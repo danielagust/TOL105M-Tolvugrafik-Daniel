@@ -4,8 +4,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        jQuery(document).ready(function($){ //wait for the document to load
+            $('.dynamic-height').each(function(){ //loop through each element with the .dynamic-height class
+                $(this).css({
+                    'margin-top' : $(this).outerHeight() - 10 + 'px' //adjust the css rule for margin-top to equal the element height - 10px and add the measurement unit "px" for valid CSS
+                });
+    });
+});
+    </script>
 </head>
 <body>
-    <div>You should not be here</div>
+    <div class="dynamic-height">
+        <div class="box">
+            <h1 class="s">404 not found</h1>
+            <img src="Windows sad face.png" alt="">
+            <h1 class="main">You should not be here</h1>
+        </div> 
+    </div>
+    
 </body>
 </html>
