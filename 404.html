@@ -13,6 +13,43 @@
     });
 });
     </script> -->
+
+<style>
+    .main {
+        color: red;
+        font-size: 50;
+        margin: 0px;
+    }
+    .s{
+        font-size: 100;
+        margin: 0px;
+    }
+    .dynamic-height {
+        -webkit-transform: translateY(100%); /* if your div is 200px, this will move it down by 200px, if it is 100px it will down by 100px etc */
+        transform: translateY(100%);      /* if your div is 200px, this will move it down by 200px, if it is 100px it will down by 100px etc */
+        margin-top: -50px;
+        text-align: center;
+        /* align-self: center; */
+        width: 100%;
+    }
+
+    .dynamic-width {
+        -webkit-transform: translateX(100%); /* //if your div is 200px, this will move it down by 200px, if it is 100px it will down by 100px etc */
+        transform: translateX(100%);         /* //if your div is 200px, this will move it down by 200px, if it is 100px it will down by 100px etc */
+        /* margin-left: -10px; */
+        text-align: center;
+        align-self: center;
+        
+    }
+
+    .box{
+        border: 5px solid;
+        outline-color: black;
+        width: 50%;
+        margin: auto;
+        
+    }
+</style>
 </head>
 <body>
     <div class="dynamic-height">
