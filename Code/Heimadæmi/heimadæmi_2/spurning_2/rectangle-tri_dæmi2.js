@@ -16,12 +16,13 @@ window.onload = function init()
 
    /*  var vertices = new Float32Array([-0.5, -0.25, 0.5, 0.25, -0.5, 0.25,
 									 -0.5, -0.25, 0.5, -0.25, 0.5, 0.25]); */
-    var vertices = new Float32Array([-0.5, -0.25, -0.5, 0.25, 0.5, 0.25, 0.5, -0.25 ]); /* loka svar */
+    // var vertices = new Float32Array([-0.5, -0.25, -0.5, 0.25, 0.5, 0.25, 0.5, -0.25 ]); 
+    var vertices = new Float32Array([0.5, -0.25, 0.5, 0.25, -0.5, -0.25, -0.5, 0.25 ]); 
 
     //  Configure WebGL
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+    gl.clearColor( 1, 1.0, 1.0, 1.0 );
     
     //  Load shaders and initialize attribute buffers
     
