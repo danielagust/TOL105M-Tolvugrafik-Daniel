@@ -22,11 +22,13 @@ window.onload = function init()
 
     var vertices = [
         vec2( -1, -1 ),
-        vec2(  0,  1 ),
-        vec2(  1, -1 )
+        vec2(  1, -1 ),
+        vec2(  1,  1 ),
+        vec2(  -1,  1 )
+        
     ];
 
-    divideTriangle( vertices[0], vertices[1], vertices[2],
+    divideSquare( vertices[0], vertices[1], vertices[2],vertices[3],
                     NumTimesToSubdivide);
 
     //
@@ -46,7 +48,7 @@ window.onload = function init()
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
 
-    // Associate out shader variables with our data buffer
+    // Associate out shader variables with our data bufferSquareSquare
 
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
@@ -55,34 +57,75 @@ window.onload = function init()
     render();
 };
 
-function triangle( a, b, c )
+function Square( a1, c1, d1, a2, b1, c2)
 {
-    points.push( a, b, c );
+    points.push( a1, c1, d1, a2, b1, c2 );
 }
 
-function divideTriangle( a, b, c, count )
+function divideSquare( a, b, c, d, count )
 {
 
     // check for end of recursion
 
     if ( count === 0 ) {
-        triangle( a, b, c );
+        Square( a, c, d, a, b, c );
     }
     else {
 
         //bisect the sides
 
-        var ab = mix( a, b, 0.5 );
-        var ac = mix( a, c, 0.5 );
-        var bc = mix( b, c, 0.5 );
+        // var ab = mix( a, b, 0.5 );
+        // var ac = mix( a, c, 0.5 );
+        // var bc = mix( b, c, 0.5 );
+
+        //middle ones
+        var ac = mix( a, c, 1 / 3);
+        var bd = mix( b, d, 1 / 3);
+        var ca = mix( c, a, 1 / 3);
+        var db = mix( d, b, 1 / 3);
+      
+
+        // sides
+        // ab side
+            var ab = mix( a, b, 1 / 3);
+            var ba = mix( b, a, 1 / 3);
+
+        // bc side
+            var bc = mix( b, c, 1 / 3);
+            var cb = mix( c, b, 1 / 3);
+
+        // cd side
+            var cd = mix( c, d, 1 / 3);
+            var dc = mix( d, c, 1 / 3);
+
+        // da side
+            var da = mix( d, a, 1 / 3);
+            var ad = mix( a, d, 1 / 3);
 
         --count;
 
-        // three new triangles
+        // clockvise
 
-        divideTriangle( a, ab, ac, count );
-        divideTriangle( c, ac, bc, count );
-        divideTriangle( b, bc, ab, count );
+        divideSquare( a, ab, ac, ad, count ); /* done */
+        divideSquare( ab, ba, bd, ac, count ); /* done */
+        divideSquare( ba, b, bc, bd, count ); /* done */
+        divideSquare( bd, bc, cb, ca, count ); /* done  */
+        divideSquare( ca, cb, c, cd, count ); /* done */
+        divideSquare( db, ca, cd, dc, count ); /* done */
+        divideSquare( da, db, dc, d, count ); /* done  */
+        divideSquare( ad, ac, db, da, count ); /* done */
+
+        //counter clockvise
+
+        // divideSquare( a, ad, ac, ab, count ); /* done */
+        // divideSquare( ab, ac, bd, ba, count ); /* done */
+        // divideSquare( ba, bd, bc, b, count ); /* done */
+        // divideSquare( bd, ca, cb, bc, count ); /* done  */
+        // divideSquare( ca, cd, c, cb, count ); /* done */
+        // divideSquare( db, dc, cd, ca, count ); /* done */
+        // divideSquare( da, d, dc, db, count ); /*  done */
+        // divideSquare( ad, da, db, ac, count ); /* done */
+        
     }
 }
 
