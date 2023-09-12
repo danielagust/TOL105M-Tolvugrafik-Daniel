@@ -24,4 +24,6 @@ class thing{
         this.translatev1(vec2(amount, 0));
     }
 
+    
+
 }
