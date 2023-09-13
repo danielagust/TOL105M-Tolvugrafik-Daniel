@@ -1,4 +1,4 @@
-class thing{
+class char_partent{
     constructor(id, points){
         this.id = id;
         this.points = points;
