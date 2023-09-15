@@ -10,6 +10,7 @@ attribute vec4 vPosition;
 void
 main()
 {
+    gl_PointSize = 1.0;
     gl_Position = vPosition;
 }
 </script>
@@ -29,10 +30,11 @@ main()
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="obj_car.js"></script>
-<script type="text/javascript" src="obj_frog.js"></script>
-<script type="text/javascript" src="obj_parent_char.js"></script>
-<script type="text/javascript" src="Verkefni_1.js"></script>
+<script nomodule defer src="./obj_parent_char.js"></script>
+<script type="module",  src="./obj_car.js"></script>
+<script type="module" src="./obj_frog.js"></script>
+
+<script type="module" src="./Verkefni_1.js"></script>
 </head>
 
 <body style="margin: 0px; height: 512px;">

@@ -4,6 +4,7 @@
 //
 //    Hjálmtýr Hafsteinsson, ágúst 2023
 ///////////////////////////////////////////////////////////////////
+import Car from "./obj_car.js"
 var gl;
 var points;
 var scaler = 0.1; // set the size of the triangle
@@ -11,6 +12,7 @@ var colorLoc;
 const min = -1; // min size of random area
 const max = 1;  // max size of random area
 const count = 100; // amount of triangles
+var car = new Car(vec2(2.0,1.0),2.0, vec2(0.0,0.0));
 
 window.onload = function init()
 {
@@ -97,6 +99,9 @@ window.onload = function init()
             vertices.push(right); 
         }
     }
+     
+    
+
 
     
     
@@ -135,20 +140,21 @@ window.onload = function init()
 
     // Associate shader variables with our data buffer
     var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+    // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
     colorLoc = gl.getUniformLocation( program, "fColor" );
 
-    render(vertices);
+    render(vertices, program);
 };
 
 
-function render(vertices) {
+function render(vertices, program) {
     gl.clear( gl.COLOR_BUFFER_BIT );
-    for ( var i = 0; i < vertices.length; i+=3 ){
-        gl.uniform4fv( colorLoc, vec4(Math.random(), Math.random(), Math.random(), 1.0) );
-        gl.drawArrays( gl.TRIANGLES, i, i+3 );
-    }
+    // for ( var i = 0; i < vertices.length; i+=3 ){
+    //     gl.uniform4fv( colorLoc, vec4(Math.random(), Math.random(), Math.random(), 1.0) );
+    //     gl.drawArrays( gl.TRIANGLES, i, i+3 );
+    // }
+    car.render(gl, program);
     
 }

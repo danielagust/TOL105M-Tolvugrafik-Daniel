@@ -1,4 +1,6 @@
-class frog extends char_partent{
+// var char_partent = require ('obj_parent_char.js');
+import char_partent from "./obj_parent_char.js"
+export default class Frog extends char_partent{
     constructor(id, size, pos){
         var temp_points = [];
         var half_width = size.x/2;

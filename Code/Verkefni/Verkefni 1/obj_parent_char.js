@@ -1,14 +1,17 @@
-class char_partent{
+
+
+export default class char_parent{
     /**
      * 
      * @param {number} id 
      * @param {vec2} points 
      * @param {WebGLUtils} gl 
      */
-    constructor(id, points, gl){
-        this.id = id;
+    constructor(points){
+        
         this.points = points;
         this.angle = 0.0;
+        
         
     }
     /**
@@ -154,10 +157,24 @@ rotate_get(theta){
 /**
  * renders the obj
  */
-render(){
+set color(color){
+    this.color = color
+}
 
+render(gl, program){
+    var bufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
+    var vPosition = gl.getAttribLocation( program, "vPosition" );
+    var colorLoc = gl.getUniformLocation( program, "fColor" );
+    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+    gl.uniform4fv( colorLoc, vec4(Math.random(), Math.random(), Math.random(), 1.0) );
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, this.points.length );
+    console.log(this.points);
 }
 
     
 
 }
+
+// module.exports = {char_parent};
