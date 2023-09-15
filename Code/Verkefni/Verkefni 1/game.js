@@ -1,3 +1,4 @@
+import Lane from "./obj_Lane.js";
 import Car from "./obj_car.js"
 import Sidewalk from "./obj_sidwalk.js";
 
@@ -25,11 +26,14 @@ gl.enableVertexAttribArray( vPosition );
 // lanes 
 var lanes = [];
 var lane_count = 3;
-var sidwalk_width = 0.5;
+var num_cars = 3;
+
+var sidwalk_width = 0.3;
 var lane_mid_list = [];
-var lanes;
+
 var wrap_line = 1.4;
 var car_list = [];
+
 
 make_lanes();
 console.log(lane_mid_list);
@@ -49,25 +53,7 @@ sidewalk_top.set_webstuff(gl, program);
 
 
 function make_lanes(){
-    // var dis = sidwalk_width + sidwalk_width;
-    // console.log(1/(lane_count + 1));
-    // var lane_diff = (sidwalk_width - - sidwalk_width)/lane_count;
-    // var lane_pos = [];
-    // console.log(lane_diff);
-    // var temp = -sidwalk_width;
-    // // lane_pos_list.push(lane_pos)
-    // for ( var i = 0; i < lane_count; ++i ){
-        
-    //     lane_pos_list.push(temp);
-    //     temp = temp + lane_diff;
-    // }
 
-    // // diff = (y-x)/n;     
-    // // d = x;
-    // // for(1 to n)
-    // //     d = d + diff
-    // //     print(d)
-    // console.log(lane_pos_list);
     lanes = splitRange(-sidwalk_width, sidwalk_width, lane_count);
     var mid;
     for ( var i = 0; i < lanes.length; ++i ){
@@ -85,6 +71,18 @@ function splitRange(rangeStart, rangeEnd, numIntervals) {
         const start = rangeStart + i * intervalSize;
         const end = start + intervalSize;
         intervals.push([start, end]);
+    }
+    return intervals;
+}
+
+function splitRangev2(rangeStart, rangeEnd, numIntervals) {
+    const intervalSize = (rangeEnd - rangeStart) / numIntervals;
+    const intervals = [];
+
+    for (let i = 0; i < numIntervals; i++) {
+        const start = rangeStart + i * intervalSize;
+        const end = start + intervalSize;
+        intervals.push(new Lane([start, end], 0.003, num_cars, splitRange(-1,1,num_cars+1)));
     }
     return intervals;
 }
