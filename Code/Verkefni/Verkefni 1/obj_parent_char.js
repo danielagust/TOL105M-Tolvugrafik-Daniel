@@ -3,15 +3,18 @@
 export default class char_parent{
     /**
      * 
-     * @param {number} id 
+     
      * @param {vec2} points 
      * @param {WebGLUtils} gl 
      */
-    constructor(points, gl){
+    constructor(points, gl, program){
         
         this.points = points;
         this.angle = 0.0;
         this.gl = gl;
+        this.id = gl.createBuffer();
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
+        this.vPosition = gl.getAttribLocation( program, "vPosition" );
         
         
         
@@ -20,9 +23,9 @@ export default class char_parent{
      * gets id
      * @return {Number} id
      */
-    get id(){
-        return this.id;
-    }
+    // get id(){
+    //     return this.id;
+    // }
     /**
      * 
      * @param {vec2} vector 
@@ -164,13 +167,13 @@ set Color(color){
 }
 
 render(gl, program){
-    var bufferId = gl.createBuffer();
+    
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     var colorLoc = gl.getUniformLocation( program, "fColor" );
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    
     gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
     
-    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+    gl.vertexAttribPointer( this.vPosition, 2, gl.FLOAT, false, 0, 0 );
     
     gl.uniform4fv( colorLoc, this.color );
     gl.drawArrays( gl.TRIANGLE_FAN, 0, this.points.length );

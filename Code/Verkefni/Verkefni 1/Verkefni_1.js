@@ -12,18 +12,19 @@ var colorLoc;
 const min = -1; // min size of random area
 const max = 1;  // max size of random area
 const count = 100; // amount of triangles
-var car = new Car(vec2(0.4,0.1),1.2, vec2(0.0,0.0));
+var car;
 
 var farmrate = 5;
 var program;
 
 window.onload = function init()
 {
-    car.Color = vec4(1.0,0.0,0.0,1.0);
+    
     var canvas = document.getElementById( "gl-canvas" );
     
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
+    
 
     // var vertices = new Float32Array([-1, -1, 0, 1, 1, -1]);
     var vertices = [ ];
@@ -155,6 +156,8 @@ window.onload = function init()
     // move(car, program);
     // move(car, program);
     // setInterval(move,farmrate, car, program);
+    car  = new Car(vec2(0.4,0.1),1.2, vec2(0.0,0.0), gl, program);
+    car.Color = vec4(1.0,0.0,0.0,1.0);
 
     render(vertices, program);
 };

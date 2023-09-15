@@ -14,7 +14,7 @@ export default class Car extends char_partent{
      * @param {float} width_screen_end 
      * @param {vec2} pos 
      */
-    constructor(size, width_screen_end, pos){
+    constructor(size, width_screen_end, pos, gl, program){
         var temp_points = [];
         var half_width = size[0]/2;
         var half_height = size[1]/2;
@@ -24,7 +24,9 @@ export default class Car extends char_partent{
         temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
         temp_points.push(add(vec2(half_width,half_height), pos)); // top right
         temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
-        super(temp_points); // sent to parent
+        
+        super(temp_points, gl,program); // sent to parent
+        
         this.size = vec2(half_width, half_height);
         this.position = pos;
         this.points = temp_points;
