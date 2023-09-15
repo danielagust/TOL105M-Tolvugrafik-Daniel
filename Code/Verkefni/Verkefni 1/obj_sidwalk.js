@@ -7,36 +7,65 @@ import char_partent from "./obj_parent_char.js"
     * @param {vec2} pos
     * vec2
  */
-export default class Car extends char_partent{
+export default class Sidewalk extends char_partent{
     /**
      * 
      * @param {vec2} size 
-     * @param {float} width_screen_end 
-     * @param {vec2} pos 
+
+     * @param {number} ifBottomv2 
      */
-    constructor(size, width_screen_end, pos){
+    constructor(size,  ifBottomv2){
         var temp_points = [];
         var half_width = size[0]/2;
         var half_height = size[1]/2;
         // console.log(size.x);
         // console.log(half_height);
-        temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
-        temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
-        temp_points.push(add(vec2(half_width,half_height), pos)); // top right
-        temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
+        // var ifBottomv2 = 1;
+
+
+        if(ifBottomv2 === 1){
+            temp_points.push(vec2(-1.0,-1.0)); // bottom left
+            temp_points.push(vec2(-1.0,size[1]+-1)); // top left
+            temp_points.push(vec2(1.0,size[1]+-1)); // top right
+            temp_points.push(vec2(1.0,-1.0)); // bottom right
+        }
+        else{
+            temp_points.push(vec2(-1.0,1-size[1])); // bottom left
+            temp_points.push(vec2(-1.0,1.0)); // top left
+            temp_points.push(vec2(1.0,1.0)); // top right
+            temp_points.push(vec2(1.0,1-size[1])); // bottom right
+            console.log("hello");
+        }
+
+        // temp_points = [
+        //     vec2(-1.0,0.0),
+        //     vec2(0.0,1.0),
+        //     vec2(1.0,0.0)
+        // ] 
+        // temp_points = [ vec2( -0.5, -0.5 ), vec2( 0.0, 0.5 ), vec2( 0.5, -0.5 ) ]
+        
+        
+        // temp_points.push(vec2(ifBottomv2*(1.0),ifBottomv2*(-1.0))); // bottom left
+        // temp_points.push(vec2(ifBottomv2*(-1.0),ifBottomv2*(-1.0))); // top left
+        // temp_points.push(vec2(ifBottomv2*(-1.0),ifBottomv2*(size[1]-1))); // top right
+        // temp_points.push(vec2(ifBottomv2*(1.0),ifBottomv2*(size[1]-1))); // bottom right
+        
+
+        
         
         super(temp_points); // sent to parent
+        // console.log(temp_points);
         
         this.size = vec2(half_width, half_height);
-        this.position = pos;
+        
         this.points = temp_points;
-        // console.log(this.points);
+        console.log(this.points);
         
         
         
 
         
-        this.width_screen_end = width_screen_end;
+        
         
         
     }
@@ -79,8 +108,8 @@ export default class Car extends char_partent{
         
         
         if (this.points[0][0] >= this.width_screen_end){
-            this.points[0] = vec2(-this.size[0]*2-this.width_screen_end,this.points[0][1])
-            this.points[1] = vec2(-this.size[0]*2-this.width_screen_end,this.points[1][1])
+            this.points[0] = vec2(-this.size[0]-this.width_screen_end/2,this.points[0][1])
+            this.points[1] = vec2(-this.size[0]-this.width_screen_end/2,this.points[1][1])
             this.points[2] = vec2(-this.width_screen_end,this.points[2][1])
             this.points[3] = vec2(-this.width_screen_end,this.points[3][1])
             
@@ -90,9 +119,7 @@ export default class Car extends char_partent{
                 this.points[i] = add(this.points[i], vector);
             }
         }
-        console.log("width x 1,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
-        console.log(this.points);
-        console.log("next\n")
+       
         
     }
 

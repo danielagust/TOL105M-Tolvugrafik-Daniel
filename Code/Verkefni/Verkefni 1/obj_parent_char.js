@@ -4,20 +4,20 @@ export default class char_parent{
     /**
      * 
      
-     * @param {vec2} points 
-     * @param {WebGLUtils} gl 
+     * @param {vec2[]} points 
      */
-    constructor(points, gl, program){
+    constructor(points){
         
         this.points = points;
         this.angle = 0.0;
-        this.gl = gl;
-        this.id = gl.createBuffer();
-        gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
-        this.vPosition = gl.getAttribLocation( program, "vPosition" );
         
-        
-        
+        // this.gl = gl;
+        // this.id = gl.createBuffer();
+        // gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
+        // this.program = program;
+        // this.vPosition = gl.getAttribLocation( program, "vPosition" );
+        // var colorLoc = gl.getUniformLocation( program, "fColor" );
+          
     }
     /**
      * gets id
@@ -30,6 +30,17 @@ export default class char_parent{
      * 
      * @param {vec2} vector 
      */
+
+    
+    set_webstuff(gl, program){
+        this.gl = gl;
+        this.id = gl.createBuffer();
+        this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
+        this.program = program;
+        this.vPosition = gl.getAttribLocation( program, "vPosition" );
+        this.colorLoc = gl.getUniformLocation( program, "fColor" );
+    }
+    
     translatev1(vector){
         for ( var i = 0; i < this.points.length; ++i ){
             this.points[i] = add(this.points[i], vector);
@@ -164,19 +175,20 @@ rotate_get(theta){
  */
 set Color(color){
     this.color = color;
+    
 }
 
-render(gl, program){
+render(){
     
-    var vPosition = gl.getAttribLocation( program, "vPosition" );
-    var colorLoc = gl.getUniformLocation( program, "fColor" );
     
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
     
-    gl.vertexAttribPointer( this.vPosition, 2, gl.FLOAT, false, 0, 0 );
+    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points), this.gl.STATIC_DRAW );
+    // console.log(this.colorLoc);
     
-    gl.uniform4fv( colorLoc, this.color );
-    gl.drawArrays( gl.TRIANGLE_FAN, 0, this.points.length );
+    this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );
+    
+    this.gl.uniform4fv( this.colorLoc, this.color );
+    this.gl.drawArrays( this.gl.TRIANGLE_FAN, 0, this.points.length );
     
     
 }
