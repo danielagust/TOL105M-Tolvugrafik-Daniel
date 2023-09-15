@@ -17,6 +17,9 @@ export default class Lane{
         
 
     }
+    set cars(cars){
+        this.cars = cars;
+    }
 
     new_cars(){
         for (let i = 0; i < this.car_amount; i++){

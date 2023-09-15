@@ -34,6 +34,9 @@ var lane_mid_list = [];
 var wrap_line = 1.4;
 var car_list = [];
 
+var width_car = 0.2;
+var height_car = 0.1;
+
 
 make_lanes();
 console.log(lane_mid_list);
@@ -50,16 +53,16 @@ sidewalk_top.Color = vec4(0.5,0.5,0.5,1.0);
 sidewalk_top.set_webstuff(gl, program);
 lanes.push(splitRangev2(-sidwalk_width, sidwalk_width, lane_count))
 
-function new_cars(){
+function new_cars(interval){
     for (let i = 0; i < num_cars; i++){
-        this.new_car(i); 
+        new_car(interval); 
      }
      
 }
-function new_car(i){
-    var mid = (this.lane_Star_and_End[0]+this.lane_Star_and_End[1])/2
-    var car  = new Car(vec2(this.width_car, this.height_car),this.wrap_line, vec2(this.space[0],mid));
-    car.set_webstuff(this.gl, this.program);
+function new_car(interval){
+    var mid = (interval[0]+interval[1])/2
+    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(splitRange(-1,1,num_cars+1),mid));
+    car.set_webstuff(gl, program);
     car.Color = vec4(1.0,0.0,0.0,1.0);
     this.cars.push(car);
 }
