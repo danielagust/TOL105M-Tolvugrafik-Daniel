@@ -14,15 +14,20 @@ export default class Lane{
         this.wrap_line = 1.4;
         this.space = space;
         
-        for (let i = 0; i < car_amount; i++){
-           this.new_car(i); 
-        }
         
 
     }
+
+    new_cars(){
+        for (let i = 0; i < this.car_amount; i++){
+            this.new_car(i); 
+         }
+         
+    }
     new_car(i){
-        var car  = new Car(vec2(this.width_car, this.height_car),this.wrap_line, vec2(this.space[0],lane_mid_list[2]));
-        car.set_webstuff(gl, program);
+        var mid = (this.lane_Star_and_End[0]+this.lane_Star_and_End[1])/2
+        var car  = new Car(vec2(this.width_car, this.height_car),this.wrap_line, vec2(this.space[0],mid));
+        car.set_webstuff(this.gl, this.program);
         car.Color = vec4(1.0,0.0,0.0,1.0);
         this.cars.push(car);
     }
@@ -32,5 +37,14 @@ export default class Lane{
             this.cars[i].move_right_wrap(this.speed); 
             this.cars[i].render();
          }
+    }
+
+    set_webstuff(gl, program){
+        this.gl = gl;
+        this.id = gl.createBuffer();
+        this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
+        this.program = program;
+        this.vPosition = gl.getAttribLocation( program, "vPosition" );
+        this.colorLoc = gl.getUniformLocation( program, "fColor" );
     }
 }

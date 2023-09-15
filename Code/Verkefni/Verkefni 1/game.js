@@ -48,8 +48,21 @@ sidewalk_bottom.set_webstuff(gl, program);
 var sidewalk_top = new Sidewalk(vec2(0.0,sidwalk_width), -1);
 sidewalk_top.Color = vec4(0.5,0.5,0.5,1.0);
 sidewalk_top.set_webstuff(gl, program);
+lanes.push(splitRangev2(-sidwalk_width, sidwalk_width, lane_count))
 
-
+function new_cars(){
+    for (let i = 0; i < num_cars; i++){
+        this.new_car(i); 
+     }
+     
+}
+function new_car(i){
+    var mid = (this.lane_Star_and_End[0]+this.lane_Star_and_End[1])/2
+    var car  = new Car(vec2(this.width_car, this.height_car),this.wrap_line, vec2(this.space[0],mid));
+    car.set_webstuff(this.gl, this.program);
+    car.Color = vec4(1.0,0.0,0.0,1.0);
+    this.cars.push(car);
+}
 
 
 function make_lanes(){
@@ -83,6 +96,8 @@ function splitRangev2(rangeStart, rangeEnd, numIntervals) {
         const start = rangeStart + i * intervalSize;
         const end = start + intervalSize;
         intervals.push(new Lane([start, end], 0.003, num_cars, splitRange(-1,1,num_cars+1)));
+        intervals[i].new_cars();
+        intervals[i].set_webstuff(gl, program);
     }
     return intervals;
 }
