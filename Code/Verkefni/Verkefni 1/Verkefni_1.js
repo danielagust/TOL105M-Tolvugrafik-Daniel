@@ -12,10 +12,14 @@ var colorLoc;
 const min = -1; // min size of random area
 const max = 1;  // max size of random area
 const count = 100; // amount of triangles
-var car = new Car(vec2(2.0,1.0),2.0, vec2(0.0,0.0));
+var car = new Car(vec2(0.4,0.1),1.2, vec2(0.0,0.0));
+
+var farmrate = 5;
+var program;
 
 window.onload = function init()
 {
+    car.Color = vec4(1.0,0.0,0.0,1.0);
     var canvas = document.getElementById( "gl-canvas" );
     
     gl = WebGLUtils.setupWebGL( canvas );
@@ -129,7 +133,7 @@ window.onload = function init()
     
     //  Load shaders and initialize attribute buffers
     
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+    program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
     // Load the data into the GPU
@@ -145,16 +149,30 @@ window.onload = function init()
 
     colorLoc = gl.getUniformLocation( program, "fColor" );
 
+    // move(car, program);
+    // move(car, program);
+    // move(car, program);
+    // move(car, program);
+    // move(car, program);
+    // setInterval(move,farmrate, car, program);
+
     render(vertices, program);
 };
 
+function move(car, program){
+    car.move_right_wrap(0.001);
+    car.render(gl, program);
+}
 
-function render(vertices, program) {
+
+function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
     // for ( var i = 0; i < vertices.length; i+=3 ){
     //     gl.uniform4fv( colorLoc, vec4(Math.random(), Math.random(), Math.random(), 1.0) );
     //     gl.drawArrays( gl.TRIANGLES, i, i+3 );
     // }
+    move(car, program);
     car.render(gl, program);
+    window.requestAnimFrame(render);
     
 }

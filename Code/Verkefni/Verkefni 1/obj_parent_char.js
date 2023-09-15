@@ -7,10 +7,12 @@ export default class char_parent{
      * @param {vec2} points 
      * @param {WebGLUtils} gl 
      */
-    constructor(points){
+    constructor(points, gl){
         
         this.points = points;
         this.angle = 0.0;
+        this.gl = gl;
+        
         
         
     }
@@ -157,20 +159,23 @@ rotate_get(theta){
 /**
  * renders the obj
  */
-set color(color){
-    this.color = color
+set Color(color){
+    this.color = color;
 }
 
 render(gl, program){
     var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     var colorLoc = gl.getUniformLocation( program, "fColor" );
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points), gl.STATIC_DRAW );
+    
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-    gl.uniform4fv( colorLoc, vec4(Math.random(), Math.random(), Math.random(), 1.0) );
+    
+    gl.uniform4fv( colorLoc, this.color );
     gl.drawArrays( gl.TRIANGLE_FAN, 0, this.points.length );
-    console.log(this.points);
+    
+    
 }
 
     

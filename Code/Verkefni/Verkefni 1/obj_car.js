@@ -18,8 +18,8 @@ export default class Car extends char_partent{
         var temp_points = [];
         var half_width = size[0]/2;
         var half_height = size[1]/2;
-        console.log(size.x);
-        console.log(half_height);
+        // console.log(size.x);
+        // console.log(half_height);
         temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
         temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
         temp_points.push(add(vec2(half_width,half_height), pos)); // top right
@@ -28,7 +28,7 @@ export default class Car extends char_partent{
         this.size = vec2(half_width, half_height);
         this.position = pos;
         this.points = temp_points;
-        console.log(this.points);
+        // console.log(this.points);
         
         
         
@@ -40,22 +40,66 @@ export default class Car extends char_partent{
     }
 
     translatev1_wrap(vector){
+        var temp_x;
         for ( var i = 0; i < this.points.length; ++i ){
-            this.points[i] = add(this.points[i]%this.width_screen_end, vector);
+            // temp_x = this.points[i][0]%this.width_screen_end;
+            // console.log(temp_x);
+            // this.points[i][0] = temp_x;
+            // console.log(this.points[i][0])
+            
+            
+            this.points[i] = (add(this.points[i], vector));
+            // console.log(this.points[i]);
+            temp_x = this.points[i][0]%this.width_screen_end;
+            console.log(temp_x);
+            this.points[i][0] = temp_x;
+            console.log(this.points[i]);
+            
         }
     }
 
     translatev2_wrap(vector){
         var temp_points = [];
+        var temp_x;
         
         for ( var i = 0; i < this.points.length; ++i ){
-            temp_points.push(add(this.points[i]%this.width_screen_end, vector));
+            temp_x = this.points[i][0]%this.width_screen_end-1.0;
+            this.points[i][0] = temp_x;
+            console.log(this.points[i]);
+            temp_points = (add(this.points[i], vector));
         }
           
     }
 
+    translatev3_wrap_right(amount){
+        var vector = vec2(amount, 0)
+        console.log("hello 1");
+        console.log("x" , this.points[0][0]);
+        console.log("width", this.width_screen_end);
+        console.log(this.points[0][0] >= this.width_screen_end);
+        
+        console.log("width x 1,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
+        if (this.points[0][0] >= this.width_screen_end){
+            this.points[0] = vec2(-this.size[0]-this.width_screen_end/2,this.points[0][1])
+            this.points[1] = vec2(-this.size[0]-this.width_screen_end/2,this.points[1][1])
+            this.points[2] = vec2(-this.width_screen_end,this.points[2][1])
+            this.points[3] = vec2(-this.width_screen_end,this.points[3][1])
+            console.log("hello 2");
+            console.log("width x 2,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
+        }
+        else{
+            for ( var i = 0; i < this.points.length; ++i ){
+                this.points[i] = add(this.points[i], vector);
+            }
+        }
+        console.log(this.points);
+        console.log("next\n")
+        
+    }
+
+
     move_right_wrap(amount){
-        this.translatev1_wrap(vec2(amount, 0));
+        this.translatev3_wrap_right(amount);
     }
 
     get Position(){
