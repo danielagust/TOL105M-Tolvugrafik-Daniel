@@ -85,7 +85,7 @@ function new_car(lane, i){
     
     var offset = Math.random();
     
-    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum+ offset,mid_lane));
+    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum + offset-num_cars,mid_lane));
     car.set_webstuff(gl, program);
     car.Color = random_color();
     // console.log(car);
