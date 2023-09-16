@@ -34,7 +34,7 @@ export default class Sidewalk extends char_partent{
             temp_points.push(vec2(-1.0,1.0)); // top left
             temp_points.push(vec2(1.0,1.0)); // top right
             temp_points.push(vec2(1.0,1-size[1])); // bottom right
-            console.log("hello");
+            // console.log("hello");
         }
 
         // temp_points = [
@@ -59,7 +59,7 @@ export default class Sidewalk extends char_partent{
         this.size = vec2(half_width, half_height);
         
         this.points = temp_points;
-        console.log(this.points);
+        // console.log(this.points);
         
         
         
@@ -82,9 +82,9 @@ export default class Sidewalk extends char_partent{
             this.points[i] = (add(this.points[i], vector));
             // console.log(this.points[i]);
             temp_x = this.points[i][0]%this.width_screen_end;
-            console.log(temp_x);
+            // console.log(temp_x);
             this.points[i][0] = temp_x;
-            console.log(this.points[i]);
+            // console.log(this.points[i]);
             
         }
     }
@@ -96,7 +96,7 @@ export default class Sidewalk extends char_partent{
         for ( var i = 0; i < this.points.length; ++i ){
             temp_x = this.points[i][0]%this.width_screen_end-1.0;
             this.points[i][0] = temp_x;
-            console.log(this.points[i]);
+            // console.log(this.points[i]);
             temp_points = (add(this.points[i], vector));
         }
           

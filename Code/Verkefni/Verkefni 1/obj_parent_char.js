@@ -178,9 +178,13 @@ set Color(color){
     
 }
 
+set Pointsv2(new_points){
+    this.points = new_points;
+}
+
 render(){
     
-    
+    // console.log(this.points , "render points");
     
     this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points), this.gl.STATIC_DRAW );
     // console.log(this.colorLoc);
