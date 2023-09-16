@@ -53,9 +53,9 @@ export default class Car extends char_partent{
             this.points[i] = (add(this.points[i], vector));
             // console.log(this.points[i]);
             temp_x = this.points[i][0]%this.width_screen_end;
-            console.log(temp_x);
+            // console.log(temp_x);
             this.points[i][0] = temp_x;
-            console.log(this.points[i]);
+            // console.log(this.points[i]);
             
         }
     }
@@ -67,7 +67,7 @@ export default class Car extends char_partent{
         for ( var i = 0; i < this.points.length; ++i ){
             temp_x = this.points[i][0]%this.width_screen_end-1.0;
             this.points[i][0] = temp_x;
-            console.log(this.points[i]);
+            // console.log(this.points[i]);
             temp_points = (add(this.points[i], vector));
         }
           
@@ -90,9 +90,9 @@ export default class Car extends char_partent{
                 this.points[i] = add(this.points[i], vector);
             }
         }
-        console.log("width x 1,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
-        console.log(this.points);
-        console.log("next\n")
+        // console.log("width x 1,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
+        // console.log(this.points);
+        // console.log("next\n")
         
     }
 

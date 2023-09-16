@@ -51,7 +51,7 @@ sidewalk_bottom.set_webstuff(gl, program);
 var sidewalk_top = new Sidewalk(vec2(0.0,sidwalk_width), -1);
 sidewalk_top.Color = vec4(0.5,0.5,0.5,1.0);
 sidewalk_top.set_webstuff(gl, program);
-lanes.push(splitRangev2(-sidwalk_width, sidwalk_width, lane_count))
+(splitRangev2(-sidwalk_width, sidwalk_width, lane_count))
 
 function new_cars(interval){
     for (let i = 0; i < num_cars; i++){
@@ -59,12 +59,14 @@ function new_cars(interval){
      }
      
 }
-function new_car(interval){
-    var mid = (interval[0]+interval[1])/2
+function new_car(lane){
+    var mid = (lane.lane_Star_and_End[0]+lane.lane_Star_and_End[1])/2
     var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(splitRange(-1,1,num_cars+1),mid));
     car.set_webstuff(gl, program);
     car.Color = vec4(1.0,0.0,0.0,1.0);
-    this.cars.push(car);
+    // console.log(car);
+    car_list.push(car);
+    // console.log(car);
 }
 
 
@@ -93,16 +95,37 @@ function splitRange(rangeStart, rangeEnd, numIntervals) {
 
 function splitRangev2(rangeStart, rangeEnd, numIntervals) {
     const intervalSize = (rangeEnd - rangeStart) / numIntervals;
-    const intervals = [];
+    
+    var speed = 0.003;
+    // console.log(numIntervals)
+    var temp_lanes = [];
 
     for (let i = 0; i < numIntervals; i++) {
         const start = rangeStart + i * intervalSize;
         const end = start + intervalSize;
-        intervals.push(new Lane([start, end], 0.003, num_cars, splitRange(-1,1,num_cars+1)));
-        intervals[i].new_cars();
-        intervals[i].set_webstuff(gl, program);
+        // intervals.push(new Lane([start, end], speed , num_cars, splitRange(-1,1,num_cars+1)));
+        temp_lanes.push(new Lane([start, end], speed, num_cars, splitRange(-1,1,num_cars+1)));
+        
+        // intervals[i].set_webstuff(gl, program);
+        // console.log(lanes[i].cars)
+        
     }
-    return intervals;
+    console.log(temp_lanes, "hello")
+    lanes = temp_lanes;
+
+    for (let i = 0; i < numIntervals/2; i++){
+        // console.log(temp_lanes[i]);
+        new_cars(temp_lanes[i])
+        console.log(car_list);
+        // console.log(temp_lanes)
+        lanes[i].Cars = car_list;
+        
+        car_list = [];
+    }
+
+    
+    console.log(lanes)
+    
 }
         
 
@@ -119,8 +142,10 @@ function move(){
     car.move_right_wrap(0.003);
     car.render();
 }
-function move_list(){
+function move_list(lane){
+    for (let i = 0; i < cars.length; i++){
 
+    }
 }
 
 function render(){

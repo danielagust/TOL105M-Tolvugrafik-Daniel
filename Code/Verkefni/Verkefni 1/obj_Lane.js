@@ -17,8 +17,8 @@ export default class Lane{
         
 
     }
-    set cars(cars){
-        this.cars = cars;
+    set Cars(cars){
+        this.cars = cars
     }
 
     new_cars(){
