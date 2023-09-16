@@ -25,7 +25,7 @@ gl.enableVertexAttribArray( vPosition );
 
 // lanes 
 var lanes = [];
-var lane_count = 4; // number of lanes
+var lane_count = 5; // number of lanes
 var num_cars = 3; // per lane
 var lane_mid_list = []; // mid point of the lane
 
@@ -60,7 +60,7 @@ function render_cars(){
     for ( var i = 0; i < lanes.length; ++i ){
         for ( var j = 0; j < lanes[i].Cars.length; ++j ){
             lanes[i].Cars[j].render();
-            console.log(lanes[i].Cars[j]);
+            // console.log(lanes[i].Cars[j]);
         }
     }
 }
@@ -77,7 +77,7 @@ function new_cars(lane){
  * @param {number} i 
  */
 function new_car(lane, i){
-    var mid_lane = (lane.mid)/2
+    var mid_lane = (lane.lane_Star_and_End[0]+lane.lane_Star_and_End[1])/2
     
     var collum = collum_maker(-wrap_line,wrap_line,num_cars+1)[i];
     var mid_collum = (collum[0]+collum[1])/2
@@ -87,7 +87,7 @@ function new_car(lane, i){
     var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum,mid_lane));
     car.set_webstuff(gl, program);
     car.Color = vec4(1.0,0.0,0.0,1.0);
-    console.log(car);
+    // console.log(car);
     car_list.push(car);
     // console.log(car);
 }
@@ -105,24 +105,20 @@ function make_lanes(){
 }
 
 function main_lane_maker(rangeStart, rangeEnd, numIntervals) {
-    const intervalSize = (rangeEnd - rangeStart) / (numIntervals);
+    rangeStart = rangeStart-0.4
+    const intervalSize = (rangeEnd - rangeStart) / (numIntervals-1);
     
     var speed = 0.003;
     // console.log(numIntervals)
     var temp_lanes = [];
+    
     var start = rangeStart;
-    var step = (rangeEnd + rangeStart) / (numIntervals);
-    // var new_star = rangeStart;
-    var mid;
-    var offset = 0.1
 
     for (let i = 0; i < numIntervals; i++) {
-        // offset = Math.random();
-        // const start = rangeStart + i * intervalSize;
-        // const end = start + intervalSize;
+        start = rangeStart + i * intervalSize;
+        const end = start + intervalSize;
         // intervals.push(new Lane([start, end], speed , num_cars, collum_maker(-1,1,num_cars+1)));
-        mid  = start+step*i+i/numIntervals;
-        temp_lanes.push(new Lane(mid, speed, num_cars, collum_maker(-1,1,num_cars+1)[i]));
+        temp_lanes.push(new Lane([start, end], speed, num_cars, collum_maker(-1,1,num_cars+1)[i]));
         
        
         // start = rangeStart + i * intervalSize;

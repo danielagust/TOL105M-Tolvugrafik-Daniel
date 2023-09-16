@@ -1,8 +1,8 @@
 import Car from "./obj_car.js"
 export default class Lane{
-    constructor(mid, speed, car_amount, space){
-        this.pos = mid;
-        // this.lane_Star_and_End = Star_and_End;
+    constructor(Star_and_End, speed, car_amount, space){
+        this.pos = (Star_and_End[1]-Star_and_End[0])/2;
+        this.lane_Star_and_End = Star_and_End;
         
         this.speed = speed;
         this.car_amount =  car_amount;
@@ -13,7 +13,6 @@ export default class Lane{
         
         this.wrap_line = 1.4;
         this.space = space;
-        this.mid = mid;
         
         
 
