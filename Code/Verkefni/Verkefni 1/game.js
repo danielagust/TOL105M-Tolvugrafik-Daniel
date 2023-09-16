@@ -26,7 +26,7 @@ gl.enableVertexAttribArray( vPosition );
 // lanes 
 var lanes = [];
 var lane_count = 5; // number of lanes
-var num_cars = 4; // per lane
+var num_cars = 3; // per lane
 var lane_mid_list = []; // mid point of the lane
 
 var sidwalk_width = 0.4; // donsent count for lanes count
@@ -38,6 +38,8 @@ var car_list = []; // temp list to make the cars
 var width_car = 0.2;
 var height_car = 0.1;
 
+const min = -0.4; // offset for the cars
+const max = 0.4; // offset for the cars
 
 make_lanes(); // makes lanes
 
@@ -80,12 +82,13 @@ function new_cars(lane){
 function new_car(lane, i){
     var mid_lane = (lane.lane_Star_and_End[0]+lane.lane_Star_and_End[1])/2
     
-    var collum = collum_maker(-wrap_line,wrap_line,num_cars+1)[i];
+    var collum = collum_maker(-wrap_line-0.5,wrap_line+0.5,num_cars+1)[i];
     var mid_collum = (collum[0]+collum[1])/2
     
-    var offset = Math.random();
     
-    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum + offset-num_cars,mid_lane));
+    var offset = Math.random() * (max - min) + min;
+    
+    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum + offset,mid_lane));
     car.set_webstuff(gl, program);
     car.Color = random_color();
     // console.log(car);
@@ -116,8 +119,10 @@ function main_lane_maker(rangeStart, rangeEnd, numIntervals) {
     var temp_lanes = [];
     
     var start = rangeStart;
+    
 
     for (let i = 0; i < numIntervals; i++) {
+        
         start = rangeStart + i * intervalSize;
         const end = start + intervalSize;
         // intervals.push(new Lane([start, end], speed , num_cars, collum_maker(-1,1,num_cars+1)));
