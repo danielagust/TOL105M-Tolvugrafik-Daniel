@@ -54,9 +54,9 @@ function Get_key(evtobj,id) {
 window.onload = function init()
 {
 
-    // event_keyboard();
-    // run()
-    document.getElementById("test").addEventListener ("click", run);
+    
+    // document.getElementById("test").addEventListener ("click", run);
+    run();
 
     document.getElementById("forward").addEventListener ("keydown", KeyDownChecker);
     document.getElementById("backward").addEventListener ("keydown", KeyDownChecker);

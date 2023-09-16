@@ -1,6 +1,7 @@
 import Lane from "./obj_Lane.js";
 import Car from "./obj_car.js"
 import Sidewalk from "./obj_sidwalk.js";
+import Frog from "./obj_frog.js";
 
 // startup
 var canvas = document.getElementById( "gl-canvas" );
@@ -23,6 +24,8 @@ var vPosition = gl.getAttribLocation( program, "vPosition" );
 
 gl.enableVertexAttribArray( vPosition );
 
+
+
 var then = 0;
 
 // lanes 
@@ -43,6 +46,10 @@ var height_car = 0.1;
 const min = -0.4; // offset for the cars
 const max = 0.4; // offset for the cars
 
+const frog_size = 0.5;
+
+var start = vec2(0.0,-0.0);
+
 make_lanes(); // makes lanes
 
 // var car = car  = new Car(vec2(0.2,0.1),wrap_line, vec2(0.0,lane_mid_list[2]));
@@ -56,6 +63,12 @@ sidewalk_bottom.set_webstuff(gl, program);
 var sidewalk_top = new Sidewalk(vec2(0.0,sidwalk_width), -1);
 sidewalk_top.Color = vec4(0.5,0.5,0.5,1.0);
 sidewalk_top.set_webstuff(gl, program);
+
+
+var frog = new Frog(vec2(frog_size,frog_size), start);
+frog.Color = vec4(1.0,0.5,0.5,1.0);
+frog.set_webstuff(gl, program);
+// console.log(frog);
 
 var Forward_key = 87; // w key
 var Backward_key = 83; // s key
@@ -173,10 +186,11 @@ function collum_maker(rangeStart, rangeEnd, numIntervals) {
         
 
 export  function run(){
-    gl.clear( gl.COLOR_BUFFER_BIT );
+    // gl.clear( gl.COLOR_BUFFER_BIT );
     
-    render_cars();
+    // render_cars();
     event_keyboard();
+    
 
     window.requestAnimationFrame(render);
 
@@ -235,10 +249,10 @@ function event_keyboard(){
     document.getElementById("test").disabled = true;
 
     $(document).on('keydown', function(event) {
-        console.log("hello");
+        // console.log("hello");
         // w key
         if (event.keyCode == Forward_key) {
-          alert('Forward_key')
+            alert('Forward_key')
         }
         // s key
         if (event.keyCode == Backward_key) {
@@ -246,7 +260,8 @@ function event_keyboard(){
         }
         // a key
         if (event.keyCode == Left_key) {
-            alert('Left_key')
+            // alert('Left_key')
+            frog.move_left(0.1);
         }
         // d key
         if (event.keyCode == Right_key) {
@@ -307,7 +322,19 @@ function render(now){
     var deltaTime = new_speed(now);
     lane_car_mover(deltaTime);
 
-    
+    frog.render();
+
+    var bufferId = gl.createBuffer();
+gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.position), gl.STATIC_DRAW );
+
+var vPosition = gl.getAttribLocation( program, "vPosition" );
+gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+gl.enableVertexAttribArray( vPosition );
+var colorLoc = gl.getUniformLocation( program, "fColor" );
+// gl.clear( gl.COLOR_BUFFER_BIT );
+gl.uniform4fv( colorLoc, vec4(2.0, 1.0, 1.0, 1.0) );
+gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
     window.requestAnimationFrame(render);
 }
 

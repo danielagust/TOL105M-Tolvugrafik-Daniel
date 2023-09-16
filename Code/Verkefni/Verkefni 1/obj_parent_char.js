@@ -129,14 +129,36 @@ rotate_self(theta){
     var s = Math.sin( radians(theta) );  
     this.angle =  theta%360;
      
-    var result = mat2(
-        vec2(c,-s),
-        vec2(s,c)
-    );
+    let result = [
+        [c,-s],
+        [s,c]
+      ];
+    var point;
+    // console.log("result ", result);
     for ( var i = 0; i < this.points.length; ++i ){
-        this.points[i] = mult(this.points[i], result);
+        // console.log(mult(this.points[i], result));
+        // console.log("before ", this.points[i])
+        point = this.multiplyMatrices(result, [[this.points[i][0]-this.po], [this.points[i][1]]])
+
+        this.points[i] = vec2(point[0], point[1]);
+        // console.log("after ", this.points[i])
     }
     
+}
+
+multiplyMatrices(m1, m2) {
+    var result = [];
+    for (var i = 0; i < m1.length; i++) {
+        result[i] = [];
+        for (var j = 0; j < m2[0].length; j++) {
+            var sum = 0;
+            for (var k = 0; k < m1[0].length; k++) {
+                sum += m1[i][k] * m2[k][j];
+            }
+            result[i][j] = sum;
+        }
+    }
+    return result;
 }
 /**
 * theta is in degres 0-360
