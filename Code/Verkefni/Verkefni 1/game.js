@@ -23,6 +23,8 @@ var vPosition = gl.getAttribLocation( program, "vPosition" );
 
 gl.enableVertexAttribArray( vPosition );
 
+var then = 0;
+
 // lanes 
 var lanes = [];
 var lane_count = 5; // number of lanes
@@ -30,7 +32,7 @@ var num_cars = 3; // per lane
 var lane_mid_list = []; // mid point of the lane
 
 var sidwalk_width = 0.4; // donsent count for lanes count
-var car_speed = 0.003;
+var car_speed = 0.4;
 
 var wrap_line = 1.4;
 var car_list = []; // temp list to make the cars
@@ -54,6 +56,11 @@ sidewalk_bottom.set_webstuff(gl, program);
 var sidewalk_top = new Sidewalk(vec2(0.0,sidwalk_width), -1);
 sidewalk_top.Color = vec4(0.5,0.5,0.5,1.0);
 sidewalk_top.set_webstuff(gl, program);
+
+var Forward_key = 87; // w key
+var Backward_key = 83; // s key
+var Left_key = 65; // a key
+var Right_key = 68; // d key
 
 (main_lane_maker(-sidwalk_width, sidwalk_width, lane_count))
 
@@ -165,24 +172,121 @@ function collum_maker(rangeStart, rangeEnd, numIntervals) {
 
         
 
-export default function run(){
+export  function run(){
     gl.clear( gl.COLOR_BUFFER_BIT );
     
     render_cars();
+    event_keyboard();
 
-    render();
+    window.requestAnimationFrame(render);
 
 
+}
+
+export  function KeyDownChecker(evtobj,id) {
+
+    var target = evtobj.target || evtobj.srcElement;
+
+    // if (evtobj.keyCode == 75 && evtobj.ctrlKey) {
+    //     AddUsers(target.id);
+
+    //     return false;
+    // }
+    // alert(target.id);
+    if (target.id == "forward"){
+        Forward_key = evtobj.keyCode;
+        // console.log("hello2");
+    }
+    if (target.id == "backward"){
+        Backward_key = evtobj.keyCode;
+        // console.log("hello2");
+    }
+    if (target.id == "left"){
+        Left_key = evtobj.keyCode;
+        // console.log("hello2");
+    }
+    if (target.id == "right"){
+        Right_key = evtobj.keyCode;
+        // console.log("hello2");
+    }
+    // console.log("hello3");
+    document.getElementById(target.id).value = "";
+}
+
+
+function event_keyboard(){
+    // var Forward_key = 87; // w key
+    // var Backward_key = 83; // s key
+    // var Left_key = 65; // a key
+    // var Right_key = 68; // d key
+
+
+    // $(this).on('keydown', function(event) {
+    //     // if (event.keyCode == 13) {
+    //     //   alert('hi.')
+    //     // }
+    //     alert(event.keyCode)
+    // })
+
+    document.getElementById('forward').disabled = true;  
+    document.getElementById('backward').disabled = true; 
+    document.getElementById('left').disabled = true; 
+    document.getElementById('right').disabled = true; 
+    document.getElementById("test").disabled = true;
+
+    $(document).on('keydown', function(event) {
+        console.log("hello");
+        // w key
+        if (event.keyCode == Forward_key) {
+          alert('Forward_key')
+        }
+        // s key
+        if (event.keyCode == Backward_key) {
+            alert('Backward_key')
+        }
+        // a key
+        if (event.keyCode == Left_key) {
+            alert('Left_key')
+        }
+        // d key
+        if (event.keyCode == Right_key) {
+            alert('Right_key')
+        }
+    })
 }
 
 // function move(){
 //     car.move_right_wrap(0.003);
 //     car.render();
 // }
-function lane_car_mover(){
+
+function new_speed(now){
+     // Convert to seconds
+     now *= 0.001;
+     // Subtract the previous time from the current time
+     var deltaTime = now - then;
+     // Remember the current time for the next frame.
+    //  console.log("now new ", now);
+    //  console.log("then new ", then);
+     then = now;
+    //  console.log("deltaTime new ", deltaTime);
+     return deltaTime;
+}
+
+function lane_car_mover(deltaTime){
+    // Convert to seconds
+    // now *= 0.001;
+    // // Subtract the previous time from the current time
+    // var deltaTime = now - then;
+    // // Remember the current time for the next frame.
+    // console.log("now old ", now);
+    // console.log("then old ", then);
+    // then = now;
+    // console.log("deltaTime old ", deltaTime);
+    // console.log(deltaTime);
     for (let i = 0; i < lanes.length; i++){
         for (let j = 0; j < lanes[i].Cars.length; j++){
-            lanes[i].Cars[j].move_right_wrap(car_speed);
+            lanes[i].Cars[j].move_right_wrap(car_speed*deltaTime);
             lanes[i].Cars[j].render();
         }
     }
@@ -193,17 +297,26 @@ function random_color(){
 }
 
 
-function render(){
+function render(now){
     gl.clear( gl.COLOR_BUFFER_BIT );
     
     sidewalk_bottom.render();
     sidewalk_top.render();
     
-
-   lane_car_mover();
+    // sleepFor(1000);
+    var deltaTime = new_speed(now);
+    lane_car_mover(deltaTime);
 
     
     window.requestAnimationFrame(render);
 }
+
+
+// function sleepFor(sleepDuration){
+//     var nowx = new Date().getTime();
+//     while(new Date().getTime() < nowx + sleepDuration){ 
+//         /* Do nothing */ 
+//     }
+// }
 
 

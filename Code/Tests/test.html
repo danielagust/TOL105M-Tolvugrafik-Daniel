@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>
+		How to find out which character
+	key is pressed using JavaScript?
+	</title>
+</head>
+
+<body>
+
+<h3>A demonstration of how to access a Text Field</h3>
+
+
+<td>
+<!--<input type="text" id="Approvers1" size="11" onkeydown="AddUsersKeyDown(event,this.id)" style="width: 470px;" />-->
+</td>
+
+<td>
+    <input type="text" id="Approvers1" size="11" onkeydown="AddUsersKeyDown(event,this.id)" style="width: 470px;" />
+    </td>
+
+<!-- <input type="text" id="Approvers1" class="keydown" size="11" style="width: 470px;" /> -->
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myText").value;
+  document.getElementById("demo").innerHTML = x;
+}
+
+function AddUsersKeyDown(evtobj,id) {
+
+    if (evtobj.keyCode == 75 && evtobj.ctrlKey) {
+
+        alert(id);
+    }
+    alert(id);
+}
+
+
+
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script>
+$(function() {
+    $('.keydown').keydown(function() {
+       alert( $(this).attr('id') );
+    });
+});
+
+function AddUsersKeyDown(evtobj,id) {
+
+if (evtobj.keyCode == 75 && evtobj.ctrlKey) {
+
+    AddUsers(id);
+}
+}
+</script>
+
+</body>
+
+</html>
