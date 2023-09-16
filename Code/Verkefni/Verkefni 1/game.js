@@ -26,10 +26,11 @@ gl.enableVertexAttribArray( vPosition );
 // lanes 
 var lanes = [];
 var lane_count = 5; // number of lanes
-var num_cars = 3; // per lane
+var num_cars = 4; // per lane
 var lane_mid_list = []; // mid point of the lane
 
-var sidwalk_width = 0.3;
+var sidwalk_width = 0.4; // donsent count for lanes count
+var car_speed = 0.003;
 
 var wrap_line = 1.4;
 var car_list = []; // temp list to make the cars
@@ -84,9 +85,9 @@ function new_car(lane, i){
     
     var offset = Math.random();
     
-    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum,mid_lane));
+    var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum+ offset,mid_lane));
     car.set_webstuff(gl, program);
-    car.Color = vec4(1.0,0.0,0.0,1.0);
+    car.Color = random_color();
     // console.log(car);
     car_list.push(car);
     // console.log(car);
@@ -105,8 +106,10 @@ function make_lanes(){
 }
 
 function main_lane_maker(rangeStart, rangeEnd, numIntervals) {
-    rangeStart = rangeStart-0.4
-    const intervalSize = (rangeEnd - rangeStart) / (numIntervals-1);
+    rangeStart = rangeStart-rangeEnd/numIntervals
+
+    rangeEnd = rangeEnd + 0.0
+    const intervalSize = (rangeEnd - rangeStart) / (numIntervals);
     
     var speed = 0.003;
     // console.log(numIntervals)
@@ -174,10 +177,14 @@ export default function run(){
 function lane_car_mover(){
     for (let i = 0; i < lanes.length; i++){
         for (let j = 0; j < lanes[i].Cars.length; j++){
-            lanes[i].Cars[j].move_right_wrap(0.003);
+            lanes[i].Cars[j].move_right_wrap(car_speed);
             lanes[i].Cars[j].render();
         }
     }
+}
+
+function random_color(){
+    return vec4(Math.random(),Math.random(),Math.random(),1.0);
 }
 
 
