@@ -27,16 +27,17 @@ export default class char_parent{
         // this.hitbox.push(add(vec2(width,height), pos)); // top right
         // this.hitbox.push(add(vec2(width,-height), pos)); // bottom right
         var top_left = add(vec2(- this.width,this.height), pos);
+        this.position = pos;
         
         // this.hitbox.push(add(vec2(- this.width,- this.height), pos)); // bottom left
         // this.hitbox.push(add(vec2(- this.width,this.height), pos)); // top left
         // this.hitbox.push(add(vec2( this.width, this.height), pos)); // top right
         // this.hitbox.push(add(vec2( this.width,- this.height), pos)); // bottom right
 
-        this.hitbox.push(add(vec2(0.0, -this.height), top_left)); // bottom left
+        this.hitbox.push(add(vec2(0.0, -this.height*2), top_left)); // bottom left
         this.hitbox.push(top_left); // top left
-        this.hitbox.push(add(vec2(this.width, 0.0), top_left)); // top right
-        this.hitbox.push(add(vec2(this.width, -this.height), top_left)); // bottom right
+        this.hitbox.push(add(vec2(this.width*2, 0.0), top_left)); // top right
+        this.hitbox.push(add(vec2(this.width*2, -this.height*2), top_left)); // bottom right
 
         for ( var i = 0; i < this.hitbox.length; ++i ){
             this.hitbox[i] = new Point(this.hitbox[i][0], this.hitbox[i][1])
@@ -177,11 +178,47 @@ export default class char_parent{
         // console.log(
         //     box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
         //     box2.top_cornor.x + box2.width >= box1.top_cornor.x );
+        const ref_corner = 1;
+        // box1 right collides with box2 left
+        console.log("box 1 this x bool ", box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x);
+        console.log("box 1 this x value ", box1.hitbox[ref_corner].x + box1.width);
+        console.log("");
+
+        // box2 right collides with box1 left
+        console.log("box 2 this x bool ", box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x);
+        console.log("box 2 this x value ", box2.hitbox[ref_corner].x + box2.width);
+        console.log("");
+
+        // box1 bottom collides with box2 top
+        console.log("box 1 this y bool ", box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[ref_corner].y);
+        console.log("box 1 this y value ", box1.hitbox[ref_corner].y + box1.height);
+        console.log("");
+
+        // box1 top collides with box2 bottom
+        console.log("box 2 this y bool ",  box2.hitbox[ref_corner].y + box2.height  >= box1.hitbox[ref_corner].y);
+        console.log("box 2 this y value ",  box2.hitbox[ref_corner].y + box2.height);
+        console.log("");
+
+        console.log("")
+
         return (
-          box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
-          box2.top_cornor.x + box2.width >= box1.top_cornor.x && // box2 right collides with box1 left
-          box1.top_cornor.y + box1.height >= box2.top_cornor.y && // box1 bottom collides with box2 top
-          box2.top_cornor.y + box2.height >= box1.top_cornor.y // box1 top collides with box2 bottom
+          box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+          box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
+          box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[ref_corner].y && // box1 bottom collides with box2 top
+          box2.hitbox[ref_corner].y + box2.height  >= box1.hitbox[ref_corner].y // box1 top collides with box2 bottom
+        )
+      }
+
+      collisionv2( box1, box2 ) {
+        // console.log(box1);
+        // console.log(
+        //     box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
+        //     box2.top_cornor.x + box2.width >= box1.top_cornor.x );
+        return (
+          box1.hitbox[1].x + box1.width>= box2.hitbox[1].x && // box1 right collides with box2 left
+          box2.hitbox[1].x + box2.width >= box1.hitbox[1].x && // box2 right collides with box1 left
+          box1.hitbox[1].y + box1.height >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+          box2.hitbox[1].y + box2.height >= box1.hitbox[1].y // box1 top collides with box2 bottom
         )
       }
 
@@ -322,7 +359,7 @@ render(){
     
     // console.log(this.points , "render points");
     
-    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points), this.gl.STATIC_DRAW );
+    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.hitboxes_to_vec()), this.gl.STATIC_DRAW );
     // console.log(this.colorLoc);
     
     this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );

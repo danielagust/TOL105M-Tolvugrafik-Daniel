@@ -21,19 +21,27 @@ export default class Car extends char_partent{
         var half_height = size[1]/2;
         // console.log(size.x);
         // console.log(half_height);
-        temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
-        temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
-        temp_points.push(add(vec2(half_width,half_height), pos)); // top right
-        temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
+       
         
         super(temp_points, size, pos); // sent to parent
+        // temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
+        // temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
+        // temp_points.push(add(vec2(half_width,half_height), pos)); // top right
+        // temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
+
+        temp_points.push(add(vec2(- this.width,- this.height), pos)); // bottom left
+        temp_points.push(add(vec2(- this.width,this.height), pos)); // top left
+        temp_points.push(add(vec2( this.width, this.height), pos)); // top right
+        temp_points.push(add(vec2( this.width,- this.height), pos)); // bottom right
         
         this.size = size;
         this.position = pos;
         this.points = temp_points;
         // console.log(this.points);
         
-        
+        // for ( var i = 0; i < this.hitbox.length; ++i ){
+        //     this.hitbox[i] = new Point(this.points[i][0], this.points[i][1])
+        // }
         this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
 
         

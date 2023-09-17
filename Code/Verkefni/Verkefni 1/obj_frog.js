@@ -234,7 +234,7 @@ export default class Frog extends char_partent{
         // this.top_cornor.position = [new_top_cornor[0], new_top_cornor[1]];
         
         this.position = this.getTriangleCentroid();
-        console.log(this.hitbox);
+        // console.log(this.hitbox);
     }
 
     translatev2_wrap(vector){

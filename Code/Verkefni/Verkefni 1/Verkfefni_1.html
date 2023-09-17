@@ -10,7 +10,7 @@ attribute vec4 vPosition;
 void
 main()
 {
-    gl_PointSize = 4.0;
+    gl_PointSize = 2.0;
     gl_Position = vPosition;
  
 }
@@ -46,6 +46,8 @@ main()
 </head>
 
 <body style="margin: 4px; height: 600px;">
+
+    <div>Points:<div id="points"></div></div>
     <p><strong style="font-size: 40px;"> keys</strong></p>
     
     <label >forward key: </label>
