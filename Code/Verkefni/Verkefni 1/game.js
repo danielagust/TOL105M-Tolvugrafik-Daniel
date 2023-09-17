@@ -262,9 +262,10 @@ function event_keyboard(){
         if (event.keyCode == Forward_key) {
             
             if (frog.angle == 90){
-                frog.move_forward(frog_speed)
+                // frog.move_forward(frog_speed)
             }
-            frog.angle_self = 90;
+            // frog.angle_self = 90;
+            frog.move_forward(frog_speed)
            
         }
         // s key

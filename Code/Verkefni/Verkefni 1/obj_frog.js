@@ -90,6 +90,38 @@ export default class Frog extends char_partent{
         var angle_corrector = (angle - theta)%360;
         const posx = this.position[0];
         const posy = this.position[1];
+        var mR = rotate( theta, 0.0, 0.0, -1.0 );
+        // console.log("self angle", angle);
+        // console.log("angle corv1 ",angle_corrector);
+        var pointM;
+        // var point;
+        var mP;
+        for ( var i = 0; i < this.points.length; ++i ){
+            
+            const x = this.points[i][0];
+            const y = this.points[i][1];
+            mP = mat4(
+                vec4(x-posx),
+                vec4(y-posy),
+                vec4(),
+                vec4()
+                );
+
+            pointM = mult( mR, mP);
+
+            this.points[i] = vec2(pointM[0][0]+posx, pointM[1][0]+posy);
+       
+        } 
+        this.angle = this.getAngle();
+        // console.log("");
+        // console.log("angle2",this.getAngle());
+    }
+
+    rotate_self_set(theta){
+        const angle = this.getAngle();
+        var angle_corrector = (angle - theta)%360;
+        const posx = this.position[0];
+        const posy = this.position[1];
         var mR = rotate( angle_corrector, 0.0, 0.0, -1.0 );
         // console.log("self angle", angle);
         // console.log("angle corv1 ",angle_corrector);
@@ -158,8 +190,9 @@ export default class Frog extends char_partent{
      */
     
     move_right(amount){
-        this.angle_self = 360;
-        this.translatev1(vec2(amount, 0));
+        // this.angle_self = 360;
+        this.rotate_self(90);
+        // this.translatev1(vec2(amount, 0));
         
     }
 
@@ -169,8 +202,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_left(amount){
-        this.angle_self = 180;
-        this.translatev1(vec2(-amount, 0));
+        // this.angle_self = 180;
+        this.rotate_self(-90);
+        // this.translatev1(vec2(-amount, 0));
         
         // console.log(this);
     }
@@ -180,8 +214,11 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_forward(amount){
-        
-        this.translatev1(vec2(0, amount));
+        const x = Math.cos(radians(this.angle));
+        const y = Math.sin(radians(this.angle));
+        console.log("angle vector", x, y);
+        console.log("angle deg", this.angle);
+        this.translatev1( vec2(x*amount, y*amount));
         // this.angle_self = 90;
         
     }
@@ -192,8 +229,13 @@ export default class Frog extends char_partent{
      */
     move_backward(amount){
         
-        this.translatev1(vec2(0, -amount));
-        this.angle_self = 270;
+        // this.translatev1(vec2(0, -amount));
+        // this.angle_self = 270;
+        const x = Math.cos(radians(this.angle));
+        const y = Math.sin(radians(this.angle));
+        console.log("angle vector", x, y);
+        console.log("angle deg", this.angle);
+        this.translatev1( vec2(x*-amount, y*-amount));
         
     }
 

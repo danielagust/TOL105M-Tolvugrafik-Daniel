@@ -9,7 +9,7 @@ export default class char_parent{
     constructor(points){
         
         this.points = points;
-        this.angle = 0;
+        this.angle = 90;
         
         // this.gl = gl;
         // this.id = gl.createBuffer();
@@ -124,7 +124,7 @@ set angle_self(theta){
     if(this.angle != Math.abs(theta)){
         var angle_corrector = (this.angle + this.angle - theta)%360;
         
-        this.rotate_self(theta)
+        this.rotate_self_set(theta)
     }
     // var angle_corrector = (this.angle + this.angle - theta)%360;
     // console.log("angle cor ",angle_corrector);
