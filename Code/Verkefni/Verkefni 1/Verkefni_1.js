@@ -8,8 +8,8 @@ window.onload = function init()
 {
 
     
-    // document.getElementById("test").addEventListener ("click", run);
-    run();
+    document.getElementById("test").addEventListener ("click", run);
+    // run();
 
     document.getElementById("forward").addEventListener ("keydown", KeyDownChecker);
     document.getElementById("backward").addEventListener ("keydown", KeyDownChecker);
