@@ -1,4 +1,5 @@
 import char_partent from "./obj_parent_char.js"
+import Point from "./point.js";
 /**
     * @param {vec2} size 
     * vec2
@@ -25,15 +26,15 @@ export default class Car extends char_partent{
         temp_points.push(add(vec2(half_width,half_height), pos)); // top right
         temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
         
-        super(temp_points); // sent to parent
+        super(temp_points, size, pos); // sent to parent
         
-        this.size = vec2(half_width, half_height);
+        this.size = size;
         this.position = pos;
         this.points = temp_points;
         // console.log(this.points);
         
         
-        
+        this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
 
         
         this.width_screen_end = width_screen_end;
@@ -79,8 +80,8 @@ export default class Car extends char_partent{
         
         
         if (this.points[0][0] >= this.width_screen_end){
-            this.points[0] = vec2(-this.size[0]*2-this.width_screen_end,this.points[0][1])
-            this.points[1] = vec2(-this.size[0]*2-this.width_screen_end,this.points[1][1])
+            this.points[0] = vec2(-this.size[0]-this.width_screen_end,this.points[0][1])
+            this.points[1] = vec2(-this.size[0]-this.width_screen_end,this.points[1][1])
             this.points[2] = vec2(-this.width_screen_end,this.points[2][1])
             this.points[3] = vec2(-this.width_screen_end,this.points[3][1])
             

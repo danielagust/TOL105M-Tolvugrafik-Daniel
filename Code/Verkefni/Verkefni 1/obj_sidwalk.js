@@ -1,4 +1,5 @@
 import char_partent from "./obj_parent_char.js"
+import Point from "./point.js";
 /**
     * @param {vec2} size 
     * vec2
@@ -22,44 +23,45 @@ export default class Sidewalk extends char_partent{
         // console.log(half_height);
         // var ifBottomv2 = 1;
 
-
+        var pos;
         if(ifBottomv2 === 1){
             temp_points.push(vec2(-1.0,-1.0)); // bottom left
             temp_points.push(vec2(-1.0,size[1]+-1)); // top left
             temp_points.push(vec2(1.0,size[1]+-1)); // top right
             temp_points.push(vec2(1.0,-1.0)); // bottom right
+            pos = vec2(0.0,(size[1]+-1)/2 )
         }
         else{
             temp_points.push(vec2(-1.0,1-size[1])); // bottom left
             temp_points.push(vec2(-1.0,1.0)); // top left
             temp_points.push(vec2(1.0,1.0)); // top right
             temp_points.push(vec2(1.0,1-size[1])); // bottom right
+            pos = vec2(-1.0,1.0 )
             // console.log("hello");
         }
 
-        // temp_points = [
-        //     vec2(-1.0,0.0),
-        //     vec2(0.0,1.0),
-        //     vec2(1.0,0.0)
-        // ] 
-        // temp_points = [ vec2( -0.5, -0.5 ), vec2( 0.0, 0.5 ), vec2( 0.5, -0.5 ) ]
         
-        
-        // temp_points.push(vec2(ifBottomv2*(1.0),ifBottomv2*(-1.0))); // bottom left
-        // temp_points.push(vec2(ifBottomv2*(-1.0),ifBottomv2*(-1.0))); // top left
-        // temp_points.push(vec2(ifBottomv2*(-1.0),ifBottomv2*(size[1]-1))); // top right
-        // temp_points.push(vec2(ifBottomv2*(1.0),ifBottomv2*(size[1]-1))); // bottom right
+      
         
 
         
         
-        super(temp_points); // sent to parent
+        super(temp_points, size, pos); // sent to parent
         // console.log(temp_points);
-        
+        this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
+        this.position = pos;
         this.size = vec2(half_width, half_height);
         
         this.points = temp_points;
+        this.width = size[0];
+        this.height = size[1];
         // console.log(this.points);
+
+        
+
+        for ( var i = 0; i < this.points.length; ++i ){
+            this.hitbox[i] = new Point(this.points[i][0], this.points[i][1])
+        }
         
         
         

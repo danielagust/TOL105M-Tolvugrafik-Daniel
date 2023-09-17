@@ -57,9 +57,11 @@ var start = vec2(0.0,-0.9); // 0.0, -0.9
 
 make_lanes(); // makes lanes
 
-// var car = car  = new Car(vec2(0.2,0.1),wrap_line, vec2(0.0,lane_mid_list[2]));
-// car.set_webstuff(gl, program);
-// car.Color = vec4(1.0,0.0,0.0,1.0);
+var car  = new Car(vec2(0.2,0.1),wrap_line, vec2(0.0,0.0));
+car.set_webstuff(gl, program);
+car.Color = vec4(1.0,0.0,0.0,1.0);
+car.render();
+console.log(car);
 
 var sidewalk_bottom = new Sidewalk(vec2(0.0,sidwalk_width), 1);
 sidewalk_bottom.Color = vec4(0.5,0.5,0.5,1.0);
@@ -83,6 +85,9 @@ var Right_key = 68; // d key
 var frog_speed = 0.1;
 
 (main_lane_maker(-sidwalk_width, sidwalk_width, lane_count))
+// console.log("col",frog.CheckCollision_self(sidewalk_top));
+
+
 
 
 
@@ -340,24 +345,31 @@ function render(now){
     
     sidewalk_bottom.render();
     sidewalk_top.render();
+
+    // car.render();
     
     // sleepFor(1000);
     var deltaTime = new_speed(now);
     lane_car_mover(deltaTime);
-
+    
     frog.render();
+    // console.log("col",frog.CheckCollision_self(car));
 
-//     var bufferId = gl.createBuffer();
+    // var bufferId = gl.createBuffer();
 // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-// gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.points[1]), gl.STATIC_DRAW );
+// const cornor = 1;
+// const point = car;
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.hitbox[cornor].x, point.hitbox[cornor].y)), gl.STATIC_DRAW );
 
 // var vPosition = gl.getAttribLocation( program, "vPosition" );
 // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
 // gl.enableVertexAttribArray( vPosition );
 // var colorLoc = gl.getUniformLocation( program, "fColor" );
 // // gl.clear( gl.COLOR_BUFFER_BIT );
-// gl.uniform4fv( colorLoc, vec4(2.0, 1.0, 1.0, 1.0) );
+// gl.uniform4fv( colorLoc, vec4(1.0, 1.0, 1.0, 1.0) );
 // gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
+// // console.log(frog.top_cornor);
+// console.log("col",frog.CheckCollision_self(car));
     window.requestAnimationFrame(render);
 }
 

@@ -1,23 +1,42 @@
 // var char_partent = require ('obj_parent_char.js');
 import char_partent from "./obj_parent_char.js"
+import Point from "./point.js";
 export default class Frog extends char_partent{
     constructor(size, pos){
         var temp_points = [];
         var width = size[0];
         var height = size[1];
         temp_points.push(add(vec2(-width,-height), pos)); // bottom left
-        temp_points.push(vec2(pos[0],height+pos[1])); // top middle
+        temp_points.push(add(vec2(0.0, height), pos)); // top middle
         temp_points.push(add(vec2(width,-height), pos)); // bottom right
+        var half_width = size[0]/2;
+        var half_height = size[1]/2;
+        // console.log(size.x);
+        // console.log(half_height);
+        // temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
+        // temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
+        // temp_points.push(add(vec2(half_width,half_height), pos)); // top right
+        // temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
+        var top_cornor = add(vec2(-width,height), pos)
+        // console.log(top_cornor); 
         // temp_points.push(vec2(-1.0,-1.0));
         // temp_points.push(vec2(0.0,1.0));
         // temp_points.push(vec2(1.0,-1.0));
+
         
-        super(temp_points);
+        
+        super(temp_points, size, pos);
+
+        
+        
         // this.top_point = this.points[1];
+        this.top_cornor = this.hitbox[1];
         this.size = vec2(width, height);
         // console.log("pos before", pos);
         this.position = this.getTriangleCentroid();
         // console.log("pos after", this.position);
+        this.width = width;
+        this.height = height;
         
 
         // console.log("angle2",this.getAngle());
@@ -120,6 +139,7 @@ export default class Frog extends char_partent{
     rotate_self_set(theta){
         const angle = this.getAngle();
         var angle_corrector = (angle - theta)%360;
+        // this.rotate_cornor_point(angle_corrector);
         const posx = this.position[0];
         const posy = this.position[1];
         var mR = rotate( angle_corrector, 0.0, 0.0, -1.0 );
@@ -144,9 +164,42 @@ export default class Frog extends char_partent{
             this.points[i] = vec2(pointM[0][0]+posx, pointM[1][0]+posy);
        
         } 
+        // this.rotate_cornor_point(angle_corrector);
         this.angle = this.getAngle();
+        
         // console.log("");
         // console.log("angle2",this.getAngle());
+        
+    }
+
+    rotate_cornor_point(theta){
+        const angle = this.getAngle();
+        // var angle_corrector = (angle - theta)%360;
+        const posx = this.position[0];
+        const posy = this.position[1];
+        var mR = rotate( theta, 0.0, 0.0, -1.0 );
+        // console.log("self angle", angle);
+        // console.log("angle corv1 ",angle_corrector);
+        var pointM;
+        // var point;
+        var mP; 
+
+        const x = this.top_cornor.x;
+        const y = this.top_cornor.y;
+        mP = mat4(
+            vec4(x-posx),
+            vec4(y-posy),
+            vec4(),
+            vec4()
+            );
+
+        pointM = mult( mR, mP);
+
+        this.top_cornor.position = [pointM[0][0]+posx, pointM[1][0]+posy];
+
+        // this.top_cornor.x = pointM[0][0]+posx;
+        // this.top_cornor.y = pointM[1][0]+posy;
+        // console.log(this.top_cornor);
     }
 
 //     POINT rotate_point(float cx,float cy,float angle,POINT p)
@@ -169,10 +222,19 @@ export default class Frog extends char_partent{
 // }
 
     translatev1(vector){
+        var new_cornor;
         for ( var i = 0; i < this.points.length; ++i ){
             this.points[i] = add(this.points[i], vector);
         }
+        for ( var i = 0; i < this.hitbox.length; ++i ){
+            new_cornor = add(this.hitbox[i].position, vector);
+            this.hitbox[i].position = [new_cornor[0], new_cornor[1]];
+        }
+        // new_top_cornor = add(this.top_cornor.position, vector);
+        // this.top_cornor.position = [new_top_cornor[0], new_top_cornor[1]];
+        
         this.position = this.getTriangleCentroid();
+        console.log(this.hitbox);
     }
 
     translatev2_wrap(vector){
@@ -190,9 +252,11 @@ export default class Frog extends char_partent{
      */
     
     move_right(amount){
-        // this.angle_self = 360;
-        this.rotate_self(90);
-        // this.translatev1(vec2(amount, 0));
+        this.angle_self = 360;
+        // this.rotate_self(90);
+        this.translatev1(vec2(amount, 0));
+        // var new_top_cornor = add(this.top_cornor.position, vec2(amount, 0));
+        // this.top_cornor.position = [new_top_cornor[0], new_top_cornor[1]];
         
     }
 
@@ -202,9 +266,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_left(amount){
-        // this.angle_self = 180;
-        this.rotate_self(-90);
-        // this.translatev1(vec2(-amount, 0));
+        this.angle_self = 180;
+        // this.rotate_self(-90);
+        this.translatev1(vec2(-amount, 0));
         
         // console.log(this);
     }
@@ -214,12 +278,13 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_forward(amount){
-        const x = Math.cos(radians(this.angle));
-        const y = Math.sin(radians(this.angle));
-        console.log("angle vector", x, y);
-        console.log("angle deg", this.angle);
-        this.translatev1( vec2(x*amount, y*amount));
-        // this.angle_self = 90;
+        // const x = Math.cos(radians(this.angle));
+        // const y = Math.sin(radians(this.angle));
+        // console.log("angle vector", x, y);
+        // console.log("angle deg", this.angle);
+        // this.translatev1( vec2(x*amount, y*amount));
+        this.translatev1(vec2(0, amount));
+        this.angle_self = 90;
         
     }
     /**
@@ -229,17 +294,17 @@ export default class Frog extends char_partent{
      */
     move_backward(amount){
         
-        // this.translatev1(vec2(0, -amount));
-        // this.angle_self = 270;
-        const x = Math.cos(radians(this.angle));
-        const y = Math.sin(radians(this.angle));
-        console.log("angle vector", x, y);
-        console.log("angle deg", this.angle);
-        this.translatev1( vec2(x*-amount, y*-amount));
+        this.translatev1(vec2(0, -amount));
+        this.angle_self = 270;
+        // const x = Math.cos(radians(this.angle));
+        // const y = Math.sin(radians(this.angle));
+        // console.log("angle vector", x, y);
+        // console.log("angle deg", this.angle);
+        // this.translatev1( vec2(x*-amount, y*-amount));
         
     }
 
-
+   
 
     get Position(){
         return this.position;
@@ -264,10 +329,18 @@ export default class Frog extends char_partent{
 
         var bufferId = this.gl.createBuffer();
         this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId );
-        this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten(this.points[1]),  this.gl.STATIC_DRAW );
+        this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten([this.points[1]]),  this.gl.STATIC_DRAW );
         // console.log(this.points[1]);
         this.gl.uniform4fv( this.colorLoc, this.color );
         this.gl.drawArrays( this.gl.POINTS, 1, 1 );
+
+        // // var bufferId2 = this.gl.createBuffer();
+        // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, this.bufferId2 );
+        // // console.log(vec2(this.top_cornor.x, this.top_cornor.y));
+        // this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten(vec2(this.top_cornor.x, this.top_cornor.y)),  this.gl.STATIC_DRAW );
+        // // console.log(this.points[1]);
+        // this.gl.uniform4fv( this.colorLoc, vec4(1.0,1.0,1.0,1.0) );
+        // this.gl.drawArrays( this.gl.POINTS, 0, 1 );
         
     }  
 }

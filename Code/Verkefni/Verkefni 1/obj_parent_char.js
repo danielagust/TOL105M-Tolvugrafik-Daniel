@@ -1,4 +1,4 @@
-
+import Point from "./point.js";
 
 export default class char_parent{
     /**
@@ -6,10 +6,12 @@ export default class char_parent{
      
      * @param {vec2[]} points 
      */
-    constructor(points){
+    constructor(points, size ,pos){
         
         this.points = points;
         this.angle = 90;
+        this.width = size[0];
+        this.height = size[1];
         
         // this.gl = gl;
         // this.id = gl.createBuffer();
@@ -17,6 +19,28 @@ export default class char_parent{
         // this.program = program;
         // this.vPosition = gl.getAttribLocation( program, "vPosition" );
         // var colorLoc = gl.getUniformLocation( program, "fColor" );
+
+        this.hitbox = []
+
+        // this.hitbox.push(add(vec2(-width,-height), pos)); // bottom left
+        // this.hitbox.push(add(vec2(-width,height), pos)); // top left
+        // this.hitbox.push(add(vec2(width,height), pos)); // top right
+        // this.hitbox.push(add(vec2(width,-height), pos)); // bottom right
+        var top_left = add(vec2(- this.width,this.height), pos);
+        
+        // this.hitbox.push(add(vec2(- this.width,- this.height), pos)); // bottom left
+        // this.hitbox.push(add(vec2(- this.width,this.height), pos)); // top left
+        // this.hitbox.push(add(vec2( this.width, this.height), pos)); // top right
+        // this.hitbox.push(add(vec2( this.width,- this.height), pos)); // bottom right
+
+        this.hitbox.push(add(vec2(0.0, -this.height), top_left)); // bottom left
+        this.hitbox.push(top_left); // top left
+        this.hitbox.push(add(vec2(this.width, 0.0), top_left)); // top right
+        this.hitbox.push(add(vec2(this.width, -this.height), top_left)); // bottom right
+
+        for ( var i = 0; i < this.hitbox.length; ++i ){
+            this.hitbox[i] = new Point(this.hitbox[i][0], this.hitbox[i][1])
+        }
           
     }
     /**
@@ -37,6 +61,9 @@ export default class char_parent{
         this.id = gl.createBuffer();
         this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id );
         this.program = program;
+
+        // this.bufferId2 = this.gl.createBuffer();
+        // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId2 );
         this.vPosition = gl.getAttribLocation( program, "vPosition" );
         this.colorLoc = gl.getUniformLocation( program, "fColor" );
     }
@@ -97,21 +124,87 @@ export default class char_parent{
      * Position is in the middle of the obj
      * can use child class
      * @param {char_partent} one 
-     * @param {char_partent} two 
+     * @param {char_partent} other 
      * @returns 
      */
-    CheckCollision( one,  two) // AABB - AABB collision
+    CheckCollision_self(other) // AABB - AABB collision
     {
-        // collision x-axis?
-        var collisionX = one.Position.x + one.Size.x >= two.Position.x &&
-            two.Position.x + two.Size.x >= one.Position.x;
-        // collision y-axis?
-        var collisionY = one.Position.y + one.Size.y >= two.Position.y &&
-            two.Position.y + two.Size.y >= one.Position.y;
-        // collision only if on both axes
-        return collisionX && collisionY;
+        // const pos_self = ""
+        // // const pos_self_x = -(this.Position[0]+this.Size[0]/2) ;
+        // // const pos_self_y = (this.Position[1]+this.Size[1]/2);
+        // const pos_self_x = this.top_cornor[0];
+        // const pos_self_y = this.top_cornor[1];
+        // console.log("top pos self", [pos_self_x, pos_self_y])
+
+        
+
+        // // const pos_other_x = -(other.Position[0]+other.Size[0]/2);
+        // // const pos_other_y = (other.Position[1]+other.Size[1]/2);
+
+        // const pos_other_x = other.top_cornor[0];
+        // const pos_other_y = other.top_cornor[1];
+        // console.log("top pos other", [pos_other_x, pos_other_y])
+        // console.log("top sidwalk", other.points[1])
+
+        // // collision x-axis?
+        // var collisionX = pos_self_x + this.Size[0] >= pos_other_x &&
+        // pos_other_x + other.Size[0] >= pos_self_x;
+        // // collision y-axis?
+        // var collisionY = pos_self_y + this.Size[1] >= pos_other_y &&
+        // pos_other_y + other.Size[1] >= pos_self_y;
+        // console.log("collisionX", collisionX);
+        // console.log("collisionY", collisionY);
+        // // collision only if on both axes
+        // // return collisionX && collisionY;
+
+        // if (
+        //     pos_self_x + this.Size[0] >= pos_other_x &&
+        //     pos_self_x <= pos_other_x + other.Size[0] &&
+        //     pos_self_y + this.Size[1] >= pos_other_y &&
+        //     pos_self_y <= pos_other_y + other.Size[1]  
+
+        // ){
+        //     return true
+        // }else{
+        //     return false
+        // }
+        var test = this;
+        return this.collision(test, other);
     } 
 
+    collision( box1, box2 ) {
+        // console.log(box1);
+        // console.log(
+        //     box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
+        //     box2.top_cornor.x + box2.width >= box1.top_cornor.x );
+        return (
+          box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
+          box2.top_cornor.x + box2.width >= box1.top_cornor.x && // box2 right collides with box1 left
+          box1.top_cornor.y + box1.height >= box2.top_cornor.y && // box1 bottom collides with box2 top
+          box2.top_cornor.y + box2.height >= box1.top_cornor.y // box1 top collides with box2 bottom
+        )
+      }
+
+
+    // /**
+    //  * must defin a get Position func and a get Size func
+    //  * Position is in the middle of the obj
+    //  * can use child class
+    //  * @param {char_partent} one 
+    //  * @param {char_partent} other 
+    //  * @returns 
+    //  */
+    // CheckCollision( one,  other) // AABB - AABB collision
+    // {
+    //     // collision x-axis?
+    //     var collisionX = one.Position.x + one.Size[0] >= other.Position.x &&
+    //         other.Position.x + other.Size[0] >= one.Position.x;
+    //     // collision y-axis?
+    //     var collisionY = one.Position.y + one.Size[1] >= other.Position.y &&
+    //         other.Position.y + other.Size[1] >= one.Position.y;
+    //     // collision only if on both axes
+    //     return collisionX && collisionY;
+    // }
 /**
  * sets angle of self to a cerend angle
  * angle is in degres 0-360
@@ -215,6 +308,14 @@ set Color(color){
 
 set Pointsv2(new_points){
     this.points = new_points;
+}
+
+hitboxes_to_vec(){
+    var temp = [];
+    for ( var i = 0; i < this.hitbox.length; ++i ){
+        temp.push(vec2(this.hitbox[i].x, this.hitbox[i].y))
+    }
+    return temp;
 }
 
 render(){
