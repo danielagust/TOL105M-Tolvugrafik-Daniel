@@ -40,8 +40,8 @@ var car_speed = 0.2;
 var wrap_line = 1.4;
 var car_list = []; // temp list to make the cars
 
-var width_car = 0.1;
-var height_car = 0.05;
+var width_car = 0.2;
+var height_car = 0.1;
 
 var car_speed_lane = [];
 
@@ -83,6 +83,8 @@ var Left_key = 65; // a key
 var Right_key = 68; // d key
 
 var frog_speed = 0.01; // 0.1
+
+var stig = 0;
 
 (main_lane_maker(-sidwalk_width, sidwalk_width, lane_count))
 // console.log("col",frog.CheckCollision_self(sidewalk_top));
@@ -362,16 +364,25 @@ function is_on_sidwalk_bottom(){
     return frog.position[1] <= sidewalk_bottom.points[1][1]
 }
 function sidewalk_point(){
-    const is_sidwalk = is_on_sidwalk()
-    if (is_sidwalk == false){
-        flip = true;
-    }
-    if (is_sidwalk){
-        if(flip){
-            console.log("sidwalk", is_sidwalk);
-            flip = false;
-        }
+    const is_sidwalk_top = is_on_sidwalk_top()
+    const is_sidwalk_bottom = is_on_sidwalk_bottom()
+    // if (is_sidwalk == false){
         
+    // }
+    if (is_sidwalk_top && flip){
+        
+        console.log("sidwalk _top", is_sidwalk_top);
+        flip = false;
+        stig += 1;
+        document.getElementById("points").innerHTML = "Points: " + stig
+        
+        
+    }
+    if (is_sidwalk_bottom && !flip){
+        console.log("sidwalk _bottom", is_sidwalk_bottom);
+        flip = true;
+        stig += 1;
+        document.getElementById("points").innerHTML = "Points: " + stig
     }
 }
 
@@ -386,28 +397,28 @@ function render(now){
     sidewalk_bottom.render();
     sidewalk_top.render();
 
-    car.render();
+    // car.render();
     
     // sleepFor(1000);
     var deltaTime = new_speed(now);
-    // lane_car_mover(deltaTime);
+    lane_car_mover(deltaTime);
     
     frog.render();
     // console.log("col",frog.CheckCollision_self(car));
 
-    var bufferId = gl.createBuffer();
-gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-const cornor = 1;
-const point = frog;
-gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.hitbox[cornor].x, point.hitbox[cornor].y)), gl.STATIC_DRAW );
+//     var bufferId = gl.createBuffer();
+// gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+// const cornor = 1;
+// const point = frog;
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.hitbox[cornor].x, point.hitbox[cornor].y)), gl.STATIC_DRAW );
 
-var vPosition = gl.getAttribLocation( program, "vPosition" );
-gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-gl.enableVertexAttribArray( vPosition );
-var colorLoc = gl.getUniformLocation( program, "fColor" );
-// gl.clear( gl.COLOR_BUFFER_BIT );
-gl.uniform4fv( colorLoc, vec4(1.0, 1.0, 1.0, 1.0) );
-gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
+// var vPosition = gl.getAttribLocation( program, "vPosition" );
+// gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+// gl.enableVertexAttribArray( vPosition );
+// var colorLoc = gl.getUniformLocation( program, "fColor" );
+// // gl.clear( gl.COLOR_BUFFER_BIT );
+// gl.uniform4fv( colorLoc, vec4(1.0, 1.0, 1.0, 1.0) );
+// gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
 // console.log(frog.top_cornor);
 
     window.requestAnimationFrame(render);

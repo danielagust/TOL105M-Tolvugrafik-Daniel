@@ -12,6 +12,7 @@ export default class char_parent{
         this.angle = 90;
         this.width = size[0];
         this.height = size[1];
+        this.size = size;
         
         // this.gl = gl;
         // this.id = gl.createBuffer();
@@ -359,7 +360,7 @@ render(){
     
     // console.log(this.points , "render points");
     
-    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.hitboxes_to_vec()), this.gl.STATIC_DRAW );
+    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points), this.gl.STATIC_DRAW );
     // console.log(this.colorLoc);
     
     this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );

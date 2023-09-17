@@ -29,12 +29,17 @@ export default class Car extends char_partent{
         // temp_points.push(add(vec2(half_width,half_height), pos)); // top right
         // temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
 
-        temp_points.push(add(vec2(- this.width,- this.height), pos)); // bottom left
-        temp_points.push(add(vec2(- this.width,this.height), pos)); // top left
-        temp_points.push(add(vec2( this.width, this.height), pos)); // top right
-        temp_points.push(add(vec2( this.width,- this.height), pos)); // bottom right
+        // temp_points.push(add(vec2(- half_width,- half_height), pos)); // bottom left
+        // temp_points.push(add(vec2(- half_width,half_height), pos)); // top left
+        // temp_points.push(add(vec2( half_width, half_height), pos)); // top right
+        // temp_points.push(add(vec2( half_width,- half_height), pos)); // bottom right
+
+        temp_points.push(add(vec2(- half_width,- half_height), pos)); // bottom left
+        temp_points.push(add(vec2(- half_width,half_height), pos)); // top left
+        temp_points.push(add(vec2( half_width, half_height), pos)); // top right
+        temp_points.push(add(vec2( half_width,- half_height), pos)); // bottom right
         
-        this.size = size;
+        // this.size = [half_width, half_height];
         this.position = pos;
         this.points = temp_points;
         // console.log(this.points);
