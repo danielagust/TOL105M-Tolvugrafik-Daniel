@@ -9,7 +9,7 @@ export default class char_parent{
     constructor(points){
         
         this.points = points;
-        this.angle = 0.0;
+        this.angle = 0;
         
         // this.gl = gl;
         // this.id = gl.createBuffer();
@@ -117,8 +117,20 @@ export default class char_parent{
  * angle is in degres 0-360
  */
 set angle_self(theta){
+    console.log("self angle",  this.angle);
+    console.log("theta", theta);
+    // console	.log(this.angle = theta)
+    
+    if(this.angle != theta){
+        // var angle_corrector = (this.angle + this.angle - theta)%360;
+        // console.log("angle cor ",angle_corrector);
+        // this.rotate_self(angle_corrector)
+    }
     var angle_corrector = (this.angle + this.angle - theta)%360;
+    console.log("angle cor ",angle_corrector);
     this.rotate_self(angle_corrector)
+    this.angle =  (theta%360) ;
+    
 }
 /**
 * theta is in degres 0-360
@@ -128,6 +140,7 @@ rotate_self(theta){
     var c = Math.cos( radians(theta) );
     var s = Math.sin( radians(theta) );  
     this.angle =  theta%360;
+    
      
     let result = [
         [c,-s],

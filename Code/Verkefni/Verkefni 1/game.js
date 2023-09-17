@@ -265,7 +265,7 @@ function event_keyboard(){
         }
         // d key
         if (event.keyCode == Right_key) {
-            alert('Right_key')
+            frog.move_right(0.1);
         }
     })
 }
