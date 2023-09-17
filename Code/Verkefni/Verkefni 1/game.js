@@ -334,7 +334,7 @@ function sidewalk_point(){
     // }
     if (is_sidwalk_top && flip){
         
-        console.log("sidwalk _top", is_sidwalk_top);
+        // console.log("sidwalk _top", is_sidwalk_top);
         flip = false;
         stig += 1;
         document.getElementById("points").innerHTML = "Points: " + stig
@@ -342,7 +342,7 @@ function sidewalk_point(){
         
     }
     if (is_sidwalk_bottom && !flip){
-        console.log("sidwalk _bottom", is_sidwalk_bottom);
+        // console.log("sidwalk _bottom", is_sidwalk_bottom);
         flip = true;
         stig += 1;
         document.getElementById("points").innerHTML = "Points: " + stig
