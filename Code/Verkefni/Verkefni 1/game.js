@@ -35,7 +35,7 @@ var num_cars = 3; // per lane
 var lane_mid_list = []; // mid point of the lane
 
 var sidwalk_width = 0.4; // donsent count for lanes count
-var car_speed = 0.4;
+var car_speed = 0.2;
 
 var wrap_line = 1.4;
 var car_list = []; // temp list to make the cars
@@ -43,12 +43,17 @@ var car_list = []; // temp list to make the cars
 var width_car = 0.2;
 var height_car = 0.1;
 
-const min = -0.4; // offset for the cars
-const max = 0.4; // offset for the cars
+var car_speed_lane = [];
 
-const frog_size = 0.5;
+const min_pos = -0.4; // offset for the cars pos
+const max_pos = 0.4; // offset for the cars pos
 
-var start = vec2(0.0,-0.0);
+const max_car_speed = 0.07;
+const min_car_speed = -0.03
+
+const frog_size = 0.05;
+
+var start = vec2(0.0,-0.9);
 
 make_lanes(); // makes lanes
 
@@ -74,6 +79,8 @@ var Forward_key = 87; // w key
 var Backward_key = 83; // s key
 var Left_key = 65; // a key
 var Right_key = 68; // d key
+
+var frog_speed = 0.1;
 
 (main_lane_maker(-sidwalk_width, sidwalk_width, lane_count))
 
@@ -106,7 +113,7 @@ function new_car(lane, i){
     var mid_collum = (collum[0]+collum[1])/2
     
     
-    var offset = Math.random() * (max - min) + min;
+    var offset = Math.random() * (max_pos - min_pos) + min_pos;
     
     var car  = new Car(vec2(width_car, height_car),wrap_line, vec2(mid_collum + offset,mid_lane));
     car.set_webstuff(gl, program);
@@ -190,6 +197,7 @@ export  function run(){
     
     // render_cars();
     event_keyboard();
+    speed_maker();
     
 
     window.requestAnimationFrame(render);
@@ -252,20 +260,20 @@ function event_keyboard(){
         // console.log("hello");
         // w key
         if (event.keyCode == Forward_key) {
-            alert('Forward_key')
+            frog.move_forward(frog_speed)
         }
         // s key
         if (event.keyCode == Backward_key) {
-            alert('Backward_key')
+            frog.move_backward(frog_speed);
         }
         // a key
         if (event.keyCode == Left_key) {
             // alert('Left_key')
-            frog.move_left(0.1);
+            frog.move_left(frog_speed);
         }
         // d key
         if (event.keyCode == Right_key) {
-            frog.move_right(0.1);
+            frog.move_right(frog_speed);
         }
     })
 }
@@ -288,6 +296,13 @@ function new_speed(now){
      return deltaTime;
 }
 
+function speed_maker(){
+    for (let i = 0; i < lanes.length; i++){
+        car_speed_lane.push(Math.random() * (max_car_speed - min_car_speed) + min_car_speed);
+        
+    }
+}
+
 function lane_car_mover(deltaTime){
     // Convert to seconds
     // now *= 0.001;
@@ -299,9 +314,11 @@ function lane_car_mover(deltaTime){
     // then = now;
     // console.log("deltaTime old ", deltaTime);
     // console.log(deltaTime);
+    // var offset;
     for (let i = 0; i < lanes.length; i++){
+        // offset = Math.random() * (max_car_speed - min_car_speed) + min_car_speed;
         for (let j = 0; j < lanes[i].Cars.length; j++){
-            lanes[i].Cars[j].move_right_wrap(car_speed*deltaTime);
+            lanes[i].Cars[j].move_right_wrap((car_speed+car_speed_lane[i])*deltaTime );
             lanes[i].Cars[j].render();
         }
     }
@@ -324,17 +341,17 @@ function render(now){
 
     frog.render();
 
-    var bufferId = gl.createBuffer();
-gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.position), gl.STATIC_DRAW );
+//     var bufferId = gl.createBuffer();
+// gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.position), gl.STATIC_DRAW );
 
-var vPosition = gl.getAttribLocation( program, "vPosition" );
-gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-gl.enableVertexAttribArray( vPosition );
-var colorLoc = gl.getUniformLocation( program, "fColor" );
-// gl.clear( gl.COLOR_BUFFER_BIT );
-gl.uniform4fv( colorLoc, vec4(2.0, 1.0, 1.0, 1.0) );
-gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
+// var vPosition = gl.getAttribLocation( program, "vPosition" );
+// gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+// gl.enableVertexAttribArray( vPosition );
+// var colorLoc = gl.getUniformLocation( program, "fColor" );
+// // gl.clear( gl.COLOR_BUFFER_BIT );
+// gl.uniform4fv( colorLoc, vec4(2.0, 1.0, 1.0, 1.0) );
+// gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
     window.requestAnimationFrame(render);
 }
 

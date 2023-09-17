@@ -117,19 +117,19 @@ export default class char_parent{
  * angle is in degres 0-360
  */
 set angle_self(theta){
-    console.log("self angle",  this.angle);
-    console.log("theta", theta);
+    // console.log("self angle",  this.angle);
+    // console.log("theta", theta);
     // console	.log(this.angle = theta)
     
-    if(this.angle != theta){
-        // var angle_corrector = (this.angle + this.angle - theta)%360;
-        // console.log("angle cor ",angle_corrector);
-        // this.rotate_self(angle_corrector)
+    if(this.angle != Math.abs(theta)){
+        var angle_corrector = (this.angle + this.angle - theta)%360;
+        
+        this.rotate_self(theta)
     }
-    var angle_corrector = (this.angle + this.angle - theta)%360;
-    console.log("angle cor ",angle_corrector);
-    this.rotate_self(angle_corrector)
-    this.angle =  (theta%360) ;
+    // var angle_corrector = (this.angle + this.angle - theta)%360;
+    // console.log("angle cor ",angle_corrector);
+    // this.rotate_self(angle_corrector)
+    
     
 }
 /**

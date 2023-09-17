@@ -11,16 +11,29 @@ export default class Frog extends char_partent{
         // temp_points.push(vec2(-1.0,-1.0));
         // temp_points.push(vec2(0.0,1.0));
         // temp_points.push(vec2(1.0,-1.0));
+        
         super(temp_points);
+        // this.top_point = this.points[1];
         this.size = vec2(width, height);
-        console.log("pos before", pos);
+        // console.log("pos before", pos);
         this.position = this.getTriangleCentroid();
-        console.log("pos after", this.position);
+        // console.log("pos after", this.position);
         
 
-        
+        // console.log("angle2",this.getAngle());
        
         
+    }
+
+    getAngle = function(){
+        const top_point = this.points[1];
+        const x = top_point[0];
+        const y = top_point[1];
+        const posx = this.position[0];
+        const posy = this.position[1];
+        var angle = Math.atan2(y-posy, x-posx);
+        var degrees = 180 * angle / Math.PI;
+        return (360 + Math.round(degrees)) % 360;
     }
 
     // getTriangleCentroid(arr){
@@ -40,7 +53,7 @@ export default class Frog extends char_partent{
         var c = Math.cos( radians(theta) );
         var s = Math.sin( radians(theta) );  
         
-        console.log("angle inside ", this.angle);
+        // console.log("angle inside ", this.angle);
         var px2;
         var py2;
          
@@ -59,52 +72,49 @@ export default class Frog extends char_partent{
             px2 = - s * (py-oy) + c * (px-ox)  + ox;
             py2 = s * (px-ox) + c * (py-oy) + oy;
 
-            console.log("before ", this.points[i])
+            // console.log("before ", this.points[i])
             // point = this.multiplyMatrices(result, [[this.points[i][0]-this.position[0]], [this.points[i][1]-this.position[1]]])
             // console.log("point1 ", point);
             // point = [point[0][0]+this.position[0],point[1][0]+this.position[1]];
             point = [px2, py2];
             // console.log("point2 ", point);
             this.points[i] = vec2(point[0], point[1]);
-            console.log("after ", this.points[i])
+            // console.log("after ", this.points[i])
         }
-        console.log("");
+        // console.log("");
         
     }
 
     rotate_self(theta){
+        const angle = this.getAngle();
+        var angle_corrector = (angle - theta)%360;
         const posx = this.position[0];
-        const posy = this.position[1]
-        var mR = rotate( theta, 0.0, 0.0, 1.0 );
+        const posy = this.position[1];
+        var mR = rotate( angle_corrector, 0.0, 0.0, -1.0 );
+        // console.log("self angle", angle);
+        // console.log("angle corv1 ",angle_corrector);
         var pointM;
-        var point;
+        // var point;
         var mP;
         for ( var i = 0; i < this.points.length; ++i ){
-            // // console.log(mult(this.points[i], result));
-            // const px = this.points[i][0];
-            // const py = this.points[i][1];
-            // const ox = this.position[0];
-            // const oy = this.position[1];
-            // px2 = - s * (py-oy) + c * (px-ox)  + ox;
-            // py2 = s * (px-ox) + c * (py-oy) + oy;
+            
             const x = this.points[i][0];
             const y = this.points[i][1];
             mP = mat4(
-                vec4(x),
-                vec4(y),
+                vec4(x-posx),
+                vec4(y-posy),
                 vec4(),
                 vec4()
                 );
-            console.log("before ", this.points[i])
-            console.log("matrix", mR);
+
             pointM = mult( mR, mP);
-            console.log("point1 ", pointM);
-            // point = [point[0][0]+this.position[0],point[1][0]+this.position[1]];
-            // point = vec2(point[0], point[1]);
-            // console.log("point2 ", point);
-            this.points[i] = vec2(pointM[0][0], pointM[1][0]);
-            console.log("after ", this.points[i])
+
+            this.points[i] = vec2(pointM[0][0]+posx, pointM[1][0]+posy);
+       
         } 
+        this.angle = this.getAngle();
+        // console.log("");
+        // console.log("angle2",this.getAngle());
     }
 
 //     POINT rotate_point(float cx,float cy,float angle,POINT p)
@@ -126,10 +136,11 @@ export default class Frog extends char_partent{
 //   return p;
 // }
 
-    translatev1_wrap(vector){
+    translatev1(vector){
         for ( var i = 0; i < this.points.length; ++i ){
-            this.points[i] = add(this.points[i]%this.width_screen_end, vector);
+            this.points[i] = add(this.points[i], vector);
         }
+        this.position = this.getTriangleCentroid();
     }
 
     translatev2_wrap(vector){
@@ -146,8 +157,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_right(amount){
-        // this.translatev1(vec2(amount, 0));
-        this.angle_self = 90;
+        this.angle_self = 360;
+        this.translatev1(vec2(amount, 0));
+        
     }
     /**
      * amount is the movement to the left
@@ -155,8 +167,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_left(amount){
-        // this.translatev1(vec2(-amount, 0));
         this.angle_self = 180;
+        this.translatev1(vec2(-amount, 0));
+        
         // console.log(this);
     }
     /**
@@ -165,8 +178,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_forward(amount){
+        this.angle_self = 90;
         this.translatev1(vec2(0, amount));
-        // this.angle_self = 0;
+        
     }
     /**
      * amount is the movement to the backwarf
@@ -174,8 +188,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_backward(amount){
+        this.angle_self = 270;
         this.translatev1(vec2(0, -amount));
-        // this.angle_self = 0;
+        
     }
 
 
