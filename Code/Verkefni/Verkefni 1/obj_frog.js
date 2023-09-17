@@ -156,11 +156,13 @@ export default class Frog extends char_partent{
      * 1.0 is max
      * @param {float} amount 
      */
+    
     move_right(amount){
         this.angle_self = 360;
         this.translatev1(vec2(amount, 0));
         
     }
+
     /**
      * amount is the movement to the left
      * 1.0 is max
@@ -178,8 +180,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_forward(amount){
-        this.angle_self = 90;
+        
         this.translatev1(vec2(0, amount));
+        // this.angle_self = 90;
         
     }
     /**
@@ -188,8 +191,9 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_backward(amount){
-        this.angle_self = 270;
+        
         this.translatev1(vec2(0, -amount));
+        this.angle_self = 270;
         
     }
 
@@ -203,5 +207,28 @@ export default class Frog extends char_partent{
         return this.size;
     }
 
-    
+    render(){
+        
+        // console.log(this.points , "render points");
+        
+        this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points), this.gl.STATIC_DRAW );
+        // console.log(this.colorLoc);
+        
+        this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );
+        
+        this.gl.uniform4fv( this.colorLoc, this.color );
+        this.gl.drawArrays( this.gl.TRIANGLE_FAN, 0, this.points.length );
+
+
+        var bufferId = this.gl.createBuffer();
+        this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId );
+        this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten(this.points[1]),  this.gl.STATIC_DRAW );
+        // console.log(this.points[1]);
+        this.gl.uniform4fv( this.colorLoc, this.color );
+        this.gl.drawArrays( this.gl.POINTS, 1, 1 );
+        
+    }  
 }
+
+    
+

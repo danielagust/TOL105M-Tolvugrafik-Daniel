@@ -51,9 +51,9 @@ const max_pos = 0.4; // offset for the cars pos
 const max_car_speed = 0.07;
 const min_car_speed = -0.03
 
-const frog_size = 0.05;
+const frog_size = 0.05; // 0.05
 
-var start = vec2(0.0,-0.9);
+var start = vec2(0.0,-0.9); // 0.0, -0.9
 
 make_lanes(); // makes lanes
 
@@ -71,7 +71,7 @@ sidewalk_top.set_webstuff(gl, program);
 
 
 var frog = new Frog(vec2(frog_size,frog_size), start);
-frog.Color = vec4(1.0,0.5,0.5,1.0);
+frog.Color = vec4(61/255,1.0,135/255,1.0);
 frog.set_webstuff(gl, program);
 // console.log(frog);
 
@@ -260,7 +260,12 @@ function event_keyboard(){
         // console.log("hello");
         // w key
         if (event.keyCode == Forward_key) {
-            frog.move_forward(frog_speed)
+            
+            if (frog.angle == 90){
+                frog.move_forward(frog_speed)
+            }
+            frog.angle_self = 90;
+           
         }
         // s key
         if (event.keyCode == Backward_key) {
@@ -343,7 +348,7 @@ function render(now){
 
 //     var bufferId = gl.createBuffer();
 // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-// gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.position), gl.STATIC_DRAW );
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.points[1]), gl.STATIC_DRAW );
 
 // var vPosition = gl.getAttribLocation( program, "vPosition" );
 // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
