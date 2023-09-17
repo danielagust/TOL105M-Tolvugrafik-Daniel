@@ -82,7 +82,7 @@ var Backward_key = 83; // s key
 var Left_key = 65; // a key
 var Right_key = 68; // d key
 
-var frog_speed = 0.01; // 0.1
+var frog_speed = 0.02; // 0.1
 
 var stig = 0;
 
@@ -170,10 +170,9 @@ function main_lane_maker(rangeStart, rangeEnd, numIntervals) {
     lanes = temp_lanes;
 
     for (let i = 0; i < temp_lanes.length; i++){
-        // console.log(temp_lanes[i]);
+  
         new_cars(temp_lanes[i])
-        // console.log(car_list);
-        // console.log(temp_lanes)
+
         lanes[i].Cars = car_list;
         
         car_list = [];
@@ -200,7 +199,7 @@ function collum_maker(rangeStart, rangeEnd, numIntervals) {
         
 
 export  function run(){
-    // gl.clear( gl.COLOR_BUFFER_BIT );
+
     
     // render_cars();
     event_keyboard();
@@ -216,12 +215,7 @@ export  function KeyDownChecker(evtobj,id) {
 
     var target = evtobj.target || evtobj.srcElement;
 
-    // if (evtobj.keyCode == 75 && evtobj.ctrlKey) {
-    //     AddUsers(target.id);
 
-    //     return false;
-    // }
-    // alert(target.id);
     if (target.id == "forward"){
         Forward_key = evtobj.keyCode;
         // console.log("hello2");
@@ -244,18 +238,7 @@ export  function KeyDownChecker(evtobj,id) {
 
 
 function event_keyboard(){
-    // var Forward_key = 87; // w key
-    // var Backward_key = 83; // s key
-    // var Left_key = 65; // a key
-    // var Right_key = 68; // d key
 
-
-    // $(this).on('keydown', function(event) {
-    //     // if (event.keyCode == 13) {
-    //     //   alert('hi.')
-    //     // }
-    //     alert(event.keyCode)
-    // })
 
     document.getElementById('forward').disabled = true;  
     document.getElementById('backward').disabled = true; 
@@ -302,8 +285,6 @@ function new_speed(now){
      // Subtract the previous time from the current time
      var deltaTime = now - then;
      // Remember the current time for the next frame.
-    //  console.log("now new ", now);
-    //  console.log("then new ", then);
      then = now;
     //  console.log("deltaTime new ", deltaTime);
      return deltaTime;
@@ -317,17 +298,6 @@ function speed_maker(){
 }
 
 function lane_car_mover(deltaTime){
-    // Convert to seconds
-    // now *= 0.001;
-    // // Subtract the previous time from the current time
-    // var deltaTime = now - then;
-    // // Remember the current time for the next frame.
-    // console.log("now old ", now);
-    // console.log("then old ", then);
-    // then = now;
-    // console.log("deltaTime old ", deltaTime);
-    // console.log(deltaTime);
-    // var offset;
     for (let i = 0; i < lanes.length; i++){
         // offset = Math.random() * (max_car_speed - min_car_speed) + min_car_speed;
         for (let j = 0; j < lanes[i].Cars.length; j++){
@@ -341,18 +311,10 @@ function random_color(){
     return vec4(Math.random(),Math.random(),Math.random(),1.0);
 }
 
-function sleepFor(sleepDuration){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){ 
-        /* Do nothing */ 
-    }
-}
+
 
 var flip = true;
-function is_on_sidwalk(){
-    
-    return frog.position[1] >= sidewalk_top.points[0][1] || frog.position[1] <= sidewalk_bottom.points[1][1]
-}
+
 
 function is_on_sidwalk_top(){
     

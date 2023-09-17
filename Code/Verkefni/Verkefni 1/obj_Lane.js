@@ -25,32 +25,6 @@ export default class Lane{
         return this.cars;
     }
 
-    // new_cars(){
-    //     for (let i = 0; i < this.car_amount; i++){
-    //         this.new_car(i); 
-    //         console.log("new line");
-    //         console.log("");
-    //      }
-    //     console.log("width car ", this.width_car);
-    //     console.log("height car ", this.height_car);
-    //     console.log("wrap line ", this.wrap_line);
-    //     console.log("pos ", vec2(this.space[0],mid) );
-        
-    //     console.log("new lane");
-    //     console.log("");
-         
-         
-    // }
-    // new_car(i){
-    //     var mid = (this.lane_Star_and_End[0]+this.lane_Star_and_End[1])/2
-    //     var car  = new Car(vec2(this.width_car, this.height_car),this.wrap_line, vec2(this.space[i],mid)); // add the cars ad a given space
-    //     car.set_webstuff(this.gl, this.program);
-    //     car.Color = vec4(1.0,0.0,0.0,1.0);
-    //     this.cars.push(car);
-    //     console.log("mid ",  mid);
-    //     console.log("car ", car);
-        
-    // }
 
     move(){
         for (let i = 0; i < car_amount; i++){

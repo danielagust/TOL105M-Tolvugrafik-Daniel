@@ -19,34 +19,21 @@ export default class Car extends char_partent{
         var temp_points = [];
         var half_width = size[0]/2;
         var half_height = size[1]/2;
-        // console.log(size.x);
-        // console.log(half_height);
+
        
         
         super(temp_points, size, pos); // sent to parent
-        // temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
-        // temp_points.push(add(vec2(-half_width,half_height), pos)); // top left
-        // temp_points.push(add(vec2(half_width,half_height), pos)); // top right
-        // temp_points.push(add(vec2(half_width,-half_height), pos)); // bottom right
 
-        // temp_points.push(add(vec2(- half_width,- half_height), pos)); // bottom left
-        // temp_points.push(add(vec2(- half_width,half_height), pos)); // top left
-        // temp_points.push(add(vec2( half_width, half_height), pos)); // top right
-        // temp_points.push(add(vec2( half_width,- half_height), pos)); // bottom right
 
         temp_points.push(add(vec2(- half_width,- half_height), pos)); // bottom left
         temp_points.push(add(vec2(- half_width,half_height), pos)); // top left
         temp_points.push(add(vec2( half_width, half_height), pos)); // top right
         temp_points.push(add(vec2( half_width,- half_height), pos)); // bottom right
         
-        // this.size = [half_width, half_height];
+
         this.position = pos;
         this.points = temp_points;
-        // console.log(this.points);
-        
-        // for ( var i = 0; i < this.hitbox.length; ++i ){
-        //     this.hitbox[i] = new Point(this.points[i][0], this.points[i][1])
-        // }
+
         this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
 
         
@@ -58,10 +45,7 @@ export default class Car extends char_partent{
     translatev1_wrap(vector){
         var temp_x;
         for ( var i = 0; i < this.points.length; ++i ){
-            // temp_x = this.points[i][0]%this.width_screen_end;
-            // console.log(temp_x);
-            // this.points[i][0] = temp_x;
-            // console.log(this.points[i][0])
+
             
             
             this.points[i] = (add(this.points[i], vector));
@@ -104,9 +88,7 @@ export default class Car extends char_partent{
                 this.points[i] = add(this.points[i], vector);
             }
         }
-        // console.log("width x 1,,,",(Math.abs(this.points[3][0]) -Math.abs(this.points[0][0])))
-        // console.log(this.points);
-        // console.log("next\n")
+
         
     }
 

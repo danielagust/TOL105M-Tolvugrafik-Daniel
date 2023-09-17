@@ -19,9 +19,7 @@ export default class Sidewalk extends char_partent{
         var temp_points = [];
         var half_width = size[0]/2;
         var half_height = size[1]/2;
-        // console.log(size.x);
-        // console.log(half_height);
-        // var ifBottomv2 = 1;
+
 
         var pos;
         if(ifBottomv2 === 1){
@@ -37,7 +35,7 @@ export default class Sidewalk extends char_partent{
             temp_points.push(vec2(1.0,1.0)); // top right
             temp_points.push(vec2(1.0,1-size[1])); // bottom right
             pos = vec2(-1.0,1.0 )
-            // console.log("hello");
+
         }
 
         
@@ -47,7 +45,7 @@ export default class Sidewalk extends char_partent{
         
         
         super(temp_points, size, pos); // sent to parent
-        // console.log(temp_points);
+     
         this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
         this.position = pos;
         this.size = vec2(half_width, half_height);
@@ -55,7 +53,7 @@ export default class Sidewalk extends char_partent{
         this.points = temp_points;
         this.width = size[0];
         this.height = size[1];
-        // console.log(this.points);
+
 
         
 
@@ -75,19 +73,15 @@ export default class Sidewalk extends char_partent{
     translatev1_wrap(vector){
         var temp_x;
         for ( var i = 0; i < this.points.length; ++i ){
-            // temp_x = this.points[i][0]%this.width_screen_end;
-            // console.log(temp_x);
-            // this.points[i][0] = temp_x;
-            // console.log(this.points[i][0])
+
             
             
             this.points[i] = (add(this.points[i], vector));
-            // console.log(this.points[i]);
+         
             temp_x = this.points[i][0]%this.width_screen_end;
             // console.log(temp_x);
             this.points[i][0] = temp_x;
-            // console.log(this.points[i]);
-            
+ 
         }
     }
 

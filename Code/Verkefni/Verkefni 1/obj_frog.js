@@ -202,24 +202,6 @@ export default class Frog extends char_partent{
         // console.log(this.top_cornor);
     }
 
-//     POINT rotate_point(float cx,float cy,float angle,POINT p)
-// {
-//   float s = sin(angle);
-//   float c = cos(angle);
-
-//   // translate point back to origin:
-//   p.x -= cx;
-//   p.y -= cy;
-
-//   // rotate point
-//   float xnew = p.x * c - p.y * s;
-//   float ynew = p.x * s + p.y * c;
-
-//   // translate point back:
-//   p.x = xnew + cx;
-//   p.y = ynew + cy;
-//   return p;
-// }
 
     translatev1(vector){
         var new_cornor;
@@ -296,12 +278,7 @@ export default class Frog extends char_partent{
         
         this.translatev1(vec2(0, -amount));
         this.angle_self = 270;
-        // const x = Math.cos(radians(this.angle));
-        // const y = Math.sin(radians(this.angle));
-        // console.log("angle vector", x, y);
-        // console.log("angle deg", this.angle);
-        // this.translatev1( vec2(x*-amount, y*-amount));
-        
+
     }
 
    
@@ -331,7 +308,7 @@ export default class Frog extends char_partent{
         this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId );
         this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten([this.points[1]]),  this.gl.STATIC_DRAW );
         // console.log(this.points[1]);
-        this.gl.uniform4fv( this.colorLoc, this.color );
+        this.gl.uniform4fv( this.colorLoc, vec4(1.0,1.0,1.0,1.0) );
         this.gl.drawArrays( this.gl.POINTS, 1, 1 );
 
         // // var bufferId2 = this.gl.createBuffer();
