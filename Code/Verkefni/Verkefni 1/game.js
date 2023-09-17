@@ -244,7 +244,8 @@ function event_keyboard(){
     document.getElementById('backward').disabled = true; 
     document.getElementById('left').disabled = true; 
     document.getElementById('right').disabled = true; 
-    document.getElementById("test").disabled = true;
+    document.getElementById("start").disabled = true;
+    document.getElementById("restart").disabled = false;
 
     $(document).on('keydown', function(event) {
         // console.log("hello");
@@ -316,7 +317,7 @@ function random_color(){
 
 var flip = true;
 
-
+document.getElementById("restart").addEventListener ("click", restart);
 function is_on_sidwalk_top(){
     
     return frog.position[1] >= sidewalk_top.points[0][1]
@@ -350,9 +351,12 @@ function sidewalk_point(){
 }
 
 function restart(){
+    flip = true;
+    stig = 0;
     frog = new Frog(vec2(frog_size,frog_size), start);
     frog.Color = vec4(61/255,1.0,135/255,1.0);
     frog.set_webstuff(gl, program);
+    
     document.getElementById("points").innerHTML = "Points: " + 0;
     frog.render();
 }
