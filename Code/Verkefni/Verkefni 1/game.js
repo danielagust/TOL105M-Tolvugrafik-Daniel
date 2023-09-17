@@ -304,7 +304,7 @@ function lane_car_mover(deltaTime){
         for (let j = 0; j < lanes[i].Cars.length; j++){
             lanes[i].Cars[j].move_right_wrap((car_speed+car_speed_lane[i])*deltaTime );
             lanes[i].Cars[j].render();
-            // is_collieding()
+            // is_collieding(i,j) // collision detection does not work and is frustrating
         }
     }
 }
@@ -370,7 +370,7 @@ function restart(){
     frog.render();
 }
 
-function is_collieding(){
+function is_collieding(i,j){
     // for (let i = 0; i < lanes.length; i++){
     //     // offset = Math.random() * (max_car_speed - min_car_speed) + min_car_speed;
     //     for (let j = 0; j < lanes[i].Cars.length; j++){
