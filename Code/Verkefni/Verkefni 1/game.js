@@ -303,6 +303,7 @@ function lane_car_mover(deltaTime){
         for (let j = 0; j < lanes[i].Cars.length; j++){
             lanes[i].Cars[j].move_right_wrap((car_speed+car_speed_lane[i])*deltaTime );
             lanes[i].Cars[j].render();
+            // is_collieding()
         }
     }
 }
@@ -348,12 +349,37 @@ function sidewalk_point(){
     }
 }
 
+function restart(){
+    frog = new Frog(vec2(frog_size,frog_size), start);
+    frog.Color = vec4(61/255,1.0,135/255,1.0);
+    frog.set_webstuff(gl, program);
+    document.getElementById("points").innerHTML = "Points: " + 0;
+    frog.render();
+}
+
+function is_collieding(){
+    // for (let i = 0; i < lanes.length; i++){
+    //     // offset = Math.random() * (max_car_speed - min_car_speed) + min_car_speed;
+    //     for (let j = 0; j < lanes[i].Cars.length; j++){
+    //         // lanes[i].Cars[j].move_right_wrap((car_speed+car_speed_lane[i])*deltaTime );
+    //         // lanes[i].Cars[j].render();
+    //         if(frog.CheckCollision_self(lanes[i].Cars[j])){
+    //             restart();
+    //         }
+    //     }
+    // }
+
+    if(frog.CheckCollision_self(lanes[i].Cars[j])){
+        restart();
+    }
+}
+
 function render(now){
     gl.clear( gl.COLOR_BUFFER_BIT );
     // console.log("col",frog.CheckCollision_self(car));
     sidewalk_point();
    
-    
+    // is_collieding();
     
     
     sidewalk_bottom.render();
@@ -366,6 +392,7 @@ function render(now){
     lane_car_mover(deltaTime);
     
     frog.render();
+    
     // console.log("col",frog.CheckCollision_self(car));
 
 //     var bufferId = gl.createBuffer();

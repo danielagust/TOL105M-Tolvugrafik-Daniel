@@ -200,7 +200,7 @@ export default class char_parent{
         // console.log("box 2 this y value ",  box2.hitbox[ref_corner].y + box2.height);
         // console.log("");
 
-        console.log("")
+        // console.log("")
 
         return (
           box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
