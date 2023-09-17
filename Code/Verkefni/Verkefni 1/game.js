@@ -60,8 +60,8 @@ make_lanes(); // makes lanes
 var car  = new Car(vec2(width_car,height_car),wrap_line, vec2(0.0,0.0));
 car.set_webstuff(gl, program);
 car.Color = vec4(1.0,0.0,0.0,1.0);
-car.render();
-console.log(car);
+// car.render();
+// console.log(car);
 
 var sidewalk_bottom = new Sidewalk(vec2(0.0,sidwalk_width), 1);
 sidewalk_bottom.Color = vec4(0.5,0.5,0.5,1.0);
