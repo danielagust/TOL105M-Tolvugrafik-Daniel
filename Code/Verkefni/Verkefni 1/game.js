@@ -327,6 +327,12 @@ function is_on_sidwalk_bottom(){
     
     return frog.position[1] <= sidewalk_bottom.points[1][1]
 }
+
+function if_won(){
+    if(stig == 10){
+        document.getElementById("points").innerHTML = "Points: " + stig + ", Winner";
+    }
+}
 function sidewalk_point(){
     const is_sidwalk_top = is_on_sidwalk_top()
     const is_sidwalk_bottom = is_on_sidwalk_bottom()
@@ -348,6 +354,9 @@ function sidewalk_point(){
         stig += 1;
         document.getElementById("points").innerHTML = "Points: " + stig
     }
+    if_won();
+
+
 }
 
 function restart(){
