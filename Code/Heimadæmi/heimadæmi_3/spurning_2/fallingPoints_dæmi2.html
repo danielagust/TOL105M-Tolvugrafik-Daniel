@@ -15,24 +15,30 @@
         vec4 tpos = vPosition;
 
         tpos.y = 1.0 -(mod(0.0015*time + tpos.y+1.0, 2.0));
-        vColor = vec4(1.0, 0.0, 0.0, 1.0);
+        vColor = vec4(0.0, 0.0, 1.0, 1.0);
         float outer_width = 0.2;
         float inner_width = 0.1;
         if( tpos.y <= outer_width && tpos.y >= -outer_width){ 
             vColor = vec4(1.0, 0.0, 0.0, 0.0);
+            // white part y axis
         }
 
         if (tpos.x <= outer_width && tpos.x >= -outer_width){
             vColor = vec4(1.0, 0.0, 0.0, 0.0);
+            // white part x axis
         }
 
         if( tpos.y <= inner_width && tpos.y >= -inner_width){ 
             vColor = vec4(1.0, 0.0, 0.0, 1.0);
+            // inner red part part y axis
         }
 
         if (tpos.x <= inner_width && tpos.x >= -inner_width){
             vColor = vec4(1.0, 0.0, 0.0, 1.0);
+            // inner red part part x axis
         }
+
+   
 
         
 
