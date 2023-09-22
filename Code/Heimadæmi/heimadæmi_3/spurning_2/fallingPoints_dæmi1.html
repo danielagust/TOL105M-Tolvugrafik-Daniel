@@ -26,16 +26,16 @@
 
         if( tpos.y >= 0.0){ 
             vColor = vec4(1.0, 0.0, 0.0, 0.0);
-            // white part y axis
+            // white part top screen
         }
         
         if( r< 0.5 ){ 
             vColor = vec4(1.0, 0.0, 0.0, 0.0);
-            // white part y axis
+            // red part of all of circle
         }
         if( r< 0.5 && tpos.y >= 0.0){ 
             vColor = vec4(1.0, 0.0, 0.0, 1.0);
-            // white part y axis
+            // white part bottom of circle
         }
         
 
@@ -56,7 +56,7 @@
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="./fallingPoints_dæmi2.js"></script>
+<script type="text/javascript" src="./fallingPoints_dæmi1.js"></script>
 </head>
 
 <body style="margin: 0px; height: 512px;">
