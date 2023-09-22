@@ -9,8 +9,8 @@ export default class Frog extends char_partent{
         temp_points.push(add(vec2(-width,-height), pos)); // bottom left
         temp_points.push(add(vec2(0.0, height), pos)); // top middle
         temp_points.push(add(vec2(width,-height), pos)); // bottom right
-        var half_width = size[0]/2;
-        var half_height = size[1]/2;
+        var double_width = size[0];
+        var double_height = size[1];
         // console.log(size.x);
         // console.log(half_height);
         // temp_points.push(add(vec2(-half_width,-half_height), pos)); // bottom left
@@ -30,10 +30,19 @@ export default class Frog extends char_partent{
         
         
         // this.top_point = this.points[1];
+        this.hitbox[0].position = add(vec2(-double_width,-double_height), pos)
+        this.hitbox[1].position = add(vec2(- double_width,double_height), pos)
+        // this.hitbox[2].position = add(vec2( double_width, double_height), pos)
+        // this.hitbox[3].position = add(vec2( double_width,-double_height), pos)
+
+
+
+
         this.top_cornor = this.hitbox[1];
         this.size = vec2(width, height);
         // console.log("pos before", pos);
-        this.position = this.getTriangleCentroid();
+        // this.position = this.getTriangleCentroid();
+        this.position = pos;
         // console.log("pos after", this.position);
         this.width = width;
         this.height = height;
@@ -202,11 +211,78 @@ export default class Frog extends char_partent{
         // console.log(this.top_cornor);
     }
 
+    collision( box1, box2 ) {
+
+        const ref_corner = 1;
+        
+
+        // return (
+        //   box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+        //   box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
+        //   box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[ref_corner].y && // box1 bottom collides with box2 top
+        //   box2.hitbox[ref_corner].y + box2.height  >= box1.hitbox[ref_corner].y // box1 top collides with box2 bottom
+        // )
+        
+        //   return (
+        //     box1.hitbox[ref_corner].x + box1.width  >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+        //     box1.hitbox[ref_corner].x <= box2.hitbox[ref_corner].x + box2.width && // box2 right collides with box1 left
+        //     box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box1.hitbox[ref_corner].y <= box2.hitbox[ref_corner].y + box2.height // box1 top collides with box2 bottom
+        //   )
+
+        //   return (
+        //   box1.hitbox[ref_corner].x + box1.width*2 >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+        //   box2.hitbox[ref_corner].x + box2.width*2 >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
+        //   box1.hitbox[0].y + box1.height*2 >= box2.hitbox[0].y && // box1 bottom collides with box2 top
+        //   box2.hitbox[0].y + box2.height*2  >= box1.hitbox[0].y // box1 top collides with box2 bottom
+        // )
+
+        return (
+            box1.hitbox[ref_corner].x + box1.width*2 >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+            box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
+            box1.hitbox[0].y + box1.height*2 >= box2.hitbox[0].y && // box1 bottom collides with box2 top
+            box2.hitbox[0].y + box2.height >= box1.hitbox[0].y // box1 top collides with box2 bottom
+          )
+        //   return (
+        //     box1.hitbox[2].x >= box2.hitbox[1].x && // box1 right collides with box2 left
+        //     box1.hitbox[1].x <= box2.hitbox[2].x && // box2 right collides with box1 left
+        //     box1.hitbox[0].y >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box1.hitbox[1].y <= box2.hitbox[0].y // box1 top collides with box2 bottom
+        //   )
+
+        // return (
+        //     box1.hitbox[2].x  >= box2.hitbox[1].x && // box1 right collides with box2 left
+        //     box2.hitbox[2].x >= box1.hitbox[1].x && // box2 right collides with box1 left
+        //     box1.hitbox[0].y >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box2.hitbox[0].y >= box1.hitbox[1].y // box1 top collides with box2 bottom
+        //   )
+
+        
+      }
+
+        hitboxes_to_vecv2(){
+        var temp = [];
+        // for ( var i = 0; i < this.hitbox.length; ++i ){
+        //     temp.push(vec2(this.hitbox[i].x, this.hitbox[i].y))
+        // }
+        // temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y + this.height)) // 0 from 1
+        // temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y)) // 1 from 1
+        // temp.push(vec2(this.hitbox[1].x + this.width, this.hitbox[0].y)) // 2 from 1
+        // temp.push(vec2(this.hitbox[1].x + this.width, this.hitbox[0].y + this.height)) // 3 from 1
+
+        temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y + this.height*2)) // 0 from 1
+        temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y)) // 1 from 1
+        temp.push(vec2(this.hitbox[1].x + this.width*2, this.hitbox[0].y)) // 2 from 1
+        temp.push(vec2(this.hitbox[1].x + this.width*2, this.hitbox[0].y + this.height*2)) // 3 from 1
+        return temp;
+    }
 
     translatev1(vector){
         var new_cornor;
         for ( var i = 0; i < this.points.length; ++i ){
             this.points[i] = add(this.points[i], vector);
+            
+            
         }
         for ( var i = 0; i < this.hitbox.length; ++i ){
             new_cornor = add(this.hitbox[i].position, vector);
@@ -214,8 +290,8 @@ export default class Frog extends char_partent{
         }
         // new_top_cornor = add(this.top_cornor.position, vector);
         // this.top_cornor.position = [new_top_cornor[0], new_top_cornor[1]];
-        
-        this.position = this.getTriangleCentroid();
+        this.position = add(this.position, vector);
+        // this.position = this.getTriangleCentroid();
         // console.log(this.hitbox);
     }
 
@@ -234,9 +310,10 @@ export default class Frog extends char_partent{
      */
     
     move_right(amount){
-        this.angle_self = 360;
+        
         // this.rotate_self(90);
         this.translatev1(vec2(amount, 0));
+        this.angle_self = 360;
         // var new_top_cornor = add(this.top_cornor.position, vec2(amount, 0));
         // this.top_cornor.position = [new_top_cornor[0], new_top_cornor[1]];
         
@@ -248,9 +325,10 @@ export default class Frog extends char_partent{
      * @param {float} amount 
      */
     move_left(amount){
-        this.angle_self = 180;
+        
         // this.rotate_self(-90);
         this.translatev1(vec2(-amount, 0));
+        this.angle_self = 180;
         
         // console.log(this);
     }
@@ -265,6 +343,8 @@ export default class Frog extends char_partent{
         // console.log("angle vector", x, y);
         // console.log("angle deg", this.angle);
         // this.translatev1( vec2(x*amount, y*amount));
+        
+        
         this.translatev1(vec2(0, amount));
         this.angle_self = 90;
         
@@ -304,12 +384,12 @@ export default class Frog extends char_partent{
         this.gl.drawArrays( this.gl.TRIANGLE_FAN, 0, this.points.length );
 
 
-        var bufferId = this.gl.createBuffer();
-        this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId );
-        this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten([this.points[1]]),  this.gl.STATIC_DRAW );
-        // console.log(this.points[1]);
-        this.gl.uniform4fv( this.colorLoc, vec4(1.0,1.0,1.0,1.0) );
-        this.gl.drawArrays( this.gl.POINTS, 1, 1 );
+        // var bufferId = this.gl.createBuffer();
+        // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, bufferId );
+        // this.gl.bufferData(  this.gl.ARRAY_BUFFER, flatten([this.points[1]]),  this.gl.STATIC_DRAW );
+        // // console.log(this.points[1]);
+        // this.gl.uniform4fv( this.colorLoc, vec4(1.0,1.0,1.0,1.0) );
+        // this.gl.drawArrays( this.gl.POINTS, 1, 1 );
 
         // // var bufferId2 = this.gl.createBuffer();
         // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, this.bufferId2 );

@@ -35,10 +35,10 @@ export default class char_parent{
         // this.hitbox.push(add(vec2( this.width, this.height), pos)); // top right
         // this.hitbox.push(add(vec2( this.width,- this.height), pos)); // bottom right
 
-        this.hitbox.push(add(vec2(0.0, -this.height*2), top_left)); // bottom left
+        this.hitbox.push(add(vec2(0.0, -this.height), top_left)); // bottom left
         this.hitbox.push(top_left); // top left
-        this.hitbox.push(add(vec2(this.width*2, 0.0), top_left)); // top right
-        this.hitbox.push(add(vec2(this.width*2, -this.height*2), top_left)); // bottom right
+        this.hitbox.push(add(vec2(this.width, 0.0), top_left)); // top right
+        this.hitbox.push(add(vec2(this.width, -this.height), top_left)); // bottom right
 
         for ( var i = 0; i < this.hitbox.length; ++i ){
             this.hitbox[i] = new Point(this.hitbox[i][0], this.hitbox[i][1])
@@ -175,7 +175,7 @@ export default class char_parent{
     } 
 
     collision( box1, box2 ) {
-        // console.log(box1);
+        // console.log("box1");
         // console.log(
         //     box1.top_cornor.x + box1.width >= box2.top_cornor.x && // box1 right collides with box2 left
         //     box2.top_cornor.x + box2.width >= box1.top_cornor.x );
@@ -202,12 +202,41 @@ export default class char_parent{
 
         // console.log("")
 
-        return (
+        // return (
+        //   box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+        //   box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
+        //   box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[ref_corner].y && // box1 bottom collides with box2 top
+        //   box2.hitbox[ref_corner].y + box2.height  >= box1.hitbox[ref_corner].y // box1 top collides with box2 bottom
+        // )
+        
+        //   return (
+        //     box1.hitbox[ref_corner].x + box1.width  >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
+        //     box1.hitbox[ref_corner].x <= box2.hitbox[ref_corner].x + box2.width && // box2 right collides with box1 left
+        //     box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box1.hitbox[ref_corner].y <= box2.hitbox[ref_corner].y + box2.height // box1 top collides with box2 bottom
+        //   )
+
+          return (
           box1.hitbox[ref_corner].x + box1.width >= box2.hitbox[ref_corner].x && // box1 right collides with box2 left
           box2.hitbox[ref_corner].x + box2.width >= box1.hitbox[ref_corner].x && // box2 right collides with box1 left
-          box1.hitbox[ref_corner].y + box1.height >= box2.hitbox[ref_corner].y && // box1 bottom collides with box2 top
-          box2.hitbox[ref_corner].y + box2.height  >= box1.hitbox[ref_corner].y // box1 top collides with box2 bottom
+          box1.hitbox[0].y + box1.height >= box2.hitbox[0].y && // box1 bottom collides with box2 top
+          box2.hitbox[0].y + box2.height  >= box1.hitbox[0].y // box1 top collides with box2 bottom
         )
+        //   return (
+        //     box1.hitbox[2].x >= box2.hitbox[1].x && // box1 right collides with box2 left
+        //     box1.hitbox[1].x <= box2.hitbox[2].x && // box2 right collides with box1 left
+        //     box1.hitbox[0].y >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box1.hitbox[1].y <= box2.hitbox[0].y // box1 top collides with box2 bottom
+        //   )
+
+        // return (
+        //     box1.hitbox[2].x  >= box2.hitbox[1].x && // box1 right collides with box2 left
+        //     box2.hitbox[2].x >= box1.hitbox[1].x && // box2 right collides with box1 left
+        //     box1.hitbox[0].y >= box2.hitbox[1].y && // box1 bottom collides with box2 top
+        //     box2.hitbox[0].y >= box1.hitbox[1].y // box1 top collides with box2 bottom
+        //   )
+
+        
       }
 
       collisionv2( box1, box2 ) {
@@ -223,6 +252,22 @@ export default class char_parent{
         )
       }
 
+      hitboxes_to_vecv2(){
+        var temp = [];
+        // for ( var i = 0; i < this.hitbox.length; ++i ){
+        //     temp.push(vec2(this.hitbox[i].x, this.hitbox[i].y))
+        // }
+        // temp.push(vec2(this.hitbox[1].x , this.hitbox[1].y - this.height*2)) // 0 from 1
+        // temp.push(vec2(this.hitbox[1].x , this.hitbox[1].y)) // 1 from 1
+        // temp.push(vec2(this.hitbox[1].x + this.width*2, this.hitbox[1].y)) // 2 from 1
+        // temp.push(vec2(this.hitbox[1].x + this.width*2, this.hitbox[1].y - this.height*2)) // 3 from 1
+
+        temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y + this.height)) // 0 from 1
+        temp.push(vec2(this.hitbox[1].x , this.hitbox[0].y)) // 1 from 1
+        temp.push(vec2(this.hitbox[1].x + this.width, this.hitbox[0].y)) // 2 from 1
+        temp.push(vec2(this.hitbox[1].x + this.width, this.hitbox[0].y + this.height)) // 3 from 1
+        return temp;
+    }
 
     // /**
     //  * must defin a get Position func and a get Size func

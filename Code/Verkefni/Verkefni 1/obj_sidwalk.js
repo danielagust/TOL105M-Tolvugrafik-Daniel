@@ -45,7 +45,8 @@ export default class Sidewalk extends char_partent{
         
         
         super(temp_points, size, pos); // sent to parent
-     
+        
+        
         this.top_cornor = new Point(temp_points[1][0], temp_points[1][1]);
         this.position = pos;
         this.size = vec2(half_width, half_height);
@@ -58,7 +59,7 @@ export default class Sidewalk extends char_partent{
         
 
         for ( var i = 0; i < this.points.length; ++i ){
-            this.hitbox[i] = new Point(this.points[i][0], this.points[i][1])
+            this.hitbox.push(new Point(this.points[i][0], this.points[i][1]))
         }
         
         
@@ -68,6 +69,12 @@ export default class Sidewalk extends char_partent{
         
         
         
+    }
+
+    to_hitbox(){
+        for ( var i = 0; i < this.points.length; ++i ){
+            this.hitbox[i].position = this.points[i]
+        }
     }
 
     translatev1_wrap(vector){

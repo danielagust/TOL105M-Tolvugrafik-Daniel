@@ -98,6 +98,7 @@ function render_cars(){
         for ( var j = 0; j < lanes[i].Cars.length; ++j ){
             lanes[i].Cars[j].render();
             // console.log(lanes[i].Cars[j]);
+            is_collieding(i,j) // collision detection does not work and is frustrating
         }
     }
 }
@@ -304,7 +305,7 @@ function lane_car_mover(deltaTime){
         for (let j = 0; j < lanes[i].Cars.length; j++){
             lanes[i].Cars[j].move_right_wrap((car_speed+car_speed_lane[i])*deltaTime );
             lanes[i].Cars[j].render();
-            // is_collieding(i,j) // collision detection does not work and is frustrating
+            is_collieding(i,j) // collision detection does not work and is frustrating
         }
     }
 }
@@ -381,12 +382,13 @@ function is_collieding(i,j){
     //         }
     //     }
     // }
-
-    if(frog.CheckCollision_self(lanes[i].Cars[j])){
+    const col = frog.CheckCollision_self(lanes[i].Cars[j])
+    // console.log(col);
+    if(col){
         restart();
     }
 }
-
+// car.move_right_wrap((0.01) );
 function render(now){
     gl.clear( gl.COLOR_BUFFER_BIT );
     // console.log("col",frog.CheckCollision_self(car));
@@ -397,22 +399,40 @@ function render(now){
     
     sidewalk_bottom.render();
     sidewalk_top.render();
-
+    // console.log("col",frog.CheckCollision_self(car));
     // car.render();
+    
     
     // sleepFor(1000);
     var deltaTime = new_speed(now);
+    car.move_right_wrap((0.01)*deltaTime );
     lane_car_mover(deltaTime);
-    
-    frog.render();
-    
-    // console.log("col",frog.CheckCollision_self(car));
+    // render_cars()
+
 
 //     var bufferId = gl.createBuffer();
 // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-// const cornor = 1;
-// const point = frog;
-// gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.hitbox[cornor].x, point.hitbox[cornor].y)), gl.STATIC_DRAW );
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(frog.hitboxes_to_vecv2()), gl.STATIC_DRAW );
+
+// var vPosition = gl.getAttribLocation( program, "vPosition" );
+// gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+// gl.enableVertexAttribArray( vPosition );
+// var colorLoc = gl.getUniformLocation( program, "fColor" );
+// // gl.clear( gl.COLOR_BUFFER_BIT );
+// gl.uniform4fv( colorLoc, vec4(1.0, 1.0, 1.0, 1.0) );
+// gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
+    
+    frog.render();
+    
+    
+
+//     var bufferId = gl.createBuffer();
+// gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+const cornor = 1;
+// const point = lanes[0].Cars[2];
+const point = frog;
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.hitbox[cornor].x, point.hitbox[cornor].y-point.height*2)), gl.STATIC_DRAW );
+// gl.bufferData( gl.ARRAY_BUFFER, flatten(vec2(point.position[0], point.position[1])), gl.STATIC_DRAW );
 
 // var vPosition = gl.getAttribLocation( program, "vPosition" );
 // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
@@ -421,7 +441,8 @@ function render(now){
 // // gl.clear( gl.COLOR_BUFFER_BIT );
 // gl.uniform4fv( colorLoc, vec4(1.0, 1.0, 1.0, 1.0) );
 // gl.drawArrays( gl.POINTS, 0, vec2(0.0,-0.0).length );
-// console.log(frog.top_cornor);
+// // console.log(frog.top_cornor);
+
 
     window.requestAnimationFrame(render);
 }
