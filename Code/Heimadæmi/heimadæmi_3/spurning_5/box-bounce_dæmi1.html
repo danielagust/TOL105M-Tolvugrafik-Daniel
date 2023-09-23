@@ -10,6 +10,7 @@ attribute vec4 vPosition;
 
 void main()
 {
+    gl_PointSize = 6.0;
     vec4 t = vPosition;
     if (if_spadi.y == 1.0){
         //t.xy += boxPos;
@@ -27,11 +28,11 @@ void main()
 
 precision mediump float;
 
-varying vec4 fColor;
+uniform vec4 fColor;
 void
 main()
 {
-    gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+    gl_FragColor = fColor;
 }
 </script>
 
