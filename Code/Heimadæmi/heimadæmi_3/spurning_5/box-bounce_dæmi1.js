@@ -35,8 +35,8 @@ var maxY = 1.0;
 // Hálf breidd/hæð ferningsins
 var boxRad = 0.05;
 
-var pos_spade = vec2(0.0, -0.9)
-var pos_box = vec2(0.0, -0.0)
+var pos_spade = vec2(0.0, -0.9) // 0.0, -0.9
+var pos_box = vec2(0.0, -0.0) // 0.0, 0.0
 var box = pos_box
 
 const width_spade = 0.15;
@@ -290,10 +290,6 @@ function translatev1(vector){
 }
 
 
-// move_box();
-// move_hitbox();
-// move_box();
-// move_hitbox();
 
 function get_top_cornor(){
     return vec2(box[0]-width_box, box[1]+height_box);
@@ -303,12 +299,22 @@ function get_bottom_coronor(){
     return vec2(box[0]-width_box, box[1]-height_box);
 }
 
+function if_collided(){
+    if(collision(hitbox, spadi_vertices)){
+        dY = -dY;
+        // Uppfæra staðsetningu
+        box[0] += dX;
+        box[1] += dY;
+    }
+}
+
 function render() {
     
     
     //
     // test[0] += 1.0 ;
     // move_box();
+    if_collided();
     move_box();
     
 
@@ -319,19 +325,19 @@ function render() {
     // render_hitbox();
     
     move_hitbox();
-    render_hitbox();
+    // render_hitbox();
     
     
 
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(get_top_cornor()), gl.DYNAMIC_DRAW );
-    // gl.uniform1fv( if_spadi, flatten(vec2(0.0,0.0)) ); 
-    gl.uniform4fv( colorLoc, vec4(0.0, 1.0, 0.0, 1.0) );   
-    // gl.uniform2fv( locBox, flatten(box) );
-    gl.uniform2fv( if_spadi, flatten( vec2(0.0,0.0)) );
-    gl.drawArrays( gl.POINTS, 0, 1 );
+    // var bufferId = gl.createBuffer();
+    // gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    // gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+    // gl.bufferData( gl.ARRAY_BUFFER, flatten(get_top_cornor()), gl.DYNAMIC_DRAW );
+    // // gl.uniform1fv( if_spadi, flatten(vec2(0.0,0.0)) ); 
+    // gl.uniform4fv( colorLoc, vec4(0.0, 1.0, 0.0, 1.0) );   
+    // // gl.uniform2fv( locBox, flatten(box) );
+    // gl.uniform2fv( if_spadi, flatten( vec2(0.0,0.0)) );
+    // gl.drawArrays( gl.POINTS, 0, 1 );
 
     render_box();
    
@@ -340,7 +346,8 @@ function render() {
     // spadi
     render_spade();
     // console.log(hitbox);
-    console.log("hit", collision(hitbox, spadi_vertices));
+    // console.log("hit", collision(hitbox, spadi_vertices));
+    
 
    
     
