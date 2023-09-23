@@ -202,9 +202,9 @@ function collision( box_col, spadi ) {
 
     return (
         box_col[ref_corner][0] + width_box >= spadi[ref_corner][0] && // box right collides with spadi left
-        spadi[ref_corner][0] + width_spade >= box_col[ref_corner][0] && // spadi right collides with box left
+        spadi[ref_corner][0] + width_spade*2 >= box_col[ref_corner][0] && // spadi right collides with box left
         box_col[0][1] + height_box >= spadi[0][1] && // box bottom collides with spadi top
-        spadi[0][1] + height_spade  >= box_col[0][1] // box top collides with spadi bottom
+        spadi[0][1] + height_spade*2  >= box_col[0][1] // box top collides with spadi bottom
       )
 
   }
