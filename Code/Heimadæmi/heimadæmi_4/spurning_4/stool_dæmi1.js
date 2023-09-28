@@ -18,6 +18,15 @@ var spinY = 0;
 var origX;
 var origY;
 
+var stool_width= 0.5; // 0.5
+var stool_length = 0.5; // 0.5
+var stool_height = 0.1; // 0.1
+
+
+var foot_width = 0.1; // 0.1
+var foot_length = 0.1; // 0.1
+var foot_height = 0.5; // 0.5
+
 var matrixLoc;
 
 window.onload = function init()
@@ -136,20 +145,32 @@ function render()
     mv = mult( mv, rotateY(spinY) ) ;
 
     // Build the letter H...
-    // First the right leg
-    mv1 = mult( mv, translate( -0.3, 0.0, 0.0 ) );
-    mv1 = mult( mv1, scalem( 0.1, 1.0, 0.1 ) );
+    // First the left leg far cornor
+    mv1 = mult( mv, translate( -(stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), (stool_width/2-foot_width/2) ) );
+    mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
 
-    // Then the left leg
-    mv1 = mult( mv, translate( 0.3, 0.0, 0.0 ) );
-    mv1 = mult( mv1, scalem( 0.1, 1.0, 0.1 ) );
+    // Then the right leg far cornor
+    mv1 = mult( mv, translate( (stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), (stool_width/2-foot_width/2) ) );
+    mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
+    gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+    // First the left leg near cornor
+    mv1 = mult( mv, translate( -(stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), -(stool_width/2-foot_width/2) ) );
+    mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
+    gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+    // Then the right leg near cornor
+    mv1 = mult( mv, translate( (stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), -(stool_width/2-foot_width/2) ) );
+    mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
 
     // Finally the middle bar (no translation necessary)
-    mv1 = mult( mv, scalem( 0.5, 0.1, 0.1 ) );
+    mv1 = mult( mv, scalem( stool_length, stool_height, stool_width ) );
     gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
 
