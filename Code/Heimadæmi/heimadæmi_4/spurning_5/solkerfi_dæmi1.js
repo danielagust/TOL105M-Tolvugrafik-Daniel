@@ -24,6 +24,8 @@ var earthTilt = 23.5;
 
 var matrixLoc;
 
+var year_speed = 0.5;
+
 
 window.onload = function init()
 {
@@ -142,7 +144,7 @@ function render()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     rotDay += 10.0;
-    rotYear += 0.5;        // not the correct value, but looks better!
+    rotYear += year_speed;        // not the correct value, but looks better!
 
     var mv = mat4();
     mv = mult( mv, rotateX(spinX) );
