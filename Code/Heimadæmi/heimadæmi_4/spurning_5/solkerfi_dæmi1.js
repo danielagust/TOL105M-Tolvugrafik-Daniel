@@ -87,6 +87,36 @@ window.onload = function init()
         }
     } );
 
+    // Event listener for keyboard
+    window.addEventListener("keydown", function(e){
+        switch( e.keyCode ) {
+            case 39: // right arrow
+            
+                earth_distant += 0.01;
+                break;
+            case 37: // left arrow
+                if(earth_distant > 0.0){
+                    earth_distant -= 0.01;
+                }
+                // earth_distant -= 0.01;
+                break;
+            
+            
+            case 38:    // up arrow
+                year_speed += 0.01;
+                // document.getElementById("Height").innerHTML = "Viðbótarhæð: "+ height;
+                break;
+           
+            case 40:    // down arrow
+                if(year_speed > 0.0){
+                    year_speed -= 0.01;
+                }
+                // year_speed -= 0.01;
+                // document.getElementById("Height").innerHTML = "Viðbótarhæð: "+ height;
+                break;
+        }
+    } );
+
     render();
 }
 
