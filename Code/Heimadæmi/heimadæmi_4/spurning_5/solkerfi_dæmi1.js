@@ -24,7 +24,8 @@ var earthTilt = 23.5;
 
 var matrixLoc;
 
-var year_speed = 0.5;
+var year_speed = 0.5; // 0.5
+var earth_distant = 1.8; // 1.8
 
 
 window.onload = function init()
@@ -157,7 +158,7 @@ function render()
 
     // teikna "jörðina"
     mv = mult( mv, rotateY( rotYear ) );
-    mv = mult( mv, translate( 1.8, 0.0, 0.0 ) );
+    mv = mult( mv, translate( earth_distant, 0.0, 0.0 ) );
     mv = mult( mv, rotateZ( earthTilt ) );
     mv = mult( mv, rotateY( rotDay ) );
 
