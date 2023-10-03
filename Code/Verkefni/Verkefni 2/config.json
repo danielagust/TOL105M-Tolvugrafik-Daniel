@@ -1,0 +1,64 @@
+{
+    "fish":{
+        "size":{
+            "lenght":{
+                "lenght_max": 0.3,
+                "lenght_min": 0.1
+            },
+            "height":{
+                "height_max": 0.1,
+                "height_min": 0.01
+            },
+            "width":{
+                "width_max": 0.0,
+                "width_min": 0.0
+            }
+             
+        },
+        "color":{
+            "red":{
+                "red_min":0.0,
+                "red_max":1.0
+            },
+            "green":{
+                "green_min":0.0,
+                "green_max":1.0
+            },
+            "blue":{
+                "blue_min":0.0,
+                "blue_max":1.0
+            }
+        },
+        "pos":{
+            "x":{
+                "x_min":-0.2,
+                "x_max":0.2
+            },
+            "y":{
+                "y_min":-0.2,
+                "y_max":0.2
+            },
+            "z":{
+                "z_min":-0.2,
+                "z_max":0.2
+            }
+        }
+    },
+    "fish_tank":{
+        "lenght": 0.6,
+        "height":0.2,
+        "width":0.4,
+        "thiknes":0.1,
+        "color":[0.63,0.4,0.18, 1.0],
+        "glass":{
+            "thiknes":0.05,
+            "color":{
+                "red": 0.0,
+                "blue": 1.0,
+                "green": 0.0,
+                "alpha": 0.5
+            }           
+        }
+
+    }
+}
