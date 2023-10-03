@@ -12,20 +12,37 @@ var gl;
 var NumVertices  = 9;
 var NumBody = 6;
 var NumTail = 3;
+var numfin1 = 3;
+
+var length2 = 0.5;
+var height = 0.2;
+var width = 0.0;
+var middle = 0.2;
+
+var tail_length = 0.15;
+var tail_height = 0.15;
+
+var fin_length = 0.1;
+var fin_height = 0.02;
 
 // Hn�tar fisks � xy-planinu
 var vertices = [
     // l�kami (spjald)
-    vec4( -0.5,  0.0, 0.0, 1.0 ),
-	vec4(  0.2,  0.2, 0.0, 1.0 ),
-	vec4(  0.5,  0.0, 0.0, 1.0 ),
-	vec4(  0.5,  0.0, 0.0, 1.0 ),
-	vec4(  0.2, -0.15, 0.0, 1.0 ),
-	vec4( -0.5,  0.0, 0.0, 1.0 ),
+    vec4( -length2,  width, 0.0, 1.0 ),
+	vec4(  middle,  height, width, 1.0 ),
+	vec4(  length2,  0.0, width, 1.0 ),
+	
+    vec4(  length2,  0.0, width, 1.0 ),
+	vec4(  middle, -height, width, 1.0 ),
+	vec4( -length2,  0.0, width, 1.0 ),
 	// spor�ur (�r�hyrningur)
-    vec4( -0.5,  0.0, 0.0, 1.0 ),
-    vec4( -0.65,  0.15, 0.0, 1.0 ),
-    vec4( -0.65, -0.15, 0.0, 1.0 )
+    vec4( -0.0,  0.0, 0.0, 1.0 ),
+    vec4( -tail_length,  tail_height, 0.0, 1.0 ),
+    vec4( -tail_length, -tail_height, 0.0, 1.0 ),
+
+    vec4( -0.0,  0.0, 0.0, 1.0 ),
+    vec4( -fin_length,  fin_height, 0.0, 1.0 ),
+    vec4( -fin_length, -fin_height, 0.0, 1.0 )
 ];
 
 
@@ -37,6 +54,12 @@ var origY;
 
 var rotTail = 0.0;        // Sn�ningshorn spor�s
 var incTail = 2.0;        // Breyting � sn�ningshorni
+
+var rotFin1 = 0.0;        // Sn�ningshorn spor�s
+var incFin1 = 0.2;        // Breyting � sn�ningshorni
+
+var rotFin2 = 0.0;        // Sn�ningshorn spor�s
+var incFin2 = -0.2;        // Breyting � sn�ningshorni
 
 var zView = 2.0;          // Sta�setning �horfanda � z-hniti
 
@@ -134,24 +157,57 @@ function render()
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
+    var mv2 = mv;
+    var mv3 = mv;
 
     rotTail += incTail;
     if( rotTail > 35.0  || rotTail < -35.0 )
         incTail *= -1;
+
+    rotFin1 += incFin1;
+    if( rotFin1 > 35.0  || rotFin1 < -0.0 )
+        incFin1 *= -1;
+
+    rotFin2 += incFin2;
+    if( rotFin2 > 0.0  || rotFin2 < -35.0 )
+        incFin2 *= -1;
 
 	gl.uniform4fv( colorLoc, vec4(0.2, 0.6, 0.9, 1.0) );
 
 	// Teikna l�kama fisks (�n sn�nings)
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.TRIANGLES, 0, NumBody );
-
+    var move = 0.50;
     // Teikna spor� og sn�a honum
-	mv = mult( mv, translate ( -0.5, 0.0, 0.0 ) );
+    
+	mv = mult( mv, translate ( -move, 0.0, 0.0 ) );
     mv = mult( mv, rotateY( rotTail ) );
-	mv = mult( mv, translate ( 0.5, 0.0, 0.0 ) );
+	mv = mult( mv, translate ( move, 0.0, 0.0 ) );
+    mv = mult( mv, translate ( -move, 0.0, 0.0 ) );
 	
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.TRIANGLES, NumBody, NumTail );
+
+    var move2 = -0.2
+    mv2 = mult( mv2, translate ( -move2, 0.0, 0.0 ) );
+    mv2 = mult( mv2, rotateY( rotFin1 ) );
+	mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
+    mv2 = mult( mv2, translate ( -move2, 0.0, 0.01 ) );
+
+    gl.uniform4fv( colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
+    gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
+
+    var move2 = -0.2
+    mv2 = mv3;
+    mv2 = mult( mv2, translate ( -move2, 0.0, 0.0 ) );
+    mv2 = mult( mv2, rotateY( rotFin2 ) );
+	mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
+    mv2 = mult( mv2, translate ( -move2, 0.0, -0.01 ) );
+
+    gl.uniform4fv( colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
+    gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
 
     requestAnimFrame( render );
 }
