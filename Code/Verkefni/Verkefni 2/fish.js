@@ -157,6 +157,7 @@ function render()
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
+    mv =  mult(mv, translate(0.5,0.2,0.2)); // pos
     var mv2 = mv;
     var mv3 = mv;
 
