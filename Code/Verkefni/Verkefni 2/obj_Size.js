@@ -4,6 +4,7 @@ export default class obj_Size{
      * @param {number} length 
      * @param {number} height 
      * @param {number} width 
+     * @param {number} [thicknes=0.0] 
      */
     constructor(length, height,width=0.0, thicknes=0.0){
         this.length = length;
