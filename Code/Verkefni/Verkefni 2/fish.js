@@ -7,6 +7,7 @@
 //    Hj�lmt�r Hafsteinsson, okt�ber 2023
 /////////////////////////////////////////////////////////////////
 import obj_Direction from "./helpers/obj_Direction.js";
+import obj_Size from "./helpers/obj_Size.js";
 import * as Helper from './helpers/Helper_func.js';
 var canvas;
 var gl;
@@ -16,10 +17,14 @@ var NumBody = 6;
 var NumTail = 3;
 var numfin1 = 3;
 
+var size_body = new obj_Size(0.5,0.2,0.0);
+
 var body_length = 0.5; // 0.5
 var body_height = 0.2;
 var body_width = 0.0;
 var body_middle = 0.2;
+
+var size_tail = new obj_Size(0.15,0.15,0.0);
 
 var tail_length = 0.15;
 var tail_height = 0.15;
@@ -48,14 +53,15 @@ var vertices = [
 ];
 
 function calculate_center(){
-    return vec3((-fin_length+body_length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
+    return vec3((-tail_length+body_length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
 }
-function calculate_centerv2(size_body, size_tail){
-    return vec3((-tail_length+size_body.length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
+function calculate_centerv2(){
+    return vec3((-size_tail.length+size_body.length)/2, (-size_body.height+size_body.height)/2, (-size_body.width+size_body.width)/2);
 }
+console.log(calculate_centerv2())
 console.log(calculate_center())
 function get_ofset(){
-    var temp = calculate_center();
+    var temp = calculate_centerv2();
     return(vec3(-temp[0], -temp[1], -temp[2]))
 }
 
@@ -167,10 +173,29 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(-1.0,0.0,0.0);
+var dir  = new obj_Direction(0.0,0.0,1.0);
+var timer = 0.0; //tick
 
-function render()
+// class Timerv2{
+//     constructor(start) {
+//         this.timer = start;
+//     }
+// }
+// var timer2 = new Timerv2(0.1);
+
+var speed = 0.1;
+function render(now)
 {
+    
+    var deltaTime = Helper.new_speed(now);
+
+    timer += speed * (deltaTime);
+    
+    dir.pitch_set = timer % 2*Math.PI
+  
+    
+   
+    // console.log(dir.x);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
@@ -249,6 +274,8 @@ function render()
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
     gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
 
-    requestAnimFrame( render );
+   
+    window.requestAnimationFrame(render);
+    // requestAnimFrame( render );
 }
 

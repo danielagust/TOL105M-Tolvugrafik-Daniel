@@ -82,7 +82,7 @@ export default class obj_Direction{
     set pyr_direction2d(new_dir){
         this.direction2d = new_dir;
     }
-   
+    
 
     set_pyr_direction3d(){
         //swap z and y
@@ -145,6 +145,26 @@ export default class obj_Direction{
      */
     get pyr_direction2d_cor(){
         return [this.speed, this.yaw_cor2d()];
+    }
+
+    /**
+     * @param {float} new_pitch
+     */
+    set pitch_set(new_pitch){
+        this.x = Math.cos(this.yaw)*Math.cos(new_pitch)
+        this.y = Math.sin(this.yaw)*Math.cos(new_pitch)
+        this.z = Math.sin(new_pitch)
+        this.pitch = new_pitch;
+    }
+
+    /**
+     * @param {float} new_yaw
+     */
+    set yaw_set(new_yaw){
+        this.x = Math.cos(new_yaw)*Math.cos(this.pitch)
+        this.y = Math.sin(new_yaw)*Math.cos(this.pitch)
+        this.z = Math.sin(this.pitch)
+        this.yaw = new_yaw;
     }
 
     

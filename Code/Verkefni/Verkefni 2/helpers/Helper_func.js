@@ -25,6 +25,21 @@ export function is_integer(value){
 export function angle_to_degre(angle){
     return angle * 180/Math.PI;
 }
+var then = 0;
+export function new_speed(now){
+    // Convert to seconds
+    now *= 0.001;
+    // Subtract the previous time from the current time
+    var deltaTime = now - then;
+    if (deltaTime != deltaTime){ // check if NAN
+        return 0.0;
+    }
+    // Remember the current time for the next frame.
+    then = now;
+   //  console.log("deltaTime new ", deltaTime);
+
+    return deltaTime;
+}
 
 // function is_floatv2(e){
 //     const n = Number(e)

@@ -11,7 +11,10 @@ export default class obj_Size{
         this.height = height;
         this.width = width;
         this.thicknes = thicknes;
+        
     }
+
+    
 
     get size2d(){
         return [this.length, this.height];
