@@ -9,6 +9,7 @@
 import obj_Direction from "./helpers/obj_Direction.js";
 import obj_Size from "./helpers/obj_Size.js";
 import * as Helper from './helpers/Helper_func.js';
+import obj_Fish from "./obj_Fish.js"
 var canvas;
 var gl;
 
@@ -29,37 +30,42 @@ var size_tail = new obj_Size(0.15,0.15,0.0);
 var tail_length = 0.15;
 var tail_height = 0.15;
 
+var size_fin = new obj_Size(0.1,0.02,0.0);
+
 var fin_length = 0.1;
 var fin_height = 0.02;
+
+var fish = new obj_Fish([size_body,size_tail,size_fin])
+
 
 // Hn�tar fisks � xy-planinu
 var vertices = [
     // l�kami (spjald)
-    vec4( -body_length,  body_width, 0.0, 1.0 ),
-	vec4(  body_middle,  body_height, body_width, 1.0 ),
-	vec4(  body_length,  0.0, body_width, 1.0 ),
+    vec4( -size_body.length,  size_body.width, 0.0, 1.0 ),
+	vec4(  body_middle,  size_body.height, size_body.width, 1.0 ),
+	vec4(  size_body.length,  0.0, size_body.width, 1.0 ),
 	
-    vec4(  body_length,  0.0, body_width, 1.0 ),
-	vec4(  body_middle, -body_height, body_width, 1.0 ),
-	vec4( -body_length,  0.0, body_width, 1.0 ),
+    vec4(  size_body.length,  0.0, size_body.width, 1.0 ),
+	vec4(  body_middle, -size_body.height, size_body.width, 1.0 ),
+	vec4( -size_body.length,  0.0, size_body.width, 1.0 ),
 	// spor�ur (�r�hyrningur)
     vec4( -0.0,  0.0, 0.0, 1.0 ),
-    vec4( -tail_length,  tail_height, 0.0, 1.0 ),
-    vec4( -tail_length, -tail_height, 0.0, 1.0 ),
+    vec4( -size_tail.length,  size_tail.height, 0.0, 1.0 ),
+    vec4( -size_tail.length, -size_tail.height, 0.0, 1.0 ),
 
     vec4( -0.0,  0.0, 0.0, 1.0 ),
-    vec4( -fin_length,  fin_height, 0.0, 1.0 ),
-    vec4( -fin_length, -fin_height, 0.0, 1.0 )
+    vec4( -size_fin.length,  size_fin.height, 0.0, 1.0 ),
+    vec4( -size_fin.length, -size_fin.height, 0.0, 1.0 )
 ];
 
-function calculate_center(){
-    return vec3((-tail_length+body_length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
-}
+// function calculate_center(){
+//     return vec3((-tail_length+body_length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
+// }
 function calculate_centerv2(){
     return vec3((-size_tail.length+size_body.length)/2, (-size_body.height+size_body.height)/2, (-size_body.width+size_body.width)/2);
 }
 console.log(calculate_centerv2())
-console.log(calculate_center())
+// console.log(calculate_center())
 function get_ofset(){
     var temp = calculate_centerv2();
     return(vec3(-temp[0], -temp[1], -temp[2]))
@@ -104,6 +110,7 @@ window.onload = function init()
     //  Load shaders and initialize attribute buffers
     //
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+
     gl.useProgram( program );
     
     var vBuffer = gl.createBuffer();
@@ -113,6 +120,8 @@ window.onload = function init()
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
+    fish.set_webstuff(gl, program);
+    
 
     colorLoc = gl.getUniformLocation( program, "fColor" );
 
@@ -173,7 +182,7 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(0.0,0.0,1.0);
+var dir  = new obj_Direction(1.0,-1.0,2.0);
 var timer = 0.0; //tick
 
 // class Timerv2{
@@ -184,26 +193,11 @@ var timer = 0.0; //tick
 // var timer2 = new Timerv2(0.1);
 
 var speed = 0.1;
-function render(now)
-{
-    
-    var deltaTime = Helper.new_speed(now);
+console.log(Helper.angle_to_degre(dir.yaw));
 
-    timer += speed * (deltaTime);
-    
-    dir.pitch_set = timer % 2*Math.PI
-  
-    
-   
-    // console.log(dir.x);
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
-    mv = mult( mv, rotateX(spinX) );
-    mv = mult( mv, rotateY(spinY) );
-    
-
+function test(mv){
     mv = mult(mv, translate(get_ofset())) // move to center
+    // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
     mv = mult( mv, rotateZ(Helper.angle_to_degre(dir.yaw)) );
     mv = mult( mv, rotateY(Helper.angle_to_degre(dir.pitch)) );
     // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
@@ -273,6 +267,29 @@ function render(now)
     gl.uniform4fv( colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
     gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
+}
+
+function render(now)
+{
+    
+    var deltaTime = Helper.new_speed(now);
+
+    timer += speed * (deltaTime);
+    
+    // dir.pitch_set = timer % 2*Math.PI
+    // dir.yaw_set = timer % 2*Math.PI
+    
+   
+    // console.log(dir.x);
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+    mv = mult( mv, rotateX(spinX) );
+    mv = mult( mv, rotateY(spinY) );
+    fish.render(mv);
+    // test(mv);
+
+    
 
    
     window.requestAnimationFrame(render);

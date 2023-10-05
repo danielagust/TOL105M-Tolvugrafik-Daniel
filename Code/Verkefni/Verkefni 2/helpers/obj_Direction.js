@@ -151,9 +151,9 @@ export default class obj_Direction{
      * @param {float} new_pitch
      */
     set pitch_set(new_pitch){
-        this.x = Math.cos(this.yaw)*Math.cos(new_pitch)
-        this.y = Math.sin(this.yaw)*Math.cos(new_pitch)
-        this.z = Math.sin(new_pitch)
+        this.x = this.speed*Math.cos(this.yaw)*Math.cos(new_pitch)
+        this.y = this.speed*Math.sin(this.yaw)*Math.cos(new_pitch)
+        this.z = this.speed*Math.sin(new_pitch)
         this.pitch = new_pitch;
     }
 
@@ -161,9 +161,9 @@ export default class obj_Direction{
      * @param {float} new_yaw
      */
     set yaw_set(new_yaw){
-        this.x = Math.cos(new_yaw)*Math.cos(this.pitch)
-        this.y = Math.sin(new_yaw)*Math.cos(this.pitch)
-        this.z = Math.sin(this.pitch)
+        this.x = this.speed*Math.cos(new_yaw)*Math.cos(this.pitch)
+        this.y = this.speed*Math.sin(new_yaw)*Math.cos(this.pitch)
+        this.z = this.speed*Math.sin(this.pitch)
         this.yaw = new_yaw;
     }
 
