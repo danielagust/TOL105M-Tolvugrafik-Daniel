@@ -149,6 +149,9 @@ window.onload = function init()
     render();
 }
 
+var fish_look_x = 2.1;
+var fish_look_y = 60;
+var fish_look_z = 1.1;
 
 function render()
 {
@@ -157,6 +160,13 @@ function render()
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
+   
+    mv = mult( mv, rotateX(fish_look_x) );
+    mv = mult( mv, rotateY(fish_look_y) );
+    mv = mult( mv, rotateZ(fish_look_z) );
+    
+   
+    
     mv =  mult(mv, translate(0.5,0.2,0.2)); // pos
     var mv2 = mv;
     var mv3 = mv;
@@ -185,7 +195,9 @@ function render()
     mv = mult( mv, rotateY( rotTail ) );
 	mv = mult( mv, translate ( move, 0.0, 0.0 ) );
     mv = mult( mv, translate ( -move, 0.0, 0.0 ) );
-	
+    
+ 
+    
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.TRIANGLES, NumBody, NumTail );
 
