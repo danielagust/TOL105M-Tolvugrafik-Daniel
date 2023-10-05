@@ -155,7 +155,7 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(0.0,-1.0,0.0);
+var dir  = new obj_Direction(1.0,0.0,0.0);
 
 function render()
 {
