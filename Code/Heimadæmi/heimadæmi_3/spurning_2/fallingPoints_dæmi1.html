@@ -11,8 +11,12 @@
     attribute vec4 vPosition;
     precision mediump float;
     varying lowp vec4 vColor;
+    float ATan2(vec4 dir);
+    
+    
     void main()
     {
+        
         gl_PointSize = 3.0;
         vec4 tpos = vPosition;
 
@@ -22,7 +26,7 @@
         float inner_width = 0.1;
 
         float r = sqrt(tpos.x*tpos.x+ tpos.y*tpos.y);
-        float theta = atan(tpos.y/tpos.x);//tried using theta
+        float theta = ATan2(tpos);//tried using theta
         float pi = radians(180.0);
         //console.log(theta);
 
@@ -44,6 +48,16 @@
         gl_Position = tpos;
 
     }
+
+    float ATan2(vec4 dir)
+    {
+        float angle = asin(dir.x) > 0.0 ? acos(dir.y) : -acos(dir.y);
+        return angle;
+    }
+
+    
+
+    
 </script>
     
 <script id="fragment-shader" type="x-shader/x-fragment">
