@@ -6,6 +6,8 @@
 //
 //    Hj�lmt�r Hafsteinsson, okt�ber 2023
 /////////////////////////////////////////////////////////////////
+import obj_Direction from "./obj_Direction.js";
+import * as Helper from './Helper_func.js';
 var canvas;
 var gl;
 
@@ -153,6 +155,8 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
+var dir  = new obj_Direction(0.0,-1.0,0.0);
+
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -160,10 +164,18 @@ function render()
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
+    
+
+    
+    mv = mult( mv, rotateZ(Helper.angle_to_degre(dir.yaw)) );
+    mv = mult( mv, rotateY(Helper.angle_to_degre(dir.pitch)) );
+    // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
    
-    mv = mult( mv, rotateX(fish_look_x) );
-    mv = mult( mv, rotateY(fish_look_y) );
-    mv = mult( mv, rotateZ(fish_look_z) );
+
+    // mv = mult( mv, rotateZ(Helper.angle_to_degre(dir.theta)) );
+    // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.phi)) );
+    // mv = mult( mv, rotate(dir.phi_cor, vec3()) );
+    // mv = mult( mv, rotateZ(fish_look_z) );
     
    
     

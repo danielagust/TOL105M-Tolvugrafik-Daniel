@@ -1,5 +1,5 @@
 // import { is_float } from "./Helper_func";
- class obj_Direction{
+export default class obj_Direction{
     /**
      * 
      * @param {float} x 
@@ -11,15 +11,17 @@
         this.x = x;
         this.y = y;
         this.z = z;
+        
         if(if2d) {
-
+            this.set_polar_direction2d();
         }else{
-            this.#set_polar_direction3d();
+            this.set_polar_direction3d();
         }
         
         
+        
     }
-    // #check_if_float(value){
+    // check_if_float(value){
     //     if(is_float(value)){
     //         throw (
     //             new Error("is not float")
@@ -41,7 +43,7 @@
         }
         this.x = new_dir[0];
         this.y = new_dir[1];
-        this.#set_polar_direction2d();
+        this.set_polar_direction2d();
     }
 
     get direction2d_to_vec(){
@@ -59,7 +61,7 @@
         this.x = new_dir[0];
         this.y = new_dir[1];
         this.z = new_dir[2];
-        this.#set_polar_direction3d();
+        this.set_polar_direction3d();
     }
 
     get direction3d_to_vec(){
@@ -76,19 +78,43 @@
     set polar_direction2d(new_dir){
         this.direction2d = new_dir;
     }
-
-    #set_polar_direction3d(){
-        if(this.x==0.0 && this.y==0.0 && this.z==0){
-            throw (
-                new Error("all stuff 0")
-            );
+    calculate_theta(){
+        if(this.z>0){
+            this.theta = Math.atan(Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2))/this.z);
+            return;
         }
-        this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2)+ Math.pow(this.z,2));
-        this.theta = Math.acos(this.z/this.speed) // 0 to pi
-        this.phi =  Math.sign(this.y)*Math.acos(this.z/Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2))) // - pi to pi
+        if(this.z>0){
+            this.theta = Math.PI + Math.atan(Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2))/this.z);
+            return;
+        }
+        if(this.z==0 && this.x!=0 & this.y!=0){
+            this.theta = Math.PI/2;
+            return;
+        }
+        this.theta = 0.0;
+
     }
 
-    #set_polar_direction2d(){
+    set_polar_direction3d(){
+        //swap z and y
+
+        
+        
+        this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2)+ Math.pow(this.z,2));
+        
+        this.dir_norm = normalize(this.direction3d_to_vec);
+        // this.theta = Math.acos(this.y/this.speed) // 0 to pi
+        // this.theta = Math.acos(this.z/this.speed) // 0 to pi
+        this.theta = Math.atan2(this.dir_norm[1], this.dir_norm[0]); // yawn
+        // this.calculate_theta();
+        
+        // this.phi =  Math.sign(this.z)*Math.acos(this.x/Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.z,2))) // - pi to pi
+        // this.phi =  Math.sign(this.y)*Math.acos(this.x/Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2))) // - pi to pi
+        this.phi = Math.asin(this.dir_norm[2]); // pitch
+        
+    }
+
+    set_polar_direction2d(){
         this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2));
         this.theta = Math.atan2(this.y, this.x);
     }
@@ -135,9 +161,19 @@
     get polar_direction2d_cor(){
         return [this.speed, this.theta_cor2d()];
     }
+
+    get pitch(){
+        return this.phi
+    }
+
+    get yaw(){
+        return this.theta
+    }
+
+    
     
 }
-export default obj_Direction;
+// export default obj_Direction;
 
 // var test = new obj_Direction(1.0,1.0,1.0)
 // console.log(test);

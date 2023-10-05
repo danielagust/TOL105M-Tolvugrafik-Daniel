@@ -22,6 +22,10 @@ export function is_integer(value){
     return Number.isSafeInteger(value);
 }
 
+export function angle_to_degre(angle){
+    return angle * 180/Math.PI;
+}
+
 // function is_floatv2(e){
 //     const n = Number(e)
 
