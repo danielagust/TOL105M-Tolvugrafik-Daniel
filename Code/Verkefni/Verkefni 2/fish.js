@@ -92,8 +92,34 @@ var zView = 2.0;          // Sta�setning �horfanda � z-hniti
 var proLoc;
 var mvLoc;
 var colorLoc;
+var flip = false;
 
+function testing(program){
+    var vBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
 
+    var vPosition = gl.getAttribLocation( program, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    
+    
+    // console.log("hello")
+
+    colorLoc = gl.getUniformLocation( program, "fColor" );
+
+    proLoc = gl.getUniformLocation( program, "projection" );
+    mvLoc = gl.getUniformLocation( program, "modelview" );
+    var vBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
+    gl.enableVertexAttribArray( vPosition );
+
+    // Setjum ofanvarpsfylki h�r � upphafi
+    var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+    gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+    flip = true;
+    
+}
 window.onload = function init()
 {
     canvas = document.getElementById( "gl-canvas" );
@@ -105,6 +131,7 @@ window.onload = function init()
     gl.clearColor( 0.95, 1.0, 1.0, 1.0 );
  
     gl.enable(gl.DEPTH_TEST);
+    
  
     //
     //  Load shaders and initialize attribute buffers
@@ -113,24 +140,31 @@ window.onload = function init()
 
     gl.useProgram( program );
     
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
+    
+   
 
-    var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vPosition );
-    fish.set_webstuff(gl, program);
+    // var vPosition = gl.getAttribLocation( program, "vPosition" );
+    // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    
+    
+    if(!fish_flip){
+        testing(program);
+    }
+    else{
+        fish.set_webstuff(gl, program);
+    }
+    
+    // fish.set_webstuff(gl, program);
     
 
-    colorLoc = gl.getUniformLocation( program, "fColor" );
+    // colorLoc = gl.getUniformLocation( program, "fColor" );
 
-    proLoc = gl.getUniformLocation( program, "projection" );
-    mvLoc = gl.getUniformLocation( program, "modelview" );
+    // proLoc = gl.getUniformLocation( program, "projection" );
+    // mvLoc = gl.getUniformLocation( program, "modelview" );
 
     // Setjum ofanvarpsfylki h�r � upphafi
-    var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-    gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+    // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+    // gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
 
     // Atbur�af�ll fyrir m�s
@@ -182,7 +216,7 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(1.0,-1.0,2.0);
+var dir  = new obj_Direction(-1.0,-0.0,0.0);
 var timer = 0.0; //tick
 
 // class Timerv2{
@@ -195,6 +229,18 @@ var timer = 0.0; //tick
 var speed = 0.1;
 console.log(Helper.angle_to_degre(dir.yaw));
 
+var fish_flip = true
+
+function tester(mv){
+    if(!flip&& fish_flip){
+        fish.render(mv);
+        
+    }
+    if(flip&& !fish_flip){
+        test(mv);
+        
+    }
+}
 function test(mv){
     mv = mult(mv, translate(get_ofset())) // move to center
     // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
@@ -247,11 +293,11 @@ function test(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.TRIANGLES, NumBody, NumTail );
 
-    var move2 = -0.2
-    mv2 = mult( mv2, translate ( -move2, 0.0, 0.0 ) );
+    var move2 = 0.2
+    mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
     mv2 = mult( mv2, rotateY( rotFin1 ) );
-	mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
-    mv2 = mult( mv2, translate ( -move2, 0.0, 0.01 ) );
+	// mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
+    // mv2 = mult( mv2, translate ( -move2, 0.0, 0.01 ) );
 
     gl.uniform4fv( colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
@@ -268,6 +314,8 @@ function test(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
     gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
 }
+
+
 
 function render(now)
 {
@@ -286,8 +334,9 @@ function render(now)
     var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
-    fish.render(mv);
-    // test(mv);
+    // fish.render(mv);
+    // fish.render(mv);
+    tester(mv);
 
     
 

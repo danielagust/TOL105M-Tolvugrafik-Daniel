@@ -2,8 +2,9 @@ import obj_Size from "./helpers/obj_Size.js";
 import obj_Parent_Char from "./obj_Parent_Char.js"
 import * as Helper from './helpers/Helper_func.js';
 import obj_Direction from "./helpers/obj_Direction.js";
+import obj_Position from "./helpers/obj_Position.js";
 
-export default class Car extends obj_Parent_Char{
+export default class Car {
     /**
      * 
      * @param {obj_Size[]} size 
@@ -17,21 +18,24 @@ export default class Car extends obj_Parent_Char{
        
         
         
-        super(temp_points, size, pos); // sent to parent
-        this.size_body = new obj_Size(0.5,0.2,0.0);
-        this.size_tail = new obj_Size(0.15,0.15,0.0);
-        this.size_fin = new obj_Size(0.1,0.02,0.0);
+        // super(temp_points, size, pos); // sent to parent
+        this.size_body = new obj_Size(0.5,0.2,0.0); //new obj_Size(0.5,0.2,0.0);
+        this.size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
+        this.size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
+        console.log(this.size_fin);
         var body_middle = 0.2;
         this.dir  = new obj_Direction(1.0,-0.0,0.0);
 
-        this.rotTail = 0.0;        // Sn�ningshorn spor�s
-        this.incTail = 2.0;        // Breyting � sn�ningshorni
+        this.rotTail = 0.0;        // Snúningshorn tail
+        this.incTail = 2.0;        // Breyting á snúningshorni
 
-        this.rotFin1 = 0.0;        // Sn�ningshorn spor�s
-        this.incFin1 = 0.2;        // Breyting � sn�ningshorni
+        this.rotFin1 = 0.0;        // Snúningshorn fin 1
+        this.incFin1 = 0.2;        // Breyting á snúningshorni
 
-        this.rotFin2 = 0.0;        // Sn�ningshorn spor�s
-        this.incFin2 = -0.2;        // Breyting � sn�ningshorni
+        this.rotFin2 = 0.0;        // Snúningshorn fin 2
+        this.incFin2 = -0.2;        // Breyting á snúningshorni
+
+        this.pos = new obj_Position(1.0,0.0,0.0);
 
         // var vertices = [
         //     // l�kami (spjald)
@@ -74,8 +78,14 @@ export default class Car extends obj_Parent_Char{
             vec4( -this.size_fin.length,  this.size_fin.height, 0.0, 1.0 ),
             vec4( -this.size_fin.length, -this.size_fin.height, 0.0, 1.0 )
         ];
+        console.log(this.fin);
         this.zView = 10.0
-        this.points_all = this.body + this.tail + this.fin;
+        this.points_all = [];
+        // this.points_all = this.body + this.tail + this.fin;
+        this.points_all.push(...this.body);
+        this.points_all.push(...this.tail);
+        this.points_all.push(...this.fin);
+        console.log(this.points_all);
         
        
         // this.position = pos;
@@ -101,16 +111,44 @@ export default class Car extends obj_Parent_Char{
         // // this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id_tail);
         
         
-        this.program = program;
+        
+        // this.program = program;
 
-        this.bufferId2 = this.gl.createBuffer();
-        this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, this.bufferId2 );
-        this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
+        // this.bufferId2 = this.gl.createBuffer();
+        // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, this.bufferId2 );
+        // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
+        
 
-        this.vPosition = gl.getAttribLocation( program, "vPosition" );
+        // this.vPosition = gl.getAttribLocation( program, "vPosition" );
+        // gl.enableVertexAttribArray( this.vPosition );
+        // this.colorLoc = gl.getUniformLocation( program, "fColor" );
+        // this.mvLoc = gl.getUniformLocation( program, "modelview" );
+        // this.proLoc = gl.getUniformLocation( program, "projection" );
+        
+        // this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );
+        
+        // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        // gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
+        var vBuffer = gl.createBuffer();
+        gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+        gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points_all), gl.STATIC_DRAW );
+    
+        var vPosition = gl.getAttribLocation( program, "vPosition" );
+        gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+        
+        
+        // console.log("hello")
+    
         this.colorLoc = gl.getUniformLocation( program, "fColor" );
-        this.mvLoc = gl.getUniformLocation( program, "modelview" );
+    
         this.proLoc = gl.getUniformLocation( program, "projection" );
+        this.mvLoc = gl.getUniformLocation( program, "modelview" );
+        // var vBuffer = gl.createBuffer();
+        // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+        // gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points_all), gl.STATIC_DRAW );
+        gl.enableVertexAttribArray( vPosition );
+    
+        // Setjum ofanvarpsfylki h�r � upphafi
         var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
         gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
     }
@@ -128,6 +166,7 @@ export default class Car extends obj_Parent_Char{
     render(mv){
         // console.log(dir.x);
     this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
 
     // var mv = lookAt( vec3(0.0, 0.0, this.zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     // mv = mult( mv, rotateX(spinX) );
@@ -151,8 +190,8 @@ export default class Car extends obj_Parent_Char{
     // mv =  mult(mv, translate(0.5,0.2,0.2)); // pos
     
     
-    var mv2 = mv;
-    var mv3 = mv;
+    var mv_fin1 = mv;
+    var mv_fin2 = mv;
 
     this.rotTail += this.incTail;
     if( this.rotTail > 35.0  || this.rotTail < -35.0 )
@@ -190,32 +229,33 @@ export default class Car extends obj_Parent_Char{
     this.gl.drawArrays( this.gl.TRIANGLES, this.body.length, this.tail.length );
     
     //fin 1
-    var move2 = -0.2
-    mv2 = mult( mv2, translate ( -move2, 0.0, 0.0 ) );
-    mv2 = mult( mv2, rotateY( this.rotFin1 ) );
-	mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
-    mv2 = mult( mv2, translate ( -move2, 0.0, 0.01 ) );
+    var move2 = 0.2
+    mv_fin1 = mult( mv_fin1, translate ( move2, 0.0, 0.01 ) );
+    // mv_fin1 = mult( mv_fin1, translate ( move2, 0.0, 0.0 ) );
+    mv_fin1 = mult( mv_fin1, rotateY( this.rotFin1 ) );
+	// mv_fin1 = mult( mv_fin1, translate ( -move2, 0.0, 0.0 ) );
+    
      
     // this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.id_fin );
     // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.fin), this.gl.STATIC_DRAW );
     this.gl.uniform4fv( this.colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
-    this.gl.uniformMatrix4fv(this.mvLoc, false, flatten(mv2));
+    this.gl.uniformMatrix4fv(this.mvLoc, false, flatten(mv_fin1));
     this.gl.drawArrays( this.gl.TRIANGLES, this.body.length+this.tail.length, this.fin.length );
 
 
     // fin 2
     var move2 = -0.2
-    mv2 = mv3;
-    mv2 = mult( mv2, translate ( -move2, 0.0, 0.0 ) );
-    mv2 = mult( mv2, rotateY( this.rotFin2 ) );
-	mv2 = mult( mv2, translate ( move2, 0.0, 0.0 ) );
-    mv2 = mult( mv2, translate ( -move2, 0.0, -0.01 ) );
+   
+    mv_fin2 = mult( mv_fin2, translate ( -move2, 0.0, 0.0 ) );
+    mv_fin2 = mult( mv_fin2, rotateY( this.rotFin2 ) );
+	mv_fin2 = mult( mv_fin2, translate ( move2, 0.0, 0.0 ) );
+    mv_fin2 = mult( mv_fin2, translate ( -move2, 0.0, -0.01 ) );
     
     // this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.id_fin );
     
     // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.fin), this.gl.STATIC_DRAW );
     this.gl.uniform4fv( this.colorLoc,  vec4(1.0, 1.0, 1.0, 1.0));
-    this.gl.uniformMatrix4fv(this.mvLoc, false, flatten(mv2));
+    this.gl.uniformMatrix4fv(this.mvLoc, false, flatten(mv_fin2));
     this.gl.drawArrays( this.gl.TRIANGLES, this.body.length+this.tail.length, this.fin.length );
 
    

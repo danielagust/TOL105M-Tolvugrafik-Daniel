@@ -1,4 +1,10 @@
 export default class obj_Position{
+    /**
+     * 
+     * @param {float} x 
+     * @param {float} y 
+     * @param {float} z 
+     */
     constructor(x, y,z=0.0){
         this.x = x;
         this.y = y;
