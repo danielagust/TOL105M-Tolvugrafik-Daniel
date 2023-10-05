@@ -6,8 +6,8 @@
 //
 //    Hj�lmt�r Hafsteinsson, okt�ber 2023
 /////////////////////////////////////////////////////////////////
-import obj_Direction from "./obj_Direction.js";
-import * as Helper from './Helper_func.js';
+import obj_Direction from "./helpers/obj_Direction.js";
+import * as Helper from './helpers/Helper_func.js';
 var canvas;
 var gl;
 
@@ -16,10 +16,10 @@ var NumBody = 6;
 var NumTail = 3;
 var numfin1 = 3;
 
-var length2 = 0.5;
-var height = 0.2;
-var width = 0.0;
-var middle = 0.2;
+var body_length = 0.5; // 0.5
+var body_height = 0.2;
+var body_width = 0.0;
+var body_middle = 0.2;
 
 var tail_length = 0.15;
 var tail_height = 0.15;
@@ -30,13 +30,13 @@ var fin_height = 0.02;
 // Hn�tar fisks � xy-planinu
 var vertices = [
     // l�kami (spjald)
-    vec4( -length2,  width, 0.0, 1.0 ),
-	vec4(  middle,  height, width, 1.0 ),
-	vec4(  length2,  0.0, width, 1.0 ),
+    vec4( -body_length,  body_width, 0.0, 1.0 ),
+	vec4(  body_middle,  body_height, body_width, 1.0 ),
+	vec4(  body_length,  0.0, body_width, 1.0 ),
 	
-    vec4(  length2,  0.0, width, 1.0 ),
-	vec4(  middle, -height, width, 1.0 ),
-	vec4( -length2,  0.0, width, 1.0 ),
+    vec4(  body_length,  0.0, body_width, 1.0 ),
+	vec4(  body_middle, -body_height, body_width, 1.0 ),
+	vec4( -body_length,  0.0, body_width, 1.0 ),
 	// spor�ur (�r�hyrningur)
     vec4( -0.0,  0.0, 0.0, 1.0 ),
     vec4( -tail_length,  tail_height, 0.0, 1.0 ),
@@ -46,6 +46,18 @@ var vertices = [
     vec4( -fin_length,  fin_height, 0.0, 1.0 ),
     vec4( -fin_length, -fin_height, 0.0, 1.0 )
 ];
+
+function calculate_center(){
+    return vec3((-fin_length+body_length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
+}
+function calculate_centerv2(size_body, size_tail){
+    return vec3((-tail_length+size_body.length)/2, (-body_height+body_height)/2, (-body_width+body_width)/2);
+}
+console.log(calculate_center())
+function get_ofset(){
+    var temp = calculate_center();
+    return(vec3(-temp[0], -temp[1], -temp[2]))
+}
 
 
 var movement = false;     // Er m�sarhnappur ni�ri?
@@ -155,7 +167,7 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(1.0,0.0,0.0);
+var dir  = new obj_Direction(-1.0,0.0,0.0);
 
 function render()
 {
@@ -166,7 +178,7 @@ function render()
     mv = mult( mv, rotateY(spinY) );
     
 
-    
+    mv = mult(mv, translate(get_ofset())) // move to center
     mv = mult( mv, rotateZ(Helper.angle_to_degre(dir.yaw)) );
     mv = mult( mv, rotateY(Helper.angle_to_degre(dir.pitch)) );
     // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
@@ -179,7 +191,9 @@ function render()
     
    
     
-    mv =  mult(mv, translate(0.5,0.2,0.2)); // pos
+    // mv =  mult(mv, translate(0.5,0.2,0.2)); // pos
+    
+    
     var mv2 = mv;
     var mv3 = mv;
 
@@ -200,7 +214,8 @@ function render()
 	// Teikna l�kama fisks (�n sn�nings)
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.TRIANGLES, 0, NumBody );
-    var move = 0.50;
+    
+    var move = body_length; // 0.5
     // Teikna spor� og sn�a honum
     
 	mv = mult( mv, translate ( -move, 0.0, 0.0 ) );
