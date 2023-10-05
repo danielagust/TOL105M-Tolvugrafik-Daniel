@@ -10,6 +10,7 @@ import obj_Direction from "./helpers/obj_Direction.js";
 import obj_Size from "./helpers/obj_Size.js";
 import * as Helper from './helpers/Helper_func.js';
 import obj_Fish from "./obj_Fish.js"
+import obj_Position from "./helpers/obj_Position.js";
 var canvas;
 var gl;
 
@@ -35,7 +36,8 @@ var size_fin = new obj_Size(0.1,0.02,0.0);
 var fin_length = 0.1;
 var fin_height = 0.02;
 
-var fish = new obj_Fish([size_body,size_tail,size_fin])
+var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0))
+var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0))
 
 
 // Hn�tar fisks � xy-planinu
@@ -152,6 +154,7 @@ window.onload = function init()
     }
     else{
         fish.set_webstuff(gl, program);
+        fish2.set_webstuff(gl, program);
     }
     
     // fish.set_webstuff(gl, program);
@@ -233,7 +236,10 @@ var fish_flip = true
 
 function tester(mv){
     if(!flip&& fish_flip){
+        
         fish.render(mv);
+        fish2.render(mv);
+        
         
     }
     if(flip&& !fish_flip){

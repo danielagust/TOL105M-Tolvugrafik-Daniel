@@ -35,7 +35,7 @@ export default class Car {
         this.rotFin2 = 0.0;        // Snúningshorn fin 2
         this.incFin2 = -0.2;        // Breyting á snúningshorni
 
-        this.pos = new obj_Position(1.0,0.0,0.0);
+        this.pos = pos;
 
         // var vertices = [
         //     // l�kami (spjald)
@@ -129,28 +129,28 @@ export default class Car {
         
         // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
         // gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
-        var vBuffer = gl.createBuffer();
-        gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-        gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points_all), gl.STATIC_DRAW );
+        this.vBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.vBuffer );
+        this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
     
-        var vPosition = gl.getAttribLocation( program, "vPosition" );
-        gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+        var vPosition = this.gl.getAttribLocation( program, "vPosition" );
+        this.gl.vertexAttribPointer( vPosition, 4, this.gl.FLOAT, false, 0, 0 );
         
         
         // console.log("hello")
     
-        this.colorLoc = gl.getUniformLocation( program, "fColor" );
+        this.colorLoc = this.gl.getUniformLocation( program, "fColor" );
     
-        this.proLoc = gl.getUniformLocation( program, "projection" );
-        this.mvLoc = gl.getUniformLocation( program, "modelview" );
+        this.proLoc = this.gl.getUniformLocation( program, "projection" );
+        this.mvLoc = this.gl.getUniformLocation( program, "modelview" );
         // var vBuffer = gl.createBuffer();
         // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
         // gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points_all), gl.STATIC_DRAW );
-        gl.enableVertexAttribArray( vPosition );
+        this.gl.enableVertexAttribArray( vPosition );
     
         // Setjum ofanvarpsfylki h�r � upphafi
         var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-        gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
+        this.gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
     }
 
     calculate_centerv2(){
@@ -165,14 +165,14 @@ export default class Car {
 
     render(mv){
         // console.log(dir.x);
-    this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    // this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
 
     // var mv = lookAt( vec3(0.0, 0.0, this.zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     // mv = mult( mv, rotateX(spinX) );
     // mv = mult( mv, rotateY(spinY) );
     
-
+    mv = mult(mv, translate(this.pos.position3d_to_vec))
     mv = mult(mv, translate(this.get_ofset())) // move to center
     // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
     mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
