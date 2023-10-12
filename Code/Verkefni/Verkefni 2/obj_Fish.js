@@ -142,7 +142,7 @@ export default class obj_Fish {
     
         this.colorLoc = this.gl.getUniformLocation( program, "fColor" );
     
-        this.proLoc = this.gl.getUniformLocation( program, "projection" );
+        // this.proLoc = this.gl.getUniformLocation( program, "projection" );
         this.mvLoc = this.gl.getUniformLocation( program, "modelview" );
         // var vBuffer = gl.createBuffer();
         // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
@@ -150,8 +150,8 @@ export default class obj_Fish {
         this.gl.enableVertexAttribArray( vPosition );
     
         // Setjum ofanvarpsfylki h�r � upphafi
-        var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-        this.gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
+        // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        // this.gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
     }
 
     calculate_centerv2(){
