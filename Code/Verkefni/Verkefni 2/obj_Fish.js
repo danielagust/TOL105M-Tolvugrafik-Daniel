@@ -4,14 +4,14 @@ import * as Helper from './helpers/Helper_func.js';
 import obj_Direction from "./helpers/obj_Direction.js";
 import obj_Position from "./helpers/obj_Position.js";
 
-export default class Car {
+export default class obj_Fish {
     /**
      * 
      * @param {obj_Size[]} size 
      * @param {float} width_screen_end 
      * @param {vec2} pos 
      */
-    constructor(size, width_screen_end, pos){
+    constructor(size, width_screen_end, pos, dir){
         var temp_points = [];
 
 
@@ -25,6 +25,7 @@ export default class Car {
         console.log(this.size_fin);
         var body_middle = 0.2;
         this.dir  = new obj_Direction(1.0,-0.0,0.0);
+        this.dir = dir
 
         this.rotTail = 0.0;        // Snúningshorn tail
         this.incTail = 2.0;        // Breyting á snúningshorni

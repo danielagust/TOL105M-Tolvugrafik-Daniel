@@ -36,8 +36,8 @@ var size_fin = new obj_Size(0.1,0.02,0.0);
 var fin_length = 0.1;
 var fin_height = 0.02;
 
-var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0))
-var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0))
+var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,1.0))
+var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
 
 
 // Hn�tar fisks � xy-planinu
