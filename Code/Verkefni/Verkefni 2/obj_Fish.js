@@ -101,35 +101,7 @@ export default class obj_Fish {
 
     set_webstuff(gl, program){
         this.gl = gl;
-        
-        // this.id_body = gl.createBuffer();
-        
-        
-        // this.id_fin = gl.createBuffer();
-        // // this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id_fin );
 
-        // this.id_tail = gl.createBuffer();
-        // // this.gl.bindBuffer( gl.ARRAY_BUFFER, this.id_tail);
-        
-        
-        
-        // this.program = program;
-
-        // this.bufferId2 = this.gl.createBuffer();
-        // this.gl.bindBuffer(  this.gl.ARRAY_BUFFER, this.bufferId2 );
-        // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
-        
-
-        // this.vPosition = gl.getAttribLocation( program, "vPosition" );
-        // gl.enableVertexAttribArray( this.vPosition );
-        // this.colorLoc = gl.getUniformLocation( program, "fColor" );
-        // this.mvLoc = gl.getUniformLocation( program, "modelview" );
-        // this.proLoc = gl.getUniformLocation( program, "projection" );
-        
-        // this.gl.vertexAttribPointer( this.vPosition, 2, this.gl.FLOAT, false, 0, 0 );
-        
-        // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-        // gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
         this.vBuffer = this.gl.createBuffer();
         this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.vBuffer );
         this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
@@ -138,15 +110,12 @@ export default class obj_Fish {
         this.gl.vertexAttribPointer( vPosition, 4, this.gl.FLOAT, false, 0, 0 );
         
         
-        // console.log("hello")
+
     
         this.colorLoc = this.gl.getUniformLocation( program, "fColor" );
     
         // this.proLoc = this.gl.getUniformLocation( program, "projection" );
         this.mvLoc = this.gl.getUniformLocation( program, "modelview" );
-        // var vBuffer = gl.createBuffer();
-        // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-        // gl.bufferData( gl.ARRAY_BUFFER, flatten(this.points_all), gl.STATIC_DRAW );
         this.gl.enableVertexAttribArray( vPosition );
     
         // Setjum ofanvarpsfylki h�r � upphafi

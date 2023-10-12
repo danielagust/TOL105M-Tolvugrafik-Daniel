@@ -141,9 +141,13 @@ window.onload = function init()
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
 
     gl.useProgram( program );
+    // var vPosition = gl.getAttribLocation( program, "vPosition" );
+    // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    
     proLoc = gl.getUniformLocation( program, "projection" );
     var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+    // gl.enableVertexAttribArray( vPosition );
    
 
     // var vPosition = gl.getAttribLocation( program, "vPosition" );
