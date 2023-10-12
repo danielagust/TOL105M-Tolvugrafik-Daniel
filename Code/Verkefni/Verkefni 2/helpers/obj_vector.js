@@ -1,8 +1,5 @@
-import obj_Vector from "./obj_vector.js";
-
-
 // import { is_float } from "./Helper_func";
-export default class obj_Direction{
+export default class obj_Vector{
     /**
      * 
      * @param {float} x 
@@ -16,9 +13,9 @@ export default class obj_Direction{
         this.z = z;
         //pyr = pitch, yaw, role
         if(if2d) {
-            this.set_pyr_direction2d();
+            this.set_pyr_vector2d();
         }else{
-            this.set_pyr_direction3d();
+            this.set_pyr_vector3d();
         }
         
         
@@ -32,13 +29,13 @@ export default class obj_Direction{
     //     }
     // }
 
-    get direction2d(){
+    get vector2d(){
         return [this.x, this.y];
     }
     /**
      * @param {float[]} new_dir two in length
      */
-    set direction2d(new_dir){
+    set vector2d(new_dir){
         if(new_dir.length != 2){
             throw (
                 new Error("it is not length of 2")
@@ -46,28 +43,28 @@ export default class obj_Direction{
         }
         this.x = new_dir[0];
         this.y = new_dir[1];
-        this.set_pyr_direction2d();
+        this.set_pyr_vector2d();
     }
 
-    get direction2d_to_vec(){
+    get vector2d_to_vec(){
         return vec2(this.x, this.y);
     }
 
 
-    get direction3d(){
+    get vector3d(){
         return [this.x, this.y, this.z];
     }
     /**
      * @param {float[]} new_dir three in length
      */
-    set direction3d(new_dir){
+    set vector3d(new_dir){
         this.x = new_dir[0];
         this.y = new_dir[1];
         this.z = new_dir[2];
-        this.set_pyr_direction3d();
+        this.set_pyr_vector3d();
     }
 
-    get direction3d_to_vec(){
+    get vector3d_to_vec(){
         return vec3(this.x, this.y, this.z);
     }
 
@@ -75,35 +72,34 @@ export default class obj_Direction{
      * @param {float[]} new_dir
      * pyr = pitch, yaw role
      */
-    set pyr_direction3d(new_dir){
-        this.direction3d = new_dir;
+    set pyr_vector3d(new_dir){
+        this.vector3d = new_dir;
     }
     /**
      * @param {float[]} new_dir
      * pyr = pitch, yaw role
      */
-    set pyr_direction2d(new_dir){
-        this.direction2d = new_dir;
+    set pyr_vector2d(new_dir){
+        this.vector2d = new_dir;
     }
     
 
-    set_pyr_direction3d(){
+    set_pyr_vector3d(){
         //swap z and y
 
         
         
         this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2)+ Math.pow(this.z,2));
         
-        this.dir_norm = normalize(this.direction3d_to_vec);
-        this.dir_norm = new obj_Vector(this.dir_norm[0], this.dir_norm[1], this.dir_norm[2]);
+        this.dir_norm = normalize(this.vector3d_to_vec);
         
-        this.yaw = Math.atan2(this.dir_norm.y, this.dir_norm.x); // yaw
+        this.yaw = Math.atan2(this.dir_norm[1], this.dir_norm[0]); // yaw
        
-        this.pitch = Math.asin(this.dir_norm.z); // pitch
+        this.pitch = Math.asin(this.dir_norm[2]); // pitch
         
     }
 
-    set_pyr_direction2d(){
+    set_pyr_vector2d(){
         this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2));
         this.theta = Math.atan2(this.y, this.x);
     }
@@ -128,26 +124,26 @@ export default class obj_Direction{
     // /**
     //  * gets the pyr dir in 3d 
     //  */
-    get pyr_direction3d(){
+    get pyr_vector3d(){
         return [this.speed, this.yaw, this.pitch];
     }
     /**
      * gets the pyr dir in 2d
      */
-    get pyr_direction2d(){
+    get pyr_vector2d(){
         return [this.speed, this.theta];
     }
     /**
      * gets the pyr dir in 3d with the angles 0 to 2π
      */
-    get pyr_direction3d_cor(){
+    get pyr_vector3d_cor(){
         return [this.speed, this.yaw_cor3d(), this.pitch_cor()];
     }
 
     /**
      * gets the pyr dir in 2d with the angles 0 to 2π
      */
-    get pyr_direction2d_cor(){
+    get pyr_vector2d_cor(){
         return [this.speed, this.yaw_cor2d()];
     }
 
@@ -178,7 +174,7 @@ export default class obj_Direction{
     
     
 }
-// export default obj_Direction;
+// export default obj_vector;
 
-// var test = new obj_Direction(1.0,1.0,1.0)
+// var test = new obj_vector(1.0,1.0,1.0)
 // console.log(test);
