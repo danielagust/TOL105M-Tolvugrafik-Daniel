@@ -11,6 +11,7 @@ import obj_Size from "./helpers/obj_Size.js";
 import * as Helper from './helpers/Helper_func.js';
 import obj_Fish from "./obj_Fish.js"
 import obj_Position from "./helpers/obj_Position.js";
+import obj_Camera from "./helpers/obj_camera.js";
 var canvas;
 var gl;
 
@@ -36,7 +37,7 @@ var size_fin = new obj_Size(0.1,0.02,0.0);
 var fin_length = 0.1;
 var fin_height = 0.02;
 
-var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,1.0))
+var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
 var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
 
 
@@ -66,7 +67,7 @@ var vertices = [
 function calculate_centerv2(){
     return vec3((-size_tail.length+size_body.length)/2, (-size_body.height+size_body.height)/2, (-size_body.width+size_body.width)/2);
 }
-console.log(calculate_centerv2())
+// console.log(calculate_centerv2())
 // console.log(calculate_center())
 function get_ofset(){
     var temp = calculate_centerv2();
@@ -89,7 +90,7 @@ var incFin1 = 0.2;        // Breyting � sn�ningshorni
 var rotFin2 = 0.0;        // Sn�ningshorn spor�s
 var incFin2 = -0.2;        // Breyting � sn�ningshorni
 
-var zView = 2.0;          // Sta�setning �horfanda � z-hniti
+var zView = 2.0;   //2.0       // Sta�setning �horfanda � z-hniti
 
 var proLoc;
 var mvLoc;
@@ -235,7 +236,7 @@ var timer = 0.0; //tick
 // var timer2 = new Timerv2(0.1);
 
 var speed = 0.1;
-console.log(Helper.angle_to_degre(dir.yaw));
+// console.log(Helper.angle_to_degre(dir.yaw));
 
 var fish_flip = true
 
@@ -325,9 +326,23 @@ function test(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv2));
     gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
 }
+var flip2 = true;
+function lock(mv){
+    if(flip2){
+        
+        flip2 = false
+        var mv = mat4();
+        mv = camera.move_forward(2.0, mv);
+        mv = camera.move_backward(2.0, mv);
+        mv = camera.move_right(2.0, mv);
+        // mv = camera.move_left(2.0, mv);
+        return mv
+    }
+    return mv
+}
 
 
-
+var camera = new obj_Camera(vec3(0.0,0.0,2.0), vec3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 1.0)
 function render(now)
 {
     
@@ -342,12 +357,20 @@ function render(now)
     // console.log(dir.x);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
-    mv = mult( mv, rotateX(spinX) );
-    mv = mult( mv, rotateY(spinY) );
+    // var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+    // mv = mult( mv, rotateX(spinX) );
+    // mv = mult( mv, rotateY(spinY) );
+    var mv  = camera.new_pos();
+    
+    mv = camera.rotate(spinX, spinY, mv);
+    mv = lock(mv);
+    // printm(mv);
+    // console.log("");
     // fish.render(mv);
     // fish.render(mv);
-    tester(mv);
+    // tester(mv);
+    fish.render(mv);
+    // fish2.render(mv);
 
     
 

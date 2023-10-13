@@ -1,4 +1,5 @@
 import obj_Vector from "./obj_vector.js";
+import * as Helper from './Helper_func.js';
 
 
 // import { is_float } from "./Helper_func";
@@ -92,10 +93,10 @@ export default class obj_Direction{
 
         
         
-        this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2)+ Math.pow(this.z,2));
-        
-        this.dir_norm = normalize(this.direction3d_to_vec);
-        this.dir_norm = new obj_Vector(this.dir_norm[0], this.dir_norm[1], this.dir_norm[2]);
+        // this.speed = Math.sqrt(Math.pow(this.x,2)+ Math.pow(this.y,2)+ Math.pow(this.z,2));
+        this.speed = Helper.get_speed(this.direction3d_to_vec);
+        // this.dir_norm = normalize(this.direction3d_to_vec);
+        this.dir_norm = Helper.vec3_to_Vector(normalize(this.direction3d_to_vec));
         
         this.yaw = Math.atan2(this.dir_norm.y, this.dir_norm.x); // yaw
        

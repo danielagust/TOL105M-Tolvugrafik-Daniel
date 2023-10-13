@@ -22,7 +22,7 @@ export default class obj_Fish {
         this.size_body = new obj_Size(0.5,0.2,0.0); //new obj_Size(0.5,0.2,0.0);
         this.size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
         this.size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
-        console.log(this.size_fin);
+        // console.log(this.size_fin);
         var body_middle = 0.2;
         this.dir  = new obj_Direction(1.0,-0.0,0.0);
         this.dir = dir
@@ -79,14 +79,14 @@ export default class obj_Fish {
             vec4( -this.size_fin.length,  this.size_fin.height, 0.0, 1.0 ),
             vec4( -this.size_fin.length, -this.size_fin.height, 0.0, 1.0 )
         ];
-        console.log(this.fin);
+        // console.log(this.fin);
         this.zView = 10.0
         this.points_all = [];
         // this.points_all = this.body + this.tail + this.fin;
         this.points_all.push(...this.body);
         this.points_all.push(...this.tail);
         this.points_all.push(...this.fin);
-        console.log(this.points_all);
+        // console.log(this.points_all);
         
        
         // this.position = pos;

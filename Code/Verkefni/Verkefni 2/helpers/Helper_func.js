@@ -1,4 +1,4 @@
-
+import obj_Vector from "./obj_vector.js";
 
 Number.isInteger = Number.isInteger || function(value) {
     return typeof value === 'number' && 
@@ -39,6 +39,18 @@ export function new_speed(now){
    //  console.log("deltaTime new ", deltaTime);
 
     return deltaTime;
+}
+
+export function get_speed(v){
+    var temp = 0;
+    for ( var i = 0; i < v.length; ++i ){
+        temp += Math.pow(v[i],2);
+    }
+    return Math.sqrt(temp);
+}
+
+export function vec3_to_Vector(v){
+    return new obj_Vector(v[0], v[1], v[2]);
 }
 
 // function is_floatv2(e){
