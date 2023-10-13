@@ -30,6 +30,17 @@ var proLoc;
 var mvLoc;
 var colorLoc;
 
+
+// function dir () {
+//     return 
+// }
+
+// var left = 0.0;
+// var right = 0.0;
+// var up = 0.0;
+// var down = 0.0;
+// var 
+
 // the 8 vertices of the cube
 var v = [
     vec3( -0.5, -0.5,  0.5 ),
@@ -134,7 +145,8 @@ function lock(mv){
         var mv = mat4();
         // mv = camera.move_forward(2.0, mv);
         // mv = camera.move_backward(2.0, mv);
-        mv = camera.move_right(0.0, mv);
+        mv = camera.move_right(1.0, mv);
+        mv = camera.move_right(1.0, mv);
         // mv = camera.move_left(2.0, mv);
         return mv
     }

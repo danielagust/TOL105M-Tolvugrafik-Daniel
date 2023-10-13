@@ -96,6 +96,26 @@ var proLoc;
 var mvLoc;
 var colorLoc;
 var flip = false;
+var speed = 0.5;
+
+var dir = {
+    left:0.0,
+    right:0.0,
+    up:0.0,
+    down:0.0,
+    forward:0.0,
+    backward:0.0,
+    rl:0.0,
+    fb:0.0,
+    ud:0.0
+}
+
+var Forward_key = 87; // w key
+var Backward_key = 83; // s key
+var Left_key = 65; // a key
+var Right_key = 68; // d key
+var Up_key = 32; // space key
+var Down_key = 16; // shift key
 
 function testing(program){
     var vBuffer = gl.createBuffer();
@@ -200,21 +220,40 @@ window.onload = function init()
     // Atbur�afall fyrir lyklabor�
      window.addEventListener("keydown", function(e){
          switch( e.keyCode ) {
-            case 38:	// upp �r
+            case Forward_key:	// upp �r
                 zView += 0.2;
+                dir.fb += speed;
                 break;
-            case 40:	// ni�ur �r
+            case Backward_key:	// ni�ur �r
                 zView -= 0.2;
+                dir.fb -= speed;
                 break;
+            case Left_key:
+                dir.rl -= speed;
+                break;
+            case Right_key:
+                dir.rl += speed;
+                break;
+            case Up_key:
+                dir.ud += speed;
+                break;
+            case Down_key:
+                dir.ud -= speed;
+                break;
+
+            
          }
+        //  alert(e.keyCode);
      }  );  
 
     // Atbur�afall fyri m�sarhj�l
      window.addEventListener("mousewheel", function(e){
          if( e.wheelDelta > 0.0 ) {
              zView -= 0.2;
+             dir.fb += speed;
          } else {
              zView += 0.2;
+             dir.fb -= speed;
          }
      }  );  
 
@@ -225,7 +264,7 @@ var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
 
-var dir  = new obj_Direction(-1.0,-0.0,0.0);
+var dir2  = new obj_Direction(-1.0,-0.0,0.0);
 var timer = 0.0; //tick
 
 // class Timerv2{
@@ -235,7 +274,7 @@ var timer = 0.0; //tick
 // }
 // var timer2 = new Timerv2(0.1);
 
-var speed = 0.1;
+// var speed = 0.1;
 // console.log(Helper.angle_to_degre(dir.yaw));
 
 var fish_flip = true
@@ -256,8 +295,8 @@ function tester(mv){
 function test(mv){
     mv = mult(mv, translate(get_ofset())) // move to center
     // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
-    mv = mult( mv, rotateZ(Helper.angle_to_degre(dir.yaw)) );
-    mv = mult( mv, rotateY(Helper.angle_to_degre(dir.pitch)) );
+    mv = mult( mv, rotateZ(Helper.angle_to_degre(dir2.yaw)) );
+    mv = mult( mv, rotateY(Helper.angle_to_degre(dir2.pitch)) );
     // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
    
 
@@ -327,22 +366,54 @@ function test(mv){
     gl.drawArrays( gl.TRIANGLES, NumBody+3, numfin1 );
 }
 var flip2 = true;
-function lock(mv){
-    if(flip2){
-        
-        flip2 = false
-        var mv = mat4();
-        mv = camera.move_forward(2.0, mv);
-        mv = camera.move_backward(2.0, mv);
-        mv = camera.move_right(2.0, mv);
-        // mv = camera.move_left(2.0, mv);
-        return mv
+
+function move(deltaTime, mv){
+    // var mv = mat4();
+    // mv = camera.move_forward(dir.forward*deltaTime, mv);
+    // mv = camera.move_backward(dir.backward*deltaTime, mv);
+    // mv = camera.move_right(dir.right*deltaTime, mv);
+    // mv = camera.move_left(dir.left*deltaTime, mv);
+    // mv = camera.move_down(dir.down*deltaTime, mv);
+    // mv = camera.move_up(dir.up*deltaTime, mv);
+    
+    // mv = camera.move_forward(dir.forward*deltaTime, mv);
+    // mv = camera.move_backward(dir.backward*deltaTime, mv);
+    // mv = camera.move_right(dir.right*deltaTime, mv);
+    // mv = camera.move_left(dir.left*deltaTime, mv);
+    // mv = camera.move_down(dir.down*deltaTime, mv);
+    // mv = camera.move_up(dir.up*deltaTime, mv);
+
+    mv = camera.move_fb(dir.fb*deltaTime, mv);
+    mv = camera.move_ud(dir.ud*deltaTime, mv);
+    mv = camera.move_rl(dir.rl*deltaTime, mv);
+ 
+    dir = {
+        left:0.0,
+        right:0.0,
+        up:0.0,
+        down:0.0,
+        forward:0.0,
+        backward:0.0,
+        rl:0.0,
+        fb:0.0,
+        ud:0.0
     }
     return mv
 }
+function lock(mv, deltaTime){
+    if(flip2){
+        
+        
+        return move(deltaTime, mv)
+    }else{
+        flip2 = true
+        camera.pos = vec3(0.0,0.0,1.0);
+    }
+    return mv
+}
+var cemera_flip = false;
 
-
-var camera = new obj_Camera(vec3(0.0,0.0,2.0), vec3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 1.0)
+var camera = new obj_Camera(vec3(0.0,0.0,0.2), vec3(0.0,0.0,-1.00), vec3(0.0,1.0,0.0), 1.0)
 function render(now)
 {
     
@@ -356,14 +427,18 @@ function render(now)
    
     // console.log(dir.x);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    // var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
-    // mv = mult( mv, rotateX(spinX) );
-    // mv = mult( mv, rotateY(spinY) );
-    var mv  = camera.new_pos();
+    if (cemera_flip){
+        var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+        mv = mult( mv, rotateX(spinX) );
+        mv = mult( mv, rotateY(spinY) );
+    }else{
+        var mv  = camera.new_pos();
     
-    mv = camera.rotate(spinX, spinY, mv);
-    mv = lock(mv);
+        mv = camera.rotate(spinX, spinY, mv);
+        mv = lock(mv, deltaTime);
+    }
+    
+   
     // printm(mv);
     // console.log("");
     // fish.render(mv);

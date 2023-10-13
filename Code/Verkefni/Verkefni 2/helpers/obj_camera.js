@@ -40,25 +40,28 @@ export default class obj_Camera{
     }
     move(v, mv){
         this.pos = add(this.pos, v);
-        
+        // var temp = (normalize(this.dir));
+        // this.dir = add( temp, v);
         
         // this.mv = mult(this.mv, translate(v))
         var mv2 = mult(mv, this.new_pos())
-        console.log( this.dir);
+        // console.log( this.dir);
         return mv2
         
     }
-    move_left(amount, mv){
-        var v = negate(scale(amount,this.cross_vector_n))
+    move_dir(v){
         var temp = this.dir;
         this.dir = add( temp, v);
+    }
+    move_left(amount, mv){
+        var v = negate(scale(amount,this.cross_vector_n))
+        this.move_dir(v);
         return this.move(v,mv);
     }
 
     move_right(amount,mv){
         var v = scale(amount,this.cross_vector_n)
-        var temp = this.dir;
-        this.dir = add( temp, v);
+        this.move_dir(v);
         return this.move(v,mv);
     }
     move_forward(amount, mv){
@@ -69,6 +72,37 @@ export default class obj_Camera{
     }
     move_backward(amount, mv){
         var v = negate(scale(amount,this.dir))
+        return this.move(v,mv);
+    }
+
+    move_up(amount, mv){
+        var v = scale(amount,vec3(0.0,1.0,0.0));
+        this.move_dir(v);
+        return this.move(v,mv);
+    }
+
+    move_down(amount, mv){
+        var v = scale(amount,vec3(0.0,-1.0,0.0));
+        this.move_dir(v);
+        return this.move(v,mv);
+    }
+
+    // combined func
+    move_fb(amount, mv){
+        var v = scale(amount,this.dir);
+        // console.log(this.pos);
+        return this.move(v,mv);
+    }
+
+    move_rl(amount, mv){
+        var v = scale(amount,this.cross_vector_n)
+        this.move_dir(v);
+        return this.move(v,mv);
+    }
+
+    move_ud(amount, mv){
+        var v = scale(amount,vec3(0.0,1.0,0.0));
+        this.move_dir(v);
         return this.move(v,mv);
     }
 
