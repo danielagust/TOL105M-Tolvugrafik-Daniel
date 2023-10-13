@@ -28,6 +28,7 @@ export default class obj_Camera{
         // this.speed_left = this.cross_vector_V.speed;
         // this.speed_right = -this.cross_vector_V.speed;
         this.zView = 2.0;
+        // console.log( this.cross_vector_n);
         
         
         
@@ -40,20 +41,24 @@ export default class obj_Camera{
     move(v, mv){
         this.pos = add(this.pos, v);
         
+        
         // this.mv = mult(this.mv, translate(v))
         var mv2 = mult(mv, this.new_pos())
-        // console.log(mv2);
+        console.log( this.dir);
         return mv2
         
     }
     move_left(amount, mv){
         var v = negate(scale(amount,this.cross_vector_n))
-        
+        var temp = this.dir;
+        this.dir = add( temp, v);
         return this.move(v,mv);
     }
 
     move_right(amount,mv){
         var v = scale(amount,this.cross_vector_n)
+        var temp = this.dir;
+        this.dir = add( temp, v);
         return this.move(v,mv);
     }
     move_forward(amount, mv){
