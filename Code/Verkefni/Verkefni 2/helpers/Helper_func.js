@@ -2,6 +2,10 @@ import obj_Vector from "./obj_vector.js";
 
 
 import config from "../config.json" assert { type: 'json' };
+import obj_Size from "./obj_Size.js";
+import obj_Fish from "../obj_Fish.js";
+import obj_Position from "./obj_Position.js";
+import obj_Direction from "./obj_Direction.js";
 
 Number.isInteger = Number.isInteger || function(value) {
     return typeof value === 'number' && 
@@ -104,9 +108,111 @@ function transpose( m )
     return result;
 }
 
-export function make_fishs(fishs){
+function make_size(fish_size_body, fish_size_tail, fish_size_fin){
+    var random_fish_size_body = []
+    random_fish_size_body.push( Math.random() * (fish_size_body.length.length_max - fish_size_body.length.length_min) + fish_size_body.length.length_min)
+    random_fish_size_body.push( Math.random() * (fish_size_body.height.height_max - fish_size_body.height.height_min) + fish_size_body.height.height_min)
+    random_fish_size_body.push( Math.random() * (fish_size_body.width.width_max - fish_size_body.width.width_min) + fish_size_body.width.width_min)
+
+    var random_fish_size_tail = []
+    random_fish_size_tail.push( Math.random() * (fish_size_tail.length.length_max - fish_size_tail.length.length_min) + fish_size_tail.length.length_min)
+    random_fish_size_tail.push( Math.random() * (fish_size_tail.height.height_max - fish_size_tail.height.height_min) + fish_size_tail.height.height_min)
+    random_fish_size_tail.push( Math.random() * (fish_size_tail.width.width_max - fish_size_tail.width.width_min) + fish_size_tail.width.width_min)
+
+    var random_fish_size_fin = []
+    random_fish_size_fin.push( Math.random() * (fish_size_fin.length.length_max - fish_size_fin.length.length_min) + fish_size_fin.length.length_min)
+    random_fish_size_fin.push( Math.random() * (fish_size_fin.height.height_max - fish_size_fin.height.height_min) + fish_size_fin.height.height_min)
+    random_fish_size_fin.push( Math.random() * (fish_size_fin.width.width_max - fish_size_fin.width.width_min) + fish_size_fin.width.width_min)
     
-    fishs.push(new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))) 
+    return {random_fish_size_body, random_fish_size_tail, random_fish_size_fin}
+}
+
+function make_pos(fish_pos){
+    var random_fish_pos = []
+
+    random_fish_pos.push(Math.random() * (fish_pos.x.x_max -fish_pos.x.x_min) + fish_pos.x.x_min);
+    random_fish_pos.push(Math.random() * (fish_pos.y.y_max -fish_pos.y.y_min) + fish_pos.y.y_min)
+    random_fish_pos.push (Math.random() * (fish_pos.z.z_max -fish_pos.z.z_min) + fish_pos.z.z_min)
+   
+    return random_fish_pos;
+}
+
+function make_dir_set(fish_dir_set){
+    var random_fish_dir_set = [];
+
+    random_fish_dir_set.push(Math.random() * (fish_dir_set.x.x_max -fish_dir_set.x.x_min) + fish_dir_set.x.x_min);
+    random_fish_dir_set.push(Math.random() * (fish_dir_set.y.y_max -fish_dir_set.y.y_min) + fish_dir_set.y.y_min)
+    random_fish_dir_set.push (Math.random() * (fish_dir_set.z.z_max -fish_dir_set.z.z_min) + fish_dir_set.z.z_min)
+    console.log(random_fish_dir_set)
+   
+    return random_fish_dir_set;
+
+}
+
+// function make_dir_allowed(fish_dir_allowed){
+//     var random_fish_dir_allowed = [];
+
+//     random_fish_dir_allowed.push(Math.random() * (fish_dir_allowed.pitch.pitch_max -fish_dir_allowed.pitch.pitch_min) + fish_dir_allowed.pitch.pitch_min);
+//     random_fish_dir_allowed.push(Math.random() * (fish_dir_allowed.yaw.yaw_max -fish_dir_allowed.yaw.yaw_min) + fish_dir_allowed.yaw.yaw_min)
+    
+//     console.log(random_fish_dir_allowed)
+   
+//     return random_fish_dir_allowed;
+
+// }
+export function make_fishs(amount, gl, program){
+    const fish_size_body = config.fish.size.size_body
+    const fish_size_tail = config.fish.size.size_tail
+    const fish_size_fin = config.fish.size.size_fin
+
+    const fish_pos = config.fish.pos;
+
+    const fish_dir_set = config.fish.dir_set;
+
+    // const fish_dir_allowed = config.fish.dir_alowed;
+    // console.log(fish_pos);
+
+    var fishs = []
+    for ( var i = 0; i < amount; ++i ){
+        // make size random
+        const random_fish_size = make_size(fish_size_body, fish_size_tail, fish_size_fin);
+        const random_fish_size_body = random_fish_size.random_fish_size_body;
+        const random_fish_size_tail = random_fish_size.random_fish_size_tail;
+        const random_fish_size_fin = random_fish_size.random_fish_size_fin;
+
+        // make size obj
+        const size_body = new obj_Size(random_fish_size_body[0],random_fish_size_body[1], random_fish_size_body[2]);
+        const size_tail = new obj_Size(random_fish_size_tail[0],random_fish_size_tail[1], random_fish_size_tail[2]);
+        const size_fin = new obj_Size(random_fish_size_fin[0],random_fish_size_fin[1], random_fish_size_fin[2]);  
+        
+        // make pos random
+        const random_fish_pos = make_pos(fish_pos);
+
+        //make pos obj
+        const fish_pos_random = new obj_Position(random_fish_pos[0], random_fish_pos[1], random_fish_pos[2]);
+
+        //make dir_set random
+        const random_fish_dir_set = make_dir_set(fish_dir_set);
+        
+        // make dir_set obj
+        const fish_dir_set_random = new obj_Direction(random_fish_dir_set[0], random_fish_dir_set[1], random_fish_dir_set[2])
+
+        // // make dir_allowed random
+        // const random_fish_dir_allowed =  make_dir_allowed(fish_dir_allowed)
+
+
+        fishs.push(new obj_Fish([size_body,size_tail,size_fin], 2.0, fish_pos_random, fish_dir_set_random, 0.2)) 
+        // console.log(fishs);
+        fishs[i].set_webstuff(gl, program)
+    }
+    
+    return fishs
+}
+
+export function render_fishs(fishs, mv){
+    for ( var i = 0; i < fishs.length; ++i ){
+        fishs[i].render(mv)
+    }
 }
 
 // function is_floatv2(e){

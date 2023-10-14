@@ -231,7 +231,7 @@ export  function KeyDownChecker(evtobj,id) {
     }
     if (target.id == "right"){
         Right_key = evtobj.keyCode;
-        // console.log("hello2");
+        // console.log("hello2");m
     }
     // console.log("hello3");
     document.getElementById(target.id).value = "";

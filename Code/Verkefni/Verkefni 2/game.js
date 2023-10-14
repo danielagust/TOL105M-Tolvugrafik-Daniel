@@ -37,8 +37,8 @@ var size_fin = new obj_Size(0.1,0.02,0.0);
 var fin_length = 0.1;
 var fin_height = 0.02;
 
-var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
-var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
+var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
+var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
 
 var fishs = [];
 
@@ -77,6 +77,7 @@ function get_ofset(){
 }
 
 
+
 var movement = false;     // Er m�sarhnappur ni�ri?
 var spinX = 0;
 var spinY = 0;
@@ -92,13 +93,15 @@ var incFin1 = 0.2;        // Breyting � sn�ningshorni
 var rotFin2 = 0.0;        // Sn�ningshorn spor�s
 var incFin2 = -0.2;        // Breyting � sn�ningshorni
 
-var zView = 2.0;   //2.0       // Sta�setning �horfanda � z-hniti
+var zView = 10.0;   //2.0       // Sta�setning �horfanda � z-hniti
 
 var proLoc;
 var mvLoc;
 var colorLoc;
 var flip = false;
-var speed = 0.5;
+
+var fish_counter = 10;
+
 
 var dir = {
     left:0.0,
@@ -175,7 +178,7 @@ export function run()
 
     // var vPosition = gl.getAttribLocation( program, "vPosition" );
     // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
-    
+    fishs = Helper.make_fishs(3, gl, program);
     
     if(!fish_flip){
         testing(program);
@@ -185,6 +188,7 @@ export function run()
         fish2.set_webstuff(gl, program);
     }
     
+
     // fish.set_webstuff(gl, program);
     
 
@@ -331,6 +335,11 @@ var timer = 0.0; //tick
 // console.log(Helper.angle_to_degre(dir.yaw));
 
 var fish_flip = true
+document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
+function cemera_fliper(){
+    cemera_flip = !cemera_flip
+}
+
 
 function tester(mv){
     if(!flip&& fish_flip){
@@ -464,9 +473,11 @@ function lock(mv, deltaTime){
     }
     return mv
 }
-var cemera_flip = false;
+var cemera_flip = true;
 
-var camera = new obj_Camera(vec3(0.0,0.0,0.2), vec3(0.0,0.0,-1.00), vec3(0.0,1.0,0.0), 1.0)
+var speed = 0.5;
+
+var camera = new obj_Camera(vec3(0.0,0.0,1.0), vec3(0.0,0.0,-1.00), vec3(0.0,1.0,0.0), 1.0)
 function render(now)
 {
     
@@ -497,8 +508,10 @@ function render(now)
     // fish.render(mv);
     // fish.render(mv);
     // tester(mv);
-    fish.render(mv);
+    // fish.render(mv);
     // fish2.render(mv);
+    // fishs[0].render(mv);
+    Helper.render_fishs(fishs, mv);
 
     
 

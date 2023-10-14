@@ -3,6 +3,7 @@ import obj_Parent_Char from "./obj_Parent_Char.js"
 import * as Helper from './helpers/Helper_func.js';
 import obj_Direction from "./helpers/obj_Direction.js";
 import obj_Position from "./helpers/obj_Position.js";
+import config from "./config.json" assert { type: 'json' };
 
 export default class obj_Fish {
     /**
@@ -11,7 +12,7 @@ export default class obj_Fish {
      * @param {float} width_screen_end 
      * @param {vec2} pos 
      */
-    constructor(size, width_screen_end, pos, dir){
+    constructor(size, width_screen_end, pos, dir, body_middle){
         var temp_points = [];
 
 
@@ -19,13 +20,17 @@ export default class obj_Fish {
         
         
         // super(temp_points, size, pos); // sent to parent
-        this.size_body = new obj_Size(0.5,0.2,0.0); //new obj_Size(0.5,0.2,0.0);
-        this.size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
-        this.size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
+        // this.size_body = new obj_Size(0.5,0.2,0.0); //new obj_Size(0.5,0.2,0.0);
+        // this.size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
+        // this.size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
+        this.size_body = size[0] //new obj_Size(0.5,0.2,0.0);
+        this.size_tail = size[1] //new obj_Size(0.15,0.15,0.0);
+        this.size_fin = size[2] //new obj_Size(0.1,0.02,0.0);
         // console.log(this.size_fin);
-        var body_middle = 0.2;
-        this.dir  = new obj_Direction(1.0,-0.0,0.0);
+        var body_middle = body_middle;
+        // this.dir  = new obj_Direction(1.0,-0.0,0.0);
         this.dir = dir
+        this.dir_allowed = config.fish.dir_alowed;
 
         this.rotTail = 0.0;        // Snúningshorn tail
         this.incTail = 2.0;        // Breyting á snúningshorni
@@ -145,7 +150,12 @@ export default class obj_Fish {
     mv = mult(mv, translate(this.pos.position3d_to_vec))
     mv = mult(mv, translate(this.get_ofset())) // move to center
     // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
-    mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
+    if (radians(this.dir_allowed.yaw.yaw_max)> this.dir.yaw && radians(this.dir_allowed.yaw.yaw_min) < this.dir.yaw){
+        mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
+    }
+    
+    
+    
     mv = mult( mv, rotateY(Helper.angle_to_degre(this.dir.pitch)) );
     // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
    
