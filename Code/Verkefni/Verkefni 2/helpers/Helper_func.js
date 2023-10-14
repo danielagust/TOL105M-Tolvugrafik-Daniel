@@ -47,10 +47,58 @@ export function get_speed(v){
         temp += Math.pow(v[i],2);
     }
     return Math.sqrt(temp);
-}
+} 
 
 export function vec3_to_Vector(v){
     return new obj_Vector(v[0], v[1], v[2]);
+}
+
+export function transposeV(v){
+    // var array = v;
+    // return array.map((_, colIndex) => array.map(row => row[colIndex]));
+    if (v.length[0] == 1){
+
+    }
+    
+    for ( var i = 0; i < v.length; ++i ) {
+        result.push( [v[i]] );
+        
+    }
+    result.matrix = true;
+    for (let i = 0; i < mat.length; i++) {
+        for (let j = 0; j < i; j++) {
+            const tmp = mat[i][j];
+            mat[i][j] = mat[j][i];
+            mat[j][i] = tmp;
+        }
+    }
+    return mat
+    return matrix.reduce((prev, next) => next.map((item, i) =>
+    (prev[i] || []).concat(next[i])
+    ), []);
+    return Object.keys(a[0]).map(function(c) {
+        return a.map(function(r) { return r[c]; });
+    });
+    return result;
+}
+
+function transpose( m )
+{
+    if ( !m.matrix ) {
+        return "transpose(): trying to transpose a non-matrix";
+    }
+
+    var result = [];
+    for ( var i = 0; i < m.length; ++i ) {
+        result.push( [] );
+        for ( var j = 0; j < m[i].length; ++j ) {
+            result[i].push( m[j][i] );
+        }
+    }
+
+    result.matrix = true;
+
+    return result;
 }
 
 // function is_floatv2(e){
