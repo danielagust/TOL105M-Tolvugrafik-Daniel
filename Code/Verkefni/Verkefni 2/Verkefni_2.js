@@ -11,9 +11,11 @@ window.onload = function init()
     run();
     // document.getElementById("restart").disabled = true;
 
-    // document.getElementById("forward").addEventListener ("keydown", KeyDownChecker);
-    // document.getElementById("backward").addEventListener ("keydown", KeyDownChecker);
-    // document.getElementById("left").addEventListener ("keydown", KeyDownChecker);
-    // document.getElementById("right").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("forward").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("backward").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("left").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("right").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("up").addEventListener ("keydown", KeyDownChecker);
+    document.getElementById("down").addEventListener ("keydown", KeyDownChecker);
     
 };

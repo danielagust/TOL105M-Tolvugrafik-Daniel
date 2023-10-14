@@ -40,6 +40,8 @@ var fin_height = 0.02;
 var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
 var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))
 
+var fishs = [];
+
 
 // Hn�tar fisks � xy-planinu
 var vertices = [
@@ -197,6 +199,25 @@ export function run()
     
 
     // Atbur�af�ll fyrir m�s
+
+    event_keyboard();
+
+    render();
+}
+
+function event_keyboard(){
+
+
+    document.getElementById('forward').disabled = true;  
+    document.getElementById('backward').disabled = true; 
+    document.getElementById('left').disabled = true; 
+    document.getElementById('right').disabled = true; 
+    document.getElementById('up').disabled = true; 
+    document.getElementById('down').disabled = true; 
+    
+    document.getElementById("start").disabled = true;
+    // document.getElementById("restart").disabled = false;
+
     canvas.addEventListener("mousedown", function(e){
         movement = true;
         origX = e.offsetX;
@@ -218,8 +239,8 @@ export function run()
     } );
     
     // Atbur�afall fyrir lyklabor�
-     window.addEventListener("keydown", function(e){
-         switch( e.keyCode ) {
+    window.addEventListener("keydown", function(e){
+        switch( e.keyCode ) {
             case Forward_key:	// upp �r
                 zView += 0.2;
                 dir.fb += speed;
@@ -247,17 +268,15 @@ export function run()
      }  );  
 
     // Atbur�afall fyri m�sarhj�l
-     window.addEventListener("mousewheel", function(e){
-         if( e.wheelDelta > 0.0 ) {
-             zView -= 0.2;
-             dir.fb += speed;
-         } else {
-             zView += 0.2;
-             dir.fb -= speed;
-         }
-     }  );  
-
-    render();
+    window.addEventListener("mousewheel", function(e){
+        if( e.wheelDelta > 0.0 ) {
+            zView -= 0.2;
+            dir.fb += speed;
+        } else {
+            zView += 0.2;
+            dir.fb -= speed;
+        }
+    }  ); 
 }
 
 var fish_look_x = 2.1;

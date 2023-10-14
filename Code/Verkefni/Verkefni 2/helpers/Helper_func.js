@@ -1,5 +1,8 @@
 import obj_Vector from "./obj_vector.js";
 
+
+import config from "../config.json" assert { type: 'json' };
+
 Number.isInteger = Number.isInteger || function(value) {
     return typeof value === 'number' && 
       isFinite(value) && 
@@ -99,6 +102,11 @@ function transpose( m )
     result.matrix = true;
 
     return result;
+}
+
+export function make_fishs(fishs){
+    
+    fishs.push(new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0))) 
 }
 
 // function is_floatv2(e){

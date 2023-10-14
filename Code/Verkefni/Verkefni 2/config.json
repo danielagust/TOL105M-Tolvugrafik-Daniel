@@ -1,18 +1,50 @@
+
 {
     "fish":{
         "size":{
-            "length":{
-                "length_max": 0.3,
-                "length_min": 0.1
+            "size_body":{ 
+                "length":{
+                    "length_max": 0.5,
+                    "length_min": 0.4
+                },
+                "height":{
+                    "height_max": 0.2,
+                    "height_min": 0.1
+                },
+                "width":{
+                    "width_max": 0.0,
+                    "width_min": 0.0
+                }
             },
-            "height":{
-                "height_max": 0.1,
-                "height_min": 0.01
+            "size_tail":{
+                "length":{
+                    "length_max": 0.3,
+                    "length_min": 0.1
+                },
+                "height":{
+                    "height_max": 0.1,
+                    "height_min": 0.01
+                },
+                "width":{
+                    "width_max": 0.0,
+                    "width_min": 0.0
+                }
             },
-            "width":{
-                "width_max": 0.0,
-                "width_min": 0.0
+            "size_fin":{
+                "length":{
+                    "length_max": 0.3,
+                    "length_min": 0.1
+                },
+                "height":{
+                    "height_max": 0.1,
+                    "height_min": 0.01
+                },
+                "width":{
+                    "width_max": 0.0,
+                    "width_min": 0.0
+                }
             }
+            
              
         },
         "color":{
