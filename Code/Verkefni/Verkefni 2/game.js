@@ -174,7 +174,7 @@ export function run()
     // var vPosition = gl.getAttribLocation( program, "vPosition" );
     // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     
-    // proLoc = gl.getUniformLocation( program, "projection" );
+    proLoc = gl.getUniformLocation( program, "projection" );
     // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
     // gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     // gl.enableVertexAttribArray( vPosition );
@@ -292,6 +292,7 @@ function event_keyboard(){
             zView += 0.2;
             dir.fb -= speed;
         }
+        console.log(zView);
     }  ); 
 }
 
@@ -505,19 +506,35 @@ function render(now)
    
     // console.log(dir.x);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    
+    
     var mv = mat4();
     
     if (cemera_flip){
+        if (zView >= 0){
+            var proj = perspective( 90.0, 1.0, 0.1, 100.0*Math.abs(zView) );
+        }else{
+            zView = -zView;
+            var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        }
         mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
         mv = mult( mv, rotateX(spinX) );
         mv = mult( mv, rotateY(spinY) );
     }else{
+        // if (dir >= 0){
+        //     var proj = perspective( 90.0, 1.0, 0.1, 100.0*Math.abs(zView) );
+        // }else{
+        //     zView = -zView;
+        //     var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        // }
         var mv  = camera.new_pos();
     
         mv = camera.rotate(spinX, spinY, mv, deltaTime);
         mv = lock(mv, deltaTime);
     }
-
+    gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+    
     var mv_org = mv;
     
     Helper.render_fishs(fishs, mv, deltaTime);

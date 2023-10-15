@@ -99,8 +99,8 @@
                 "yaw_max":10
             }
         },
-        "fish_count": 1,
-        "fish_speed": 9.0
+        "fish_count": 10,
+        "fish_speed": 2.0
     },
     "fish_tank":{
         "length": 100,

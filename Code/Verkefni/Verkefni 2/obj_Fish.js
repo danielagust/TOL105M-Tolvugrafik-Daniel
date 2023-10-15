@@ -109,9 +109,9 @@ export default class obj_Fish {
 
     set_webstuff(gl, program){
         this.gl = gl;
-        var proLoc = this.gl.getUniformLocation( program, "projection" );
-        var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-        this.gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+        this.proLoc = this.gl.getUniformLocation( program, "projection" );
+        // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        // this.gl.uniformMatrix4fv(proLoc, false, flatten(proj));
 
         this.vBuffer = this.gl.createBuffer();
         this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.vBuffer );
@@ -159,6 +159,11 @@ export default class obj_Fish {
     // var mv = lookAt( vec3(0.0, 0.0, this.zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     // mv = mult( mv, rotateX(spinX) );
     // mv = mult( mv, rotateY(spinY) );
+
+    // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+    // this.gl.uniformMatrix4fv(this.proLoc, false, flatten(proj));
+
+
     this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
     mv = mult(mv, translate(this.pos.position3d_to_vec))
     mv = mult(mv, translate(this.get_ofset())) // move to center
@@ -169,8 +174,8 @@ export default class obj_Fish {
     // mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
     // console.log(Helper.angle_to_degre(this.dir.yaw))
     // console.log(Helper.angle_to_degre(this.dir.pitch))
-    console.log(this.pos);
-    console.log("");
+    // console.log(this.pos);
+    // console.log("");
     
     mv = mult( mv, rotateY(Helper.angle_to_degre(-this.dir.pitch)) );
     // mv =this.move_fish(mv, this.timer) // add to move

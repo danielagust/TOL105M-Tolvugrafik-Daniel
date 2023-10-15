@@ -212,8 +212,8 @@ export function make_fishs(amount, gl, program){
         // var size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
         // var size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
 
-        var fish_pos_random = new obj_Position(0.0,0.0,0.0);
-        var fish_dir_set_random = new obj_Direction(1.0,1.0,1.0)
+        // var fish_pos_random = new obj_Position(0.0,0.0,0.0);
+        // var fish_dir_set_random = new obj_Direction(1.0,1.0,1.0)
 
 
         fishs.push(new obj_Fish([size_body,size_tail,size_fin], 2.0, fish_pos_random, fish_dir_set_random, 0.2)) 
