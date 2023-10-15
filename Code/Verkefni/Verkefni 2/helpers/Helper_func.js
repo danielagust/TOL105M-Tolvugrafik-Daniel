@@ -432,6 +432,29 @@ export function if_end(fishs){
     }
     
 }
+export function if_endv2(fishs){
+    for ( var i = 0; i < fishs.length; ++i ){
+        var temp = negate(fishs[i].dir.direction3d_to_vec)
+        if(fishs[i].pos.x>= config.fish_tank.length &&fishs[i].pos.x<= -config.fish_tank.length ){
+            fishs[i].dir = vec3_to_Dir(temp);
+            // fishs[i].dir.x = -fishs[i].dir.x
+        }
+        if(fishs[i].pos.y>= config.fish_tank.height &&fishs[i].pos.y<= -config.fish_tank.height ){
+            fishs[i].dir = vec3_to_Dir(temp);
+            // fishs[i].dir.y = -fishs[i].dir.y
+        }
+        
+        if(fishs[i].pos.z>= config.fish_tank.width &&fishs[i].pos.z<= -config.fish_tank.width ){
+            fishs[i].dir = vec3_to_Dir(temp);
+            // fishs[i].dir.z = -fishs[i].dir.z
+        }
+        // fail save
+        if(fishs[i].pos.radius>= config.fish_tank.radius+1){
+            fishs[i].pos = new obj_Position(0.0,0.0,0.0)
+        }
+    }
+    
+}
 
 // function is_floatv2(e){
 //     const n = Number(e)

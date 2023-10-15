@@ -116,15 +116,15 @@
         "fish_count": 10,
         "fish_speed": 2.0,
         "away_from_closest_weight": 2.0,
-        "middle_weight":2.0,
+        "middle_weight":2.5,
         "dir_weight":1.5,
         "mod": 10,
         "ofsett": 3
     },
     "fish_tank":{
-        "length": 100,
-        "height":100,
-        "width":100,
+        "length": 10,
+        "height":10,
+        "width":10,
         "padding":{
             "x":{
                 "x_min":0.1,
