@@ -222,17 +222,17 @@ export function run()
 function event_keyboard(){
 
 
-    document.getElementById('forward').disabled = true;  
-    document.getElementById('backward').disabled = true; 
-    document.getElementById('left').disabled = true; 
-    document.getElementById('right').disabled = true; 
-    document.getElementById('up').disabled = true; 
-    document.getElementById('down').disabled = true; 
+    // document.getElementById('forward').disabled = true;  
+    // document.getElementById('backward').disabled = true; 
+    // document.getElementById('left').disabled = true; 
+    // document.getElementById('right').disabled = true; 
+    // document.getElementById('up').disabled = true; 
+    // document.getElementById('down').disabled = true; 
 
     
     document.getElementById("start").disabled = true;
 
-    document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
+    // document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
     
     change_fish_count_button
     document.getElementById("change_fish_count_input").disabled = true;
