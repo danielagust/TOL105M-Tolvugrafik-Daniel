@@ -119,7 +119,7 @@
         "middle_weight":2.5,
         "dir_weight":1.5,
         "mod": 10,
-        "ofsett": 3
+        "ofsett": 0
     },
     "fish_tank":{
         "length": 10,

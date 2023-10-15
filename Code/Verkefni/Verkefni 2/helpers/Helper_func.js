@@ -370,6 +370,7 @@ export function find_weighted_average(fishs){
     // const dir_weight = config.fish.dir_weight;
     var weight = [];
     var temp_all = [];
+    const all = away_from_closest_weight+ middle_weight+dir_weight
     for ( var i = 0; i < fishs.length; ++i ){
         // const temp_all_away_from_closest = fishs[i].away_from_closest;
         temp_all.push(scale(away_from_closest_weight, fishs[i].away_from_closest.direction3d_to_vec))
@@ -378,7 +379,7 @@ export function find_weighted_average(fishs){
         // add_muliple(temp_all);
         const temp_added = add_muliple(temp_all);
         // weight.push(vec3_to_Dir(dived_vector(temp_added, 3)))
-        fishs[i].dir = vec3_to_Dir(normalize(dived_vector(temp_added, 3)));
+        fishs[i].dir = vec3_to_Dir(normalize(dived_vector(temp_added, all)));
         // console.log(add_muliple(temp_all))
     }
     // console.log(weight)
@@ -410,16 +411,17 @@ export function if_end(fishs){
     for ( var i = 0; i < fishs.length; ++i ){
         if(fishs[i].pos.radius>= config.fish_tank.radius){
             
-            if (fishs[i].has_been_hit){
-                var temp = negate(fishs[i].dir.direction3d_to_vec)
-                // temp = add(temp, scale(-(config.fish_tank.radius-0.5), vec3(0.0,0.0,0.0)))
-                fishs[i].has_been_hit = false
-            }
-            else{
-                fishs[i].has_been_hit = true
-                var temp = negate(fishs[i].dir.direction3d_to_vec)
-            }
-            
+            // if (fishs[i].has_been_hit){
+            //     var temp = negate(fishs[i].dir.direction3d_to_vec)
+            //     var temp = negate(fishs[i].dir.direction3d_to_vec)
+            //     // temp = add(temp, scale(-(config.fish_tank.radius-0.5), vec3(0.0,0.0,0.0)))
+            //     fishs[i].has_been_hit = false
+            // }
+            // else{
+            //     fishs[i].has_been_hit = true
+            //     var temp = negate(fishs[i].dir.direction3d_to_vec)
+            // }
+            var temp = negate(fishs[i].dir.direction3d_to_vec)
             fishs[i].dir = vec3_to_Dir(temp);
             
             
