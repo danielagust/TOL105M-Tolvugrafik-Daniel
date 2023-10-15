@@ -65,7 +65,7 @@ export default class obj_Direction{
         this.x = new_dir[0];
         this.y = new_dir[1];
         this.z = new_dir[2];
-        this.set_pyr_direction3d();
+        // this.set_pyr_direction3d();
     }
 
     get direction3d_to_vec(){

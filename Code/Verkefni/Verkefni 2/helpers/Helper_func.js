@@ -409,8 +409,19 @@ export function negateM4(m){
 export function if_end(fishs){
     for ( var i = 0; i < fishs.length; ++i ){
         if(fishs[i].pos.radius>= config.fish_tank.radius){
-            var temp = negate(fishs[i].pos.position3d_to_vec)
-            fishs[i].pos = vec3_to_Pos(temp);
+            
+            if (fishs[i].has_been_hit){
+                var temp = negate(fishs[i].dir.direction3d_to_vec)
+                // temp = add(temp, scale(-(config.fish_tank.radius-0.5), vec3(0.0,0.0,0.0)))
+                fishs[i].has_been_hit = false
+            }
+            else{
+                fishs[i].has_been_hit = true
+                var temp = negate(fishs[i].dir.direction3d_to_vec)
+            }
+            
+            fishs[i].dir = vec3_to_Dir(temp);
+            
             
             
         }

@@ -574,7 +574,7 @@ function render(now)
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
     var mv_org = mv;
-    Helper.if_end(fishs);
+    
     Helper.render_fishs(fishs, mv, deltaTime);
     if (fishs.length > 1){
         
@@ -588,6 +588,7 @@ function render(now)
     
     
     Helper.move_fish(fishs, config.fish.fish_speed*deltaTime)
+    Helper.if_end(fishs);
     
    
     
