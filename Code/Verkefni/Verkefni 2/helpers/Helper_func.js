@@ -60,6 +60,14 @@ export function vec3_to_Vector(v){
     return new obj_Vector(v[0], v[1], v[2]);
 }
 
+export function vec3_to_Dir(v){
+    return new obj_Direction(v[0], v[1], v[2]);
+}
+
+export function vec3_to_Pos(v){
+    return new obj_Position(v[0], v[1], v[2]);
+}
+
 export function transposeV(v){
     // var array = v;
     // return array.map((_, colIndex) => array.map(row => row[colIndex]));
@@ -143,7 +151,7 @@ function make_dir_set(fish_dir_set){
     random_fish_dir_set.push(Math.random() * (fish_dir_set.x.x_max -fish_dir_set.x.x_min) + fish_dir_set.x.x_min);
     random_fish_dir_set.push(Math.random() * (fish_dir_set.y.y_max -fish_dir_set.y.y_min) + fish_dir_set.y.y_min)
     random_fish_dir_set.push (Math.random() * (fish_dir_set.z.z_max -fish_dir_set.z.z_min) + fish_dir_set.z.z_min)
-    console.log(random_fish_dir_set)
+    // console.log(random_fish_dir_set)
    
     return random_fish_dir_set;
 
@@ -189,16 +197,23 @@ export function make_fishs(amount, gl, program){
         const random_fish_pos = make_pos(fish_pos);
 
         //make pos obj
-        const fish_pos_random = new obj_Position(random_fish_pos[0], random_fish_pos[1], random_fish_pos[2]);
+        var fish_pos_random = new obj_Position(random_fish_pos[0], random_fish_pos[1], random_fish_pos[2]);
 
         //make dir_set random
         const random_fish_dir_set = make_dir_set(fish_dir_set);
         
         // make dir_set obj
-        const fish_dir_set_random = new obj_Direction(random_fish_dir_set[0], random_fish_dir_set[1], random_fish_dir_set[2])
+        var fish_dir_set_random = new obj_Direction(random_fish_dir_set[0], random_fish_dir_set[1], random_fish_dir_set[2])
 
         // // make dir_allowed random
         // const random_fish_dir_allowed =  make_dir_allowed(fish_dir_allowed)
+
+        // var size_body = new obj_Size(0.5,0.2,0.0); //new obj_Size(0.5,0.2,0.0);
+        // var size_tail = new obj_Size(0.15,0.15,0.0); //new obj_Size(0.15,0.15,0.0);
+        // var size_fin = new obj_Size(0.1,0.02,0.0); //new obj_Size(0.1,0.02,0.0);
+
+        var fish_pos_random = new obj_Position(0.0,0.0,0.0);
+        var fish_dir_set_random = new obj_Direction(1.0,1.0,1.0)
 
 
         fishs.push(new obj_Fish([size_body,size_tail,size_fin], 2.0, fish_pos_random, fish_dir_set_random, 0.2)) 
@@ -209,9 +224,54 @@ export function make_fishs(amount, gl, program){
     return fishs
 }
 
-export function render_fishs(fishs, mv){
+export function render_fishs(fishs, mv, deltaTime){
     for ( var i = 0; i < fishs.length; ++i ){
-        fishs[i].render(mv)
+        fishs[i].render(mv, deltaTime)
+    }
+}
+
+export function move_fish(fishs, amount){
+    for ( var i = 0; i < fishs.length; ++i ){
+        var v = add(fishs[i].pos.position3d_to_vec, (scale(amount,normalize(fishs[i].dir.direction3d_to_vec))));
+        // v = scale(amount,v)
+        fishs[i].pos = vec3_to_Pos(v);
+    }
+    
+    // console.log(fishs[0].dir)*
+
+
+    
+}
+
+export function negateM3(m){
+    var m2 = [
+        vec3( -1,  0.0,  0.0 ),
+        vec3(  0.0, -1,  0.0 ),
+        vec3(  0.0,  0.0, -1 )
+    ];
+    m2.matrix = true;
+    return mult(m2,m);
+}
+
+
+export function negateM4(m){
+    var m2 = [
+        vec4( -1, 0.0,  0.0,   0.0 ),
+        vec4( 0.0,  -1, 0.0,   0.0 ),
+        vec4( 0.0,  0.0,  -1,  0.0 ),
+        vec4( 0.0,  0.0,  0.0,  -1 )
+    ];
+    m2.matrix = true;
+    return mult(m2,m);
+}
+
+export function if_end(fishs){
+    for ( var i = 0; i < fishs.length; ++i ){
+        if(fishs[i].pos.radius>= config.fish_tank.radius){
+            var temp = negate(fishs[i].pos.position3d_to_vec)
+            fishs[i].pos = vec3_to_Pos(temp);
+            
+        }
     }
 }
 

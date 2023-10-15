@@ -43,6 +43,9 @@ export default class obj_Fish {
 
         this.pos = pos;
 
+        this.timer = 1.0;
+        this.speed = config.fish.fish_speed
+
         // var vertices = [
         //     // l�kami (spjald)
         //     vec4( -body_length,  body_width, 0.0, 1.0 ),
@@ -106,10 +109,13 @@ export default class obj_Fish {
 
     set_webstuff(gl, program){
         this.gl = gl;
+        var proLoc = this.gl.getUniformLocation( program, "projection" );
+        var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+        this.gl.uniformMatrix4fv(proLoc, false, flatten(proj));
 
         this.vBuffer = this.gl.createBuffer();
         this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.vBuffer );
-        this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
+        
     
         var vPosition = this.gl.getAttribLocation( program, "vPosition" );
         this.gl.vertexAttribPointer( vPosition, 4, this.gl.FLOAT, false, 0, 0 );
@@ -138,7 +144,14 @@ export default class obj_Fish {
         return(vec3(-temp[0], -temp[1], -temp[2]))
     }
 
-    render(mv){
+    move_fish(mv, amount){
+        mv = mult(mv, translate(this.pos.position3d_to_vec))
+        mv = mult(mv, translate(scale(amount,normalize(this.dir.direction3d_to_vec))))
+        mv = mult(mv, (translate(negate(this.pos.position3d_to_vec))))
+        return mv;
+    }
+
+    render(mv, deltaTime){
         // console.log(dir.x);
     // this.gl.clear( this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     // this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
@@ -146,17 +159,23 @@ export default class obj_Fish {
     // var mv = lookAt( vec3(0.0, 0.0, this.zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
     // mv = mult( mv, rotateX(spinX) );
     // mv = mult( mv, rotateY(spinY) );
-    
+    this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.points_all), this.gl.STATIC_DRAW );
     mv = mult(mv, translate(this.pos.position3d_to_vec))
     mv = mult(mv, translate(this.get_ofset())) // move to center
     // mv = mult( mv, rotateX(Helper.angle_to_degre(dir.yaw)) );
     if (radians(this.dir_allowed.yaw.yaw_max)> this.dir.yaw && radians(this.dir_allowed.yaw.yaw_min) < this.dir.yaw){
         mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
     }
+    // mv = mult( mv, rotateZ(Helper.angle_to_degre(this.dir.yaw)) );
+    // console.log(Helper.angle_to_degre(this.dir.yaw))
+    // console.log(Helper.angle_to_degre(this.dir.pitch))
+    console.log(this.pos);
+    console.log("");
     
+    mv = mult( mv, rotateY(Helper.angle_to_degre(-this.dir.pitch)) );
+    // mv =this.move_fish(mv, this.timer) // add to move
+    this.timer +=  this.speed*deltaTime
     
-    
-    mv = mult( mv, rotateY(Helper.angle_to_degre(this.dir.pitch)) );
     // mv = mult( mv, rotateY(Helper.angle_to_degre(Math.PI)) );
    
 

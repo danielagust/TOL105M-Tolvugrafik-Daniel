@@ -12,6 +12,8 @@ import * as Helper from './helpers/Helper_func.js';
 import obj_Fish from "./obj_Fish.js"
 import obj_Position from "./helpers/obj_Position.js";
 import obj_Camera from "./helpers/obj_camera.js";
+import { obj_Fish_Tank } from "./obj_Fish_Tank.js";
+import config from "./config.json" assert { type: 'json' };
 var canvas;
 var gl;
 
@@ -37,8 +39,10 @@ var size_fin = new obj_Size(0.1,0.02,0.0);
 var fin_length = 0.1;
 var fin_height = 0.02;
 
-var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
-var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
+// var fish = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(0.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
+// var fish2 = new obj_Fish([size_body,size_tail,size_fin], 2.0, new obj_Position(1.0,0.0,0.0), new obj_Direction(1.0,-0.0,0.0), 0.2)
+
+var fish_tank = new obj_Fish_Tank(new obj_Size(0.5,0.5,0.5), new obj_Position(0.0,0.0,0.0))
 
 var fishs = [];
 
@@ -93,14 +97,14 @@ var incFin1 = 0.2;        // Breyting � sn�ningshorni
 var rotFin2 = 0.0;        // Sn�ningshorn spor�s
 var incFin2 = -0.2;        // Breyting � sn�ningshorni
 
-var zView = 10.0;   //2.0       // Sta�setning �horfanda � z-hniti
+var zView = 2.0;   //2.0       // Sta�setning �horfanda � z-hniti
 
 var proLoc;
 var mvLoc;
 var colorLoc;
 var flip = false;
 
-var fish_counter = 10;
+var fish_counter = config.fish.fish_count;
 
 
 var dir = {
@@ -170,24 +174,28 @@ export function run()
     // var vPosition = gl.getAttribLocation( program, "vPosition" );
     // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     
-    proLoc = gl.getUniformLocation( program, "projection" );
-    var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
-    gl.uniformMatrix4fv(proLoc, false, flatten(proj));
+    // proLoc = gl.getUniformLocation( program, "projection" );
+    // var proj = perspective( 90.0, 1.0, 0.1, 100.0 );
+    // gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     // gl.enableVertexAttribArray( vPosition );
    
 
     // var vPosition = gl.getAttribLocation( program, "vPosition" );
     // gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
-    fishs = Helper.make_fishs(3, gl, program);
     
-    if(!fish_flip){
-        testing(program);
-    }
-    else{
-        fish.set_webstuff(gl, program);
-        fish2.set_webstuff(gl, program);
-    }
+    fishs = Helper.make_fishs(fish_counter, gl, program);
+    fish_tank.set_webstuff(gl, program);
     
+    
+    // if(!fish_flip){
+    //     testing(program);
+    // }
+    // else{
+    //     fish.set_webstuff(gl, program);
+    //     fish2.set_webstuff(gl, program);
+    // }
+    
+    // console.log(Helper.negateM3(mat3()))
 
     // fish.set_webstuff(gl, program);
     
@@ -218,8 +226,12 @@ function event_keyboard(){
     document.getElementById('right').disabled = true; 
     document.getElementById('up').disabled = true; 
     document.getElementById('down').disabled = true; 
+
     
     document.getElementById("start").disabled = true;
+
+    document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
+    document.getElementById("cemara_flip").disabled = true; // could not get it to work
     // document.getElementById("restart").disabled = false;
 
     canvas.addEventListener("mousedown", function(e){
@@ -321,7 +333,7 @@ export function KeyDownChecker(evtobj,id) {
     document.getElementById(target.id).value = "";
 }
 
-var dir2  = new obj_Direction(-1.0,-0.0,0.0);
+// var dir2  = new obj_Direction(-1.0,-0.0,0.0);
 var timer = 0.0; //tick
 
 // class Timerv2{
@@ -335,7 +347,7 @@ var timer = 0.0; //tick
 // console.log(Helper.angle_to_degre(dir.yaw));
 
 var fish_flip = true
-document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
+
 function cemera_fliper(){
     cemera_flip = !cemera_flip
 }
@@ -478,6 +490,8 @@ var cemera_flip = true;
 var speed = 0.5;
 
 var camera = new obj_Camera(vec3(0.0,0.0,1.0), vec3(0.0,0.0,-1.00), vec3(0.0,1.0,0.0), 1.0)
+
+
 function render(now)
 {
     
@@ -491,17 +505,27 @@ function render(now)
    
     // console.log(dir.x);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    var mv = mat4();
+    
     if (cemera_flip){
-        var mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+        mv = lookAt( vec3(0.0, 0.0, zView), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
         mv = mult( mv, rotateX(spinX) );
         mv = mult( mv, rotateY(spinY) );
     }else{
         var mv  = camera.new_pos();
     
-        mv = camera.rotate(spinX, spinY, mv);
+        mv = camera.rotate(spinX, spinY, mv, deltaTime);
         mv = lock(mv, deltaTime);
     }
+
+    var mv_org = mv;
     
+    Helper.render_fishs(fishs, mv, deltaTime);
+    mv = mv_org;
+    Helper.move_fish(fishs, config.fish.fish_speed*deltaTime)
+   
+    Helper.if_end(fishs);
+    fish_tank.render(mv);
    
     // printm(mv);
     // console.log("");
@@ -511,7 +535,11 @@ function render(now)
     // fish.render(mv);
     // fish2.render(mv);
     // fishs[0].render(mv);
-    Helper.render_fishs(fishs, mv);
+    // Helper.render_fishs(fishs, mv, deltaTime);
+    // mv = mv_org;
+    // Helper.move_fish(fishs, config.fish.fish_speed*deltaTime)
+    // Helper.if_end(fishs);
+    // fish_tank.render(mv);
 
     
 

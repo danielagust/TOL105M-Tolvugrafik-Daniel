@@ -1,3 +1,4 @@
+import * as Helper from './Helper_func.js';
 export default class obj_Position{
     /**
      * 
@@ -37,6 +38,10 @@ export default class obj_Position{
 
     get position3d_to_vec(){
         return vec3(this.x, this.y, this.z);
+    }
+
+    get radius(){
+        return Helper.get_speed(this.position3d_to_vec)
     }
     
 }

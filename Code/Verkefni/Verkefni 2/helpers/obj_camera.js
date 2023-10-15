@@ -1,4 +1,5 @@
 import * as Helper from './Helper_func.js';
+import obj_Direction from './obj_Direction.js';
 import obj_Position from './obj_Position.js';
 import obj_Vector from './obj_vector.js';
 export default class obj_Camera{
@@ -96,17 +97,17 @@ export default class obj_Camera{
 
     move_rl(amount, mv){
         var v = scale(amount,this.cross_vector_n)
-        this.move_dir(v);
+        // this.move_dir(v);
         return this.move(v,mv);
     }
 
     move_ud(amount, mv){
         var v = scale(amount,vec3(0.0,1.0,0.0));
-        this.move_dir(v);
+        // this.move_dir(v);
         return this.move(v,mv);
     }
 
-    rotate(yaw, pitch, mv){
+    rotate(yaw, pitch, mv, deltaTime){
         
         
         mv = mult(mv, (translate(this.pos)));
@@ -116,6 +117,14 @@ export default class obj_Camera{
         mv = mult( mv, rotateY(pitch) );
         
         mv = mult(mv, (translate(negate(this.pos))));
+        
+        // const corector = 0.1
+        // var temp = Helper.vec3_to_Dir(this.dir);
+        // temp.pitch_set = pitch*corector;
+        // temp.yaw_set = yaw*corector;
+        // this.dir = temp.direction3d_to_vec;
+        // this.new_pos();
+        // console.log(this.dir);
         
         return mv;
     }

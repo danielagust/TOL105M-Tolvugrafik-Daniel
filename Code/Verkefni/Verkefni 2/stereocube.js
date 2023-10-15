@@ -42,15 +42,19 @@ var colorLoc;
 // var 
 
 // the 8 vertices of the cube
+var lenght = 2.0;
+var height = 2.0;
+var width = 2.0
+
 var v = [
-    vec3( -0.5, -0.5,  0.5 ),
-    vec3( -0.5,  0.5,  0.5 ),
-    vec3(  0.5,  0.5,  0.5 ),
-    vec3(  0.5, -0.5,  0.5 ),
-    vec3( -0.5, -0.5, -0.5 ),
-    vec3( -0.5,  0.5, -0.5 ),
-    vec3(  0.5,  0.5, -0.5 ),
-    vec3(  0.5, -0.5, -0.5 )
+    vec3( -lenght, -height,  width ),
+    vec3( -lenght,  height,  width ),
+    vec3(  lenght,  height,  width ),
+    vec3(  lenght, -height,  width ),
+    vec3( -lenght, -height, -width ),
+    vec3( -lenght,  height, -width ),
+    vec3(  lenght,  height, -width ),
+    vec3(  lenght, -height, -width )
 ];
 
 var lines = [ v[0], v[1], v[1], v[2], v[2], v[3], v[3], v[0],

@@ -102,6 +102,16 @@ export default class obj_Direction{
        
         this.pitch = Math.asin(this.dir_norm.z); // pitch
         
+        // this.yaw = Math.atan2(this.dir_norm.x, this.dir_norm.z); // yaw
+       
+        // this.pitch = Math.asin(-this.dir_norm.y); // pitch
+
+        // this.yaw = Math.atan2(this.dir_norm.x,-this.dir_norm.y); // yaw
+       
+        // this.pitch = Math.atan(Math.sqrt(Math.pow(this.dir_norm.x,2)+Math.pow(this.dir_norm.y,2))/this.dir_norm.z)
+        console.log(this.yaw);
+        console.log(this.pitch);
+        console.log("");
     }
 
     set_pyr_direction2d(){

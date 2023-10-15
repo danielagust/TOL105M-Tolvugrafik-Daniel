@@ -98,7 +98,9 @@
                 "yaw_min":350,
                 "yaw_max":10
             }
-        }
+        },
+        "fish_count": 1,
+        "fish_speed": 9.0
     },
     "fish_tank":{
         "length": 100,
@@ -118,6 +120,7 @@
                 "z_max":0.2
             }
         },
+        "radius":7,
 
 
 
