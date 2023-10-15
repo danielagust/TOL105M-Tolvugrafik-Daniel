@@ -217,6 +217,8 @@ export function run()
     render();
 }
 
+
+
 function event_keyboard(){
 
 
@@ -231,7 +233,21 @@ function event_keyboard(){
     document.getElementById("start").disabled = true;
 
     document.getElementById("cemara_flip").addEventListener ("click", cemera_fliper);
-    document.getElementById("cemara_flip").disabled = true; // could not get it to work
+    
+    change_fish_count_button
+    document.getElementById("change_fish_count_input").disabled = true;
+    document.getElementById("change_fish_count_button").disabled = true;
+    
+    document.getElementById("change_away_from_closest_weight_input").disabled = true;
+    document.getElementById("change_middle_weight_input").disabled = true;
+    document.getElementById("change_dir_weight_input").disabled = true;
+
+    document.getElementById("change_away_from_closest_weight_button").disabled = true;
+    document.getElementById("change_middle_weight_button").disabled = true;
+    document.getElementById("change_dir_weight_button").disabled = true;
+
+    
+    
     // document.getElementById("restart").disabled = false;
 
     canvas.addEventListener("mousedown", function(e){
@@ -299,7 +315,29 @@ function event_keyboard(){
 var fish_look_x = 2.1;
 var fish_look_y = 60;
 var fish_look_z = 1.1;
+export function change_fish_count(){
+    // console.log()
+    if(Helper.is_integer(Number(document.getElementById("change_fish_count_input").value))){
+        fish_counter = Math.floor(Number(document.getElementById("change_fish_count_input").value));
+    }
+    else{
+        console.log("hello");
+    }
+}
 
+export function config_changer(evtobj,id){
+    var target = evtobj.target || evtobj.srcElement;
+    if (target.id == "change_fish_count_button"){
+        if(Helper.is_integer(Number(document.getElementById("change_fish_count_input").value))){
+            fish_counter = Math.floor(Number(document.getElementById("change_fish_count_input").value));
+        }
+        else{
+            console.log("hello");
+        }
+       
+        // console.log("hello2");
+    }
+}
 
 export function KeyDownChecker(evtobj,id) {
 
@@ -536,16 +574,32 @@ function render(now)
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
     var mv_org = mv;
-    
-    Helper.render_fishs(fishs, mv, deltaTime);
-    mv = mv_org;
-    Helper.move_fish(fishs, config.fish.fish_speed*deltaTime)
-   
     Helper.if_end(fishs);
+    Helper.render_fishs(fishs, mv, deltaTime);
+    if (fishs.length > 1){
+        
+        Helper.distand_from_point(fishs);
+        
+        Helper.set_closest(fishs);
+        if(timer % config.fish.mod > config.fish.ofsett){
+            Helper.find_weighted_average(fishs)
+        }
+    }
+    
+    
+    Helper.move_fish(fishs, config.fish.fish_speed*deltaTime)
+    
+   
+    
+    
+    
+    mv = mv_org;
     fish_tank.render(mv);
+
+    // console.log(fishs[0].pos)
    
     // printm(mv);
-    // console.log("");
+    // console.log(fishs[0]);
     // fish.render(mv);
     // fish.render(mv);
     // tester(mv);

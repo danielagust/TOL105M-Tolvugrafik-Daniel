@@ -63,16 +63,30 @@
         },
         "pos":{
             "x":{
-                "x_min":-5.0,
-                "x_max":5.0
+                "x_min":-3.0,
+                "x_max":3.0
             },
             "y":{
-                "y_min":-5.0,
-                "y_max":5.0
+                "y_min":-3.0,
+                "y_max":3.0
             },
             "z":{
-                "z_min":-5.0,
-                "z_max":5.0
+                "z_min":-3.0,
+                "z_max":3.0
+            }
+        },
+        "pos_pyr":{
+            "r":{
+                "r_min":1.0,
+                "r_max":1.0
+            },
+            "pitch":{
+                "pitch_min":0,
+                "pitch_max":360
+            },
+            "yaw":{
+                "yaw_min":0,
+                "yaw_max":360
             }
         },
         "dir_set":{
@@ -100,7 +114,12 @@
             }
         },
         "fish_count": 10,
-        "fish_speed": 2.0
+        "fish_speed": 2.0,
+        "away_from_closest_weight": 2.0,
+        "middle_weight":2.0,
+        "dir_weight":1.5,
+        "mod": 10,
+        "ofsett": 3
     },
     "fish_tank":{
         "length": 100,
@@ -120,7 +139,7 @@
                 "z_max":0.2
             }
         },
-        "radius":7,
+        "radius":6,
 
 
 

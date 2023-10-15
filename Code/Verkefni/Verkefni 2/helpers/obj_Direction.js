@@ -74,16 +74,34 @@ export default class obj_Direction{
 
     /**
      * @param {float[]} new_dir
+     */
+    set (new_dir){
+        this.direction3d = new_dir;
+    }
+
+    /**
+     * @param {float[]} new_dir
      * pyr = pitch, yaw role
      */
-    set pyr_direction3d(new_dir){
-        this.direction3d = new_dir;
+    set pyr_direction3d(new_pyr){
+        // this.pitch_set = new_pyr[1];
+        // this.yaw_set = new_pyr[2];
+        this.x = Math.cos(radians(new_pyr[2]))*Math.cos(radians(new_pyr[1]))
+        this.y = Math.sin(radians(new_pyr[2]))*Math.cos(radians(new_pyr[1]))
+        this.z = Math.sin(radians(new_pyr[1]))
+        var temp = (normalize(this.direction3d_to_vec), 100)
+        this.direction3d = scale(new_pyr[0], normalize(this.direction3d_to_vec))
+        this.set_pyr_direction3d()
+        console.log(this.yaw)
+        console.log(temp)
+        
+        
     }
     /**
      * @param {float[]} new_dir
      * pyr = pitch, yaw role
      */
-    set pyr_direction2d(new_dir){
+    set direction2d(new_dir){
         this.direction2d = new_dir;
     }
     
@@ -109,9 +127,9 @@ export default class obj_Direction{
         // this.yaw = Math.atan2(this.dir_norm.x,-this.dir_norm.y); // yaw
        
         // this.pitch = Math.atan(Math.sqrt(Math.pow(this.dir_norm.x,2)+Math.pow(this.dir_norm.y,2))/this.dir_norm.z)
-        console.log(this.yaw);
-        console.log(this.pitch);
-        console.log("");
+        // console.log(this.yaw);
+        // console.log(this.pitch);
+        // console.log("");
     }
 
     set_pyr_direction2d(){

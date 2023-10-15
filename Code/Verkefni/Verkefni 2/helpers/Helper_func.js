@@ -145,6 +145,21 @@ function make_pos(fish_pos){
     return random_fish_pos;
 }
 
+function make_pos_pyr(fish_pos_pyr){
+
+
+    var random_fish_pos_pyr = []
+
+    random_fish_pos_pyr.push(Math.random() * (fish_pos_pyr.r.r_max -fish_pos_pyr.r.r_min) + fish_pos_pyr.r.r_min);
+    random_fish_pos_pyr.push(Math.random() * (fish_pos_pyr.pitch.pitch_max -fish_pos_pyr.pitch.pitch_min) + fish_pos_pyr.pitch.pitch_min)
+    random_fish_pos_pyr.push (Math.random() * (fish_pos_pyr.yaw.yaw_max -fish_pos_pyr.yaw.yaw_min) + fish_pos_pyr.yaw.yaw_min)
+    console.log(random_fish_pos_pyr);
+    var temp = new obj_Direction(1.0,0.0,0.0)
+    temp.pyr_direction3d = random_fish_pos_pyr;
+    var random_fish_pos = vec3_to_Pos(temp.direction3d_to_vec)
+    return random_fish_pos;
+}
+
 function make_dir_set(fish_dir_set){
     var random_fish_dir_set = [];
 
@@ -173,7 +188,9 @@ export function make_fishs(amount, gl, program){
     const fish_size_tail = config.fish.size.size_tail
     const fish_size_fin = config.fish.size.size_fin
 
+    // const fish_pos = config.fish.pos;
     const fish_pos = config.fish.pos;
+    const fish_pos_pyr = config.fish.pos_pyr;
 
     const fish_dir_set = config.fish.dir_set;
 
@@ -194,6 +211,7 @@ export function make_fishs(amount, gl, program){
         const size_fin = new obj_Size(random_fish_size_fin[0],random_fish_size_fin[1], random_fish_size_fin[2]);  
         
         // make pos random
+        make_pos_pyr(fish_pos_pyr);
         const random_fish_pos = make_pos(fish_pos);
 
         //make pos obj
@@ -242,6 +260,129 @@ export function move_fish(fishs, amount){
 
     
 }
+export function middle_point(fishs){
+    var pos_x = 0;
+    var pos_y = 0;
+    var pos_z = 0;
+
+    for ( var i = 0; i < fishs.length; ++i ){
+        pos_x += fishs[i].pos.x 
+        pos_y += fishs[i].pos.y 
+        pos_z += fishs[i].pos.z 
+    }  
+    
+    // var pos = 
+    return new obj_Position(pos_x/fishs.length, pos_y/fishs.length, pos_z/fishs.length );
+}
+
+export function distand(pos1, pos2){
+    var temp = 0;
+    // var temp2 = 0;
+    
+    temp += Math.pow(pos2.x -pos1.x,2);
+    temp += Math.pow(pos2.y -pos1.y,2);
+    temp += Math.pow(pos2.z -pos1.z,2);
+    
+        
+    
+    return Math.sqrt(temp);
+}
+
+export function get_closest(fish, fishs){
+    var max_dis = 0;
+    var curr_closest;
+    for ( var i = 0; i < fishs.length; ++i ){
+        const dis = distand(fish.pos, fishs[i].pos)
+        if(dis >max_dis){
+            max_dis = dis;
+            curr_closest = fishs[i]
+        }
+        
+    }
+    
+    return curr_closest;
+}
+
+export function set_closest(fishs){
+    for ( var i = 0; i < fishs.length; ++i ){
+        const temp = get_closest(fishs[i], fishs)
+        fishs[i].closest = temp
+        fishs[i].distand_to_closest = distand(fishs[i].pos, temp.pos)
+        fishs[i].away_from_closest = (get_dir(temp.pos, fishs[i].pos))
+    }
+}
+
+export function distand_from_point(fishs){
+    var pos = middle_point(fishs)
+    for ( var i = 0; i < fishs.length; ++i ){
+        fishs[i].distand = distand(fishs[i].pos, pos)
+        // const temp =  add(fishs[i].pos.position3d_to_vec, pos.position3d_to_vec)
+        fishs[i].to_middlepoint = (get_dir(fishs[i].pos, pos))
+        
+    }
+    // console.log(fishs[0].distand)
+
+}
+
+export function get_dir(pos1, pos2){
+    return vec3_to_Dir(subtract(pos2.position3d_to_vec, pos1.position3d_to_vec))
+}
+
+export function dived_vector(v, d){
+    return scale(1/d,v)
+
+}
+
+
+export function add_muliple(v){
+    var temp = vec3();
+    for ( var i = 0; i < v.length; ++i ){
+        temp = add(temp, v[i]);
+    }
+    return temp;
+}
+
+var away_from_closest_weight = config.fish.away_from_closest_weight;
+var middle_weight = config.fish.middle_weight;
+var dir_weight = config.fish.dir_weight;
+
+export function config_changer(evtobj,id){
+    var target = evtobj.target || evtobj.srcElement;
+    if (target.id == "change_away_from_closest_weight_button"){
+        if(Helper.is_integer(Number(document.getElementById("change_away_from_closest_weight_input").value))){
+            away_from_closest_weight = (Number(document.getElementById("change_away_from_closest_weight_input").value));
+        }
+    }
+    if (target.id == "change_middle_weight_button"){
+        if(Helper.is_integer(Number(document.getElementById("change_middle_weight_input").value))){
+            middle_weight = (Number(document.getElementById("change_middle_weight_input").value));
+        }
+    }
+    if (target.id == "change_dir_weight_button"){
+        if(Helper.is_integer(Number(document.getElementById("change_dir_weight_input").value))){
+            dir_weight = (Number(document.getElementById("change_dir_weight_input").value));
+        }
+    }
+}
+export function find_weighted_average(fishs){
+    // const away_from_closest_weight = config.fish.away_from_closest_weight;
+    // const middle_weight = config.fish.middle_weight;
+    // const dir_weight = config.fish.dir_weight;
+    var weight = [];
+    var temp_all = [];
+    for ( var i = 0; i < fishs.length; ++i ){
+        // const temp_all_away_from_closest = fishs[i].away_from_closest;
+        temp_all.push(scale(away_from_closest_weight, fishs[i].away_from_closest.direction3d_to_vec))
+        temp_all.push(scale(middle_weight, fishs[i].to_middlepoint.direction3d_to_vec));
+        temp_all.push(scale(dir_weight, fishs[i].dir.direction3d_to_vec));
+        // add_muliple(temp_all);
+        const temp_added = add_muliple(temp_all);
+        // weight.push(vec3_to_Dir(dived_vector(temp_added, 3)))
+        fishs[i].dir = vec3_to_Dir(normalize(dived_vector(temp_added, 3)));
+        // console.log(add_muliple(temp_all))
+    }
+    // console.log(weight)
+}
 
 export function negateM3(m){
     var m2 = [
@@ -271,8 +412,14 @@ export function if_end(fishs){
             var temp = negate(fishs[i].pos.position3d_to_vec)
             fishs[i].pos = vec3_to_Pos(temp);
             
+            
+        }
+        // fail save
+        if(fishs[i].pos.radius>= config.fish_tank.radius+1){
+            fishs[i].pos = new obj_Position(0.0,0.0,0.0)
         }
     }
+    
 }
 
 // function is_floatv2(e){

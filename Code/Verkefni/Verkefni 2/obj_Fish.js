@@ -46,6 +46,12 @@ export default class obj_Fish {
         this.timer = 1.0;
         this.speed = config.fish.fish_speed
 
+        this.distand = 0.0
+        this.closest;
+        this.to_middlepoint;
+        this.distand_to_closest;
+        this.away_from_closest;
+
         // var vertices = [
         //     // l�kami (spjald)
         //     vec4( -body_length,  body_width, 0.0, 1.0 ),
@@ -146,7 +152,7 @@ export default class obj_Fish {
 
     move_fish(mv, amount){
         mv = mult(mv, translate(this.pos.position3d_to_vec))
-        mv = mult(mv, translate(scale(amount,normalize(this.dir.direction3d_to_vec))))
+        mv = mult(mv, translate(scale(-amount,normalize(this.dir.direction3d_to_vec))))
         mv = mult(mv, (translate(negate(this.pos.position3d_to_vec))))
         return mv;
     }
