@@ -5,7 +5,7 @@
 //
 //    Hjálmtýr Hafsteinsson, október 2023
 /////////////////////////////////////////////////////////////////
-import obj_Camera from "./helpers/obj_camera.js";
+// import obj_Camera from "./helpers/obj_camera.js";
 var canvas;
 var gl;
 
@@ -24,6 +24,7 @@ var origX;
 var origY;
 
 var zDist = -3.0;
+var xDist = 0.0;
 var eyesep = 0.2;
 
 var proLoc;
@@ -45,6 +46,17 @@ var colorLoc;
 var lenght = 2.0;
 var height = 2.0;
 var width = 2.0
+
+var Forward_key = 87; // w key
+var Backward_key = 83; // s key
+var Left_key = 65; // a key
+var Right_key = 68; // d key
+var Up_key = 32; // space key
+var Down_key = 16; // shift key
+
+var mv = lookAt( vec3(xDist, 0.0, zDist),
+                  vec3(xDist, 0.0, zDist+2.0),
+                  vec3(0.0, 1.0, 0.0) );
 
 var v = [
     vec3( -lenght, -height,  width ),
@@ -114,20 +126,44 @@ window.onload = function init()
             spinX = ( spinX + (origY - e.offsetY) ) % 360;
             origX = e.offsetX;
             origY = e.offsetY;
+            mv = mouseLook("", spinY);
         }
     } );
     
-    // Event listener for keyboard
-     window.addEventListener("keydown", function(e){
-         switch( e.keyCode ) {
-            case 38:	// upp ör
-                zDist += 0.1;
+    // // Event listener for keyboard
+    //  window.addEventListener("keydown", function(e){
+    //      switch( e.keyCode ) {
+    //         case Forward_key:	// áfram ör
+    //             zDist += 0.1;
+    //             break;
+    //         case Backward_key:	// tilbaka ör
+    //             zDist -= 0.1;
+    //             break;
+    //         case Left_key: // vinstri ör
+    //             xDist +=0.1;
+    //             break;
+    //         case Right_key: // hægri ör
+    //             xDist -= 0.1;
+    //      }
+    //  }  );  
+
+      // Event listener for keyboard
+      window.addEventListener("keydown", function(e){
+        switch( e.keyCode ) {
+           case Forward_key:	// áfram ör
+                mv = mouseLook("w", spinY);
                 break;
-            case 40:	// niður ör
-                zDist -= 0.1;
+           case Backward_key:	// tilbaka ör
+                mv = mouseLook("s", spinY);
                 break;
-         }
-     }  );  
+           case Left_key: // vinstri ör
+                mv = mouseLook("a", spinY);
+                break;
+           case Right_key: // hægri ör
+                mv = mouseLook("d", spinY);
+                break;
+        }
+    }  );
 
     // Event listener for mousewheel
      window.addEventListener("mousewheel", function(e){
@@ -156,22 +192,27 @@ function lock(mv){
     }
     return mv
 }
-var camera = new obj_Camera(vec3(0.0,0.0,2.0), vec3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 1.0)
+// var camera = new obj_Camera(vec3(0.0,0.0,2.0), vec3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 1.0)
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Vinstra auga...
-    var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
-                      vec3(0.0, 0.0, zDist+2.0),
-                      vec3(0.0, 1.0, 0.0) );
-                      var mv  = camera.new_pos();
+    // var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
+    //                   vec3(0.0, 0.0, zDist+2.0),
+    //                   vec3(0.0, 1.0, 0.0) );
+    // var mv = lookAt( vec3(xDist, 0.0, zDist),
+    //                   vec3(xDist, 0.0, zDist+2.0),
+    //                   vec3(0.0, 1.0, 0.0) );
+    //                 //   var mv  = camera.new_pos();
     // mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
-    mv = camera.rotate(spinX, spinY, mv);
-
-    mv = lock(mv);
+    // var mv = mouseLook("",spinY)
+    // mv = camera.rotate(spinX, spinY, mv);
+    // mv = mouseLook("", spinY);
+    // mv = lock(mv);
 
     // Vinstri mynd er í rauðu...
+    // mv = mult(mv, translate(0.0,0.0,0.0))
     gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 0.0, 1.0) );
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.drawArrays( gl.LINES, 0, NumVertices );
