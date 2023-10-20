@@ -5,10 +5,10 @@
 //
 //    Hjálmtýr Hafsteinsson, október 2023
 /////////////////////////////////////////////////////////////////
-// import obj_Direction from "./helpers/obj_Direction.js";
-// import obj_Position from "./helpers/obj_Position.js";
-// import obj_Camera from "./helpers/obj_camera.js";
-// import * as Helper from './helpers/Helper_func.js';
+import obj_Direction from "./helpers/obj_Direction.js";
+import obj_Position from "./helpers/obj_Position.js";
+import obj_Camera from "./helpers/obj_camera.js";
+import * as Helper from './helpers/Helper_func.js';
 var canvas;
 var gl;
 
@@ -21,8 +21,8 @@ var vBuffer;
 var vPosition;
 
 var movement = false;     // Do we rotate?
-var spinX = 0;
-var spinY = 0;
+var spinX = 0.0;
+var spinY = 0.0;
 var origX;
 var origY;
 
@@ -85,6 +85,13 @@ var v = [
     vec3(  lenght, -height, -width )
 ];
 
+
+function test(){
+    for(let i = 1; i < NumVertices; i++){
+
+    }
+}
+
 var lines = [ v[0], v[1], v[1], v[2], v[2], v[3], v[3], v[0],
               v[4], v[5], v[5], v[6], v[6], v[7], v[7], v[4],
               v[0], v[4], v[1], v[5], v[2], v[6], v[3], v[7]
@@ -104,10 +111,12 @@ function move(deltaTime, mv){
     // mv = camera.move_left(dir.left*deltaTime, mv);
     // mv = camera.move_down(dir.down*deltaTime, mv);
     // mv = camera.move_up(dir.up*deltaTime, mv);
-
+    
     mv = camera.move_fbv2(dir.fb*deltaTime, mv);
     mv = camera.move_udv2(dir.ud*deltaTime, mv);
     mv = camera.move_rlv2(dir.rl*deltaTime, mv);
+    
+    
     // camera.yDist = spinY+1;
     
     dir = {
@@ -266,13 +275,15 @@ window.onload = function init()
     render();
 }
 
-var flip2 = false;
+var flip2 = true;
 function lock(mv, deltaTime){
     if(flip2){
-        var mv  = camera.new_posv3();
+        var mv  = camera.new_lookAt();
         // mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
-        mv = move(deltaTime, mv)
+        move(deltaTime, mv)
+        // mv = camera.rotate(spinX, spinY, mv, deltaTime)
         mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
+        
         
         return mv
         flip2 = false
@@ -289,16 +300,78 @@ function lock(mv, deltaTime){
     }
     return mv
 }
-// var camera = new obj_Camera(new obj_Position(0.0,0.0,0.0), new obj_Direction(0.0,0.0,1.0), vec3(0.0,spinY,0.0), spinY)
+var camera = new obj_Camera(new obj_Position(0.0,0.0,0.0), new obj_Direction(0.0,0.0,1.0), vec3(0.0,1.0,0.0), spinY)
+var is_bluev2 = [
+    false,false,false,false,true,true,true,true,
+    true,true,true,true,true,true,true,true,
+    true,true,true,true,true,true,true,true
+]
+var is_blue = [
+    true,true,false,true,
+    true,true,true,true,
+    true,true,true,true
+]
+// var is_bluev2 = [
+//     is_blue[0],true,is_blue[1],true,is_blue[2],true,is_blue[3],true,
+//     is_blue[4],true,is_blue[5],true,is_blue[6],true,is_blue[7],true,
+//     is_blue[8],true,is_blue[9],true,is_blue[10],true,is_blue[11],true
+// ]
+
+
+
+function draw(mv){
+
+    
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    
+    for(let i = 0; i < lines.length+1; i+=2 ){
+        gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+        
+        if(is_bluev2[(i)]){
+            
+            gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+        }
+        else{
+            
+            // console.log(i)
+            gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 0.0, 1.0) );
+        }
+        // console.log(Math.floor(i/2))
+        console.log((i))
+        // if(i==0){
+            
+        //     gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 1.0, 1.0) );
+        // }
+        // gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+
+        // console.log(is_blue[i])
+        
+        gl.drawArrays( gl.LINES, (i), (i+1) );
+        // gl.drawArrays( gl.LINES, (i)+1, (i)+2 );
+    }
+    // if(is_bluev2[1]){
+            
+    //     gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+    // }
+    // else{
+    //     gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 0.0, 1.0) );
+    // }
+    gl.drawArrays( gl.LINES, (0), (2) );
+
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    
+    // console.log("")
+}
+
 function render(now)
 {
-    // var deltaTime = Helper.new_speed(now);
+    var deltaTime = Helper.new_speed(now);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Vinstra auga...
-    var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
-                      vec3(0.0, 0.0, zDist+2.0),
-                      vec3(0.0, 1.0, 0.0) );
+    // var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
+    //                   vec3(0.0, 0.0, zDist+2.0),
+    //                   vec3(0.0, 1.0, 0.0) );
     // var mv = lookAt( vec3(xDist, 0.0, zDist),
     //                   vec3(xDist, 0.0, zDist+2.0),
     //                   vec3(0.0, 1.0, 0.0) );
@@ -306,8 +379,11 @@ function render(now)
         
     }
     
-    mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
-    // mv = lock(mv, deltaTime);
+    // mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
+    
+    mv = lock(mv, deltaTime);
+    camera.angle_set(spinX,spinY)
+    
     
     // var mv = mouseLook("",spinY)
     // mv = camera.rotate(spinX, spinY, mv);
@@ -316,10 +392,36 @@ function render(now)
 
     // Vinstri mynd er í rauðu...
     // mv = mult(mv, translate(0.0,0.0,0.0))
+    var offset = 8
+    var offset2 = 4;
+    var offset3 = 1;
+    var adder = 2;
     gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 0.0, 1.0) );
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-    gl.drawArrays( gl.LINES, 0, NumVertices );
+    gl.drawArrays( gl.LINES, 0, NumVertices);
 
+    // gl.uniform4fv( colorLoc, vec4(1.0, 0.0, 0.0, 1.0) );
+    // gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    // gl.drawArrays( gl.LINES, NumVertices-offset*2-offset2*2, NumVertices-offset2*2 );
+
+    
+
+
+    
+    // gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+    // gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    // gl.drawArrays( gl.LINES, NumVertices-offset3*2, NumVertices-(offset3*2+adder) );
+
+    // gl.uniform4fv( colorLoc, vec4(1.0, 0.5, 1.0, 1.0) );
+    // gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    // gl.drawArrays( gl.LINES, NumVertices-(offset3*2+adder*2), NumVertices );
+
+
+    // gl.uniform4fv( colorLoc, vec4(0.0, 0.0, 1.0, 1.0) );
+    // gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    // gl.drawArrays( gl.LINES, NumVertices-(offset3*2+adder*2), NumVertices );
+    
+    // draw(mv)
     // Hægra auga...
     // mv = lookAt( vec3(0.0+eyesep/2.0, 0.0, zDist),
     //                   vec3(0.0, 0.0, zDist+2.0),
