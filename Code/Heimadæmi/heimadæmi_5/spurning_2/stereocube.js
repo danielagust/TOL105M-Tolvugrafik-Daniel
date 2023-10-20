@@ -5,10 +5,10 @@
 //
 //    Hjálmtýr Hafsteinsson, október 2023
 /////////////////////////////////////////////////////////////////
-import obj_Direction from "./helpers/obj_Direction.js";
-import obj_Position from "./helpers/obj_Position.js";
-import obj_Camera from "./helpers/obj_camera.js";
-import * as Helper from './helpers/Helper_func.js';
+// import obj_Direction from "./helpers/obj_Direction.js";
+// import obj_Position from "./helpers/obj_Position.js";
+// import obj_Camera from "./helpers/obj_camera.js";
+// import * as Helper from './helpers/Helper_func.js';
 var canvas;
 var gl;
 
@@ -285,20 +285,20 @@ function lock(mv, deltaTime){
         return mv
     }
     else{
-       mv = mouseLook("",spinY) 
+    //    mv = mouseLook("",spinY) 
     }
     return mv
 }
-var camera = new obj_Camera(new obj_Position(0.0,0.0,0.0), new obj_Direction(0.0,0.0,1.0), vec3(0.0,spinY,0.0), spinY)
+// var camera = new obj_Camera(new obj_Position(0.0,0.0,0.0), new obj_Direction(0.0,0.0,1.0), vec3(0.0,spinY,0.0), spinY)
 function render(now)
 {
-    var deltaTime = Helper.new_speed(now);
+    // var deltaTime = Helper.new_speed(now);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Vinstra auga...
-    // var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
-    //                   vec3(0.0, 0.0, zDist+2.0),
-    //                   vec3(0.0, 1.0, 0.0) );
+    var mv = lookAt( vec3(0.0-eyesep/2.0, 0.0, zDist),
+                      vec3(0.0, 0.0, zDist+2.0),
+                      vec3(0.0, 1.0, 0.0) );
     // var mv = lookAt( vec3(xDist, 0.0, zDist),
     //                   vec3(xDist, 0.0, zDist+2.0),
     //                   vec3(0.0, 1.0, 0.0) );
@@ -306,8 +306,8 @@ function render(now)
         
     }
     
-    // mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
-    mv = lock(mv, deltaTime);
+    mv = mult( mv, mult( rotateX(spinX), rotateY(spinY) ) );
+    // mv = lock(mv, deltaTime);
     
     // var mv = mouseLook("",spinY)
     // mv = camera.rotate(spinX, spinY, mv);
