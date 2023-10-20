@@ -1,9 +1,9 @@
 import obj_Vector from "./obj_vector.js";
 
 
-import config from "../config.json" assert { type: 'json' };
+// import config from "../config.json" assert { type: 'json' };
 import obj_Size from "./obj_Size.js";
-import obj_Fish from "../obj_Fish.js";
+// import obj_Fish from "../obj_Fish.js";
 import obj_Position from "./obj_Position.js";
 import obj_Direction from "./obj_Direction.js";
 
@@ -342,9 +342,9 @@ export function add_muliple(v){
     return temp;
 }
 
-var away_from_closest_weight = config.fish.away_from_closest_weight;
-var middle_weight = config.fish.middle_weight;
-var dir_weight = config.fish.dir_weight;
+// var away_from_closest_weight = config.fish.away_from_closest_weight;
+// var middle_weight = config.fish.middle_weight;
+// var dir_weight = config.fish.dir_weight;
 
 export function config_changer(evtobj,id){
     var target = evtobj.target || evtobj.srcElement;

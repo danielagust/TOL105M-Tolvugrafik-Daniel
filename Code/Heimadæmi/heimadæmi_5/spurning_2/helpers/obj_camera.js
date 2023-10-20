@@ -1,4 +1,4 @@
-import * as Helper from './Helper_func.js';
+// import * as Helper from './Helper_func.js';
 import obj_Direction from './obj_Direction.js';
 import obj_Position from './obj_Position.js';
 import obj_Vector from './obj_vector.js';
@@ -10,7 +10,7 @@ export default class obj_Camera{
      * @param {vec3} up 
      * @param {number} speed 
      */
-    constructor(pos, at, up, speed){
+    constructor(pos, at, up, ySpin){
         this.pos = pos;
         this.dir = at;
         this.up = up;
@@ -18,26 +18,41 @@ export default class obj_Camera{
         // console.log(this.dir)
         // console.log(this.up)
         
-        this.cross_vector = cross(this.dir, this.up);
-        // this.cross_vector = cross(this.up, this.dir);
-        this.cross_vector_n = normalize(this.cross_vector);
+        // this.cross_vector = cross(this.dir, this.up);
+        // // this.cross_vector = cross(this.up, this.dir);
+        // this.cross_vector_n = normalize(this.cross_vector);
         
         // this.dir = (normalize(this.dir))
-        this.speed = speed;
+        // this.ySpin = ySpin;
         
-        this.cross_vector_V = Helper.vec3_to_Vector(this.cross_vector);
+        // this.cross_vector_V = Helper.vec3_to_Vector(this.cross_vector);
         // this.speed_left = this.cross_vector_V.speed;
         // this.speed_right = -this.cross_vector_V.speed;
         this.zView = 2.0;
         // console.log( this.cross_vector_n);
+
+        this.zDist = -3.0;
+        this.xDist = 0.0;
+        this.yDist = 0.0;
         
         
         
         
     }
     new_pos(){
-     
+        // console.log("hello")
         return lookAt( this.pos, this.dir, this.up );
+    }
+
+    new_posv2(){
+     
+        return lookAt( this.pos.position3d_to_vec, this.dir.direction3d_to_vec, this.up );
+    }
+    new_posv3(){
+     
+        return  lookAt( vec3(this.xDist, this.yDist, this.zDist),
+                vec3(this.xDist, this.yDist, this.zDist+2.0),
+                vec3(0.0, 1.0, 0.0) );
     }
     move(v, mv){
         this.pos = add(this.pos, v);
@@ -49,6 +64,12 @@ export default class obj_Camera{
         // console.log( this.dir);
         return mv2
         
+    }
+
+    movev2(mv){
+        var mv2 = mult(mv, this.new_posv2())
+        // console.log( this.dir);
+        return mv2
     }
     move_dir(v){
         var temp = this.dir;
@@ -107,6 +128,29 @@ export default class obj_Camera{
         return this.move(v,mv);
     }
 
+    
+    move_fbv2(amount, mv){
+       
+        // this.pos = new obj_Position(this.pos.x, this.pos.y, amount);
+        // this.dir = new obj_Direction(this.dir.x, this.dir.y, amount+2.0)
+        this.zDist +=amount;
+        return this.new_posv3()
+    }
+
+    move_rlv2(amount, mv){
+        // this.pos = new obj_Position(this.pos.x+amount, this.pos.y, this.pos.z);
+        // this.dir = new obj_Direction(this.dir.x+amount, this.dir.y, this.dir.z)
+        this.xDist +=amount;
+        return this.new_posv3()
+    }
+
+    move_udv2(amount, mv){
+        // this.pos = new obj_Position(this.pos.x, this.pos.y+amount, this.pos.z);
+        // this.dir = new obj_Direction(this.dir.x, this.dir.y+amount, this.dir.z)
+        this.yDist +=amount;
+        return this.new_posv3()
+    }
+
     rotate(yaw, pitch, mv, deltaTime){
         
         
@@ -129,3 +173,6 @@ export default class obj_Camera{
         return mv;
     }
 }
+var mv = lookAt( vec3(xDist, 0.0, zDist),
+vec3(xDist, 0.0, zDist+2.0),
+vec3(0.0, 1.0, 0.0) );

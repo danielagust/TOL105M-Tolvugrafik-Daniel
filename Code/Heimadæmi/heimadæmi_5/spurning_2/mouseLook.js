@@ -11,25 +11,51 @@ var Right_key = "d"; // d key
 var Up_key = 32; // space key
 var Down_key = 16; // shift key
 
+var speed_out = 0.1;
 
-function do_key(key){
+
+function do_key(key, deltaTime, speed){
     switch( key ) {
         case Forward_key:	// áfram ör
-            zDist += 0.1;
+            zDist += speed*deltaTime;
             break;
         case Backward_key:	// tilbaka ör
-            zDist -= 0.1;
+            zDist -= speed*deltaTime;
             break;
         case Left_key: // vinstri ör
-            xDist +=0.1;
+            xDist += speed*deltaTime;
             break;
         case Right_key: // hægri ör
-            xDist -= 0.1;
+            xDist -= speed*deltaTime;
      }
 }
 function mouseLook(key, mdelta){
     var mv = mat4();
-    do_key(key);
+    do_key(key, 1.0, speed_out);
+    var mv = lookAt( vec3(xDist, 0.0, zDist),
+                      vec3(xDist, 0.0, zDist+2.0),
+                      vec3(0.0, 1.0, 0.0) );
+    mv = mult( mv,  rotateY(mdelta) ) ;
+    // mdelta2 = mdelta2
+    // console.log("hello");
+    return mv;
+}
+
+function mouseLook_cor(key, mdelta, deltaTime){
+    var mv = mat4();
+    do_key(key, deltaTime, speed_out);
+    var mv = lookAt( vec3(xDist, 0.0, zDist),
+                      vec3(xDist, 0.0, zDist+2.0),
+                      vec3(0.0, 1.0, 0.0) );
+    mv = mult( mv,  rotateY(mdelta) ) ;
+    // mdelta2 = mdelta2
+    // console.log("hello");
+    return mv;
+}
+
+function mouseLook_cor_ws(key, mdelta, deltaTime, speed){
+    var mv = mat4();
+    do_key(key, deltaTime, speed);
     var mv = lookAt( vec3(xDist, 0.0, zDist),
                       vec3(xDist, 0.0, zDist+2.0),
                       vec3(0.0, 1.0, 0.0) );
