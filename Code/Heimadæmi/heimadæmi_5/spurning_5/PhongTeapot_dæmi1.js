@@ -55,6 +55,8 @@ var Forward_key = 38; // w key
 var Backward_key = 40; // s key
 var Left_key = 37; // a key
 var Right_key = 39; // d key
+
+var speed= 0.1;
 var numkeys = [
     48,
     49,
@@ -100,7 +102,7 @@ function set_self(index){
     self[index] = false
 }
 
-var speed= 0.5;
+
 
 function self_main(index){
     num_iteration = index;
@@ -118,17 +120,21 @@ function event_keyboard(){
             case Forward_key:	// upp �r
                 // zView += 0.2;
                 y_pos += speed;
+                get_light();
                 break;
             case Backward_key:	// ni�ur �r
                 // zView -= 0.2;
                 y_pos-= speed;
+                get_light();
                 break;
             case Left_key:
                 x_pos -= speed;
+                get_light();
+                
                 break;
             case Right_key:
                 x_pos += speed;
-                console.log("hello", x_pos)
+                get_light();
                 break;
             
             case numkeys[1]:
@@ -220,10 +226,28 @@ onload = function init(){
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     gl.enable(gl.DEPTH_TEST);
+    //event listeners for mouse
+    event_keyboard()
     run();
 }
 
 
+
+function get_light(){
+    lightPosition = vec4(x_pos, y_pos, 1.0, 0.0 );
+
+    ambientProduct = mult(lightAmbient, materialAmbient);
+    diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    specularProduct = mult(lightSpecular, materialSpecular);
+
+    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );	
+    gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
+    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
+
+
+}
 function run() {
 
     
@@ -238,7 +262,8 @@ function run() {
     normals = myTeapot.Normals;
 
 
-    lightPosition = vec4(x_pos, y_pos, 1.0, 0.0 );
+    
+    // console.log("hello", lightPosition)
 
     
     // vBuffer = gl.createBuffer();
@@ -258,8 +283,8 @@ function run() {
     gl.enableVertexAttribArray( vNormal);
 
      // nBuffer = gl.createBuffer();
-     gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer);
-     gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
+    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer);
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
     gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
@@ -267,19 +292,10 @@ function run() {
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
 
-    ambientProduct = mult(lightAmbient, materialAmbient);
-    diffuseProduct = mult(lightDiffuse, materialDiffuse);
-    specularProduct = mult(lightSpecular, materialSpecular);
+    
+    get_light();
 
-    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );	
-    gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
-
-
-    //event listeners for mouse
-    event_keyboard()
+    
     
     render();
 }
