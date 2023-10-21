@@ -111,6 +111,7 @@ window.onload = function init()
            case Forward_key:	// áfram ör
                 // mv = mouseLook("w", spinY);
                 key = "w";
+                // console.log(key)
                 break;
            case Backward_key:	// tilbaka ör
                 // mv = mouseLook("s", spinY);
