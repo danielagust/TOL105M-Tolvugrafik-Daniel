@@ -46,6 +46,7 @@ var canvas, render, gl;
 
 var points = [];
 var normals = [];
+var num_iteration =5;
 
 onload = function init()  {
 
@@ -60,7 +61,7 @@ onload = function init()  {
 
     gl.enable(gl.DEPTH_TEST);
 
-    var myTeapot = teapot(5);
+    var myTeapot = teapot(num_iteration);
     myTeapot.scale(0.5, 0.5, 0.5);
 
     console.log(myTeapot.TriangleVertices.length);
