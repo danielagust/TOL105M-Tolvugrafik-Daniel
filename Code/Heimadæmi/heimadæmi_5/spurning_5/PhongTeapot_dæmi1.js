@@ -31,6 +31,7 @@ var vd = vec4(0.816497, -0.471405, 0.333333,1);
 
 var x_pos = 1.0;
 var y_pos = 1.0;
+var z_pos = 1.0;
     
 var lightPosition = vec4(x_pos, y_pos, 1.0, 0.0 );
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
@@ -55,6 +56,10 @@ var Forward_key = 38; // w key
 var Backward_key = 40; // s key
 var Left_key = 37; // a key
 var Right_key = 39; // d key
+
+var Up_key = 32; // space key
+var Down_key = 16; // shift key
+
 
 var speed= 0.1;
 var numkeys = [
@@ -130,12 +135,21 @@ function event_keyboard(){
             case Left_key:
                 x_pos -= speed;
                 get_light();
-                
                 break;
             case Right_key:
                 x_pos += speed;
                 get_light();
                 break;
+            // case Up_key:
+            //     z_pos += speed;
+            //     get_light();
+            //     break;
+            // case Down_key:
+            //     z_pos -= speed;
+            //     get_light();
+            //     break;
+
+
             
             case numkeys[1]:
                 self_main(1)
@@ -234,7 +248,7 @@ onload = function init(){
 
 
 function get_light(){
-    lightPosition = vec4(x_pos, y_pos, 1.0, 0.0 );
+    lightPosition = vec4(x_pos, y_pos, z_pos, 0.0 );
 
     ambientProduct = mult(lightAmbient, materialAmbient);
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
