@@ -185,6 +185,7 @@ window.onload = function init() {
     
     // Event listener for keyboard
      window.addEventListener("keydown", function(e){
+        
          switch( e.keyCode ) {
             case 38:	// upp ör
                 zDist += 1.0;
@@ -199,16 +200,16 @@ window.onload = function init() {
 			//     theta[0] = Math.max(-180, theta[0]-5);
             //     break;
             case 65:	// a - snýr neðri armi
-			    theta[1] = Math.min(80, theta[1]+5);
+                neðri_theta = Math.min(max_neðri_theta, neðri_theta+5);
                 break;
             case 83:	// s - snýr neðri armi
-			    theta[1] = Math.max(-80, theta[1]-5);
+                neðri_theta = Math.max(-min_neðri_theta, neðri_theta-5);
                 break;
             case 81:	// q - snýr efri armi
-			    theta[2] = Math.min(170, theta[2]+5);
+                efri_theta = Math.min(max_efri_theta, efri_theta+5);
                 break;
             case 87:	// w - snýr efri armi
-			    theta[2] = Math.max(-170, theta[2]-5);
+                efri_theta = Math.max(-min_efri_theta, efri_theta-5);
                 break;
          }
      }  );  
@@ -227,6 +228,43 @@ window.onload = function init() {
 }
 
 //----------------------------------------------------------------------------
+var efri_theta = 90; //90
+var neðri_theta = 80; //80
+
+var max_efri_theta = 180;
+var min_efri_theta = 0.0;
+
+var max_neðri_theta = 180;
+var min_neðri_theta = 0.0;
+
+
+function swing_upper(ticker){
+    theta[1] = Math.sin(ticker)*efri_theta
+}
+function swing_lower(ticker){
+    theta[2] = Math.sin(ticker)*neðri_theta
+}
+
+function swing(ticker){
+    swing_upper(ticker);
+    swing_lower(ticker);
+}
+then = 0;
+function new_speed(now){
+    // Convert to seconds
+    now *= 0.001;
+    // Subtract the previous time from the current time
+    var deltaTime = now - then;
+    if (deltaTime != deltaTime){ // check if NAN
+        return 0.0;
+    }
+    // Remember the current time for the next frame.
+    then = now;
+   //  console.log("deltaTime new ", deltaTime);
+
+    return deltaTime;
+}
+
 
 
 function base() {
@@ -263,11 +301,14 @@ function lowerArm()
 
 //----------------------------------------------------------------------------
 
-
-var render = function() {
+var tick = 0
+var speed = 1.0
+var render = function(now) {
 
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
-    
+    var deltaTime = new_speed(now);
+    swing(tick)
+    tick += speed*deltaTime
     // Staðsetja áhorfanda og meðhöndla músarhreyfingu
     var mv = lookAt( vec3(0.0, 2.0, zDist), vec3(0.0, 2.0, 0.0), vec3(0.0, 1.0, 0.0) );
     mv = mult( mv, rotateX( spinX ) );
