@@ -58,13 +58,19 @@ var veggur_size = {
 
 var roof_size_top = {
     width: 5.0,
-    height: 1.5,
-    length: 0.0
+    height: 0.5,
+    length: 10.0
 }
 
 var roof_size_side = {
     width: 5.0,
-    height: 3.0,
+    height: 1.5,
+    length: 0.0
+}
+
+var roof_size_side_tex = {
+    width: 5.0,
+    height: 5.0,
     length: 0.0
 }
 
@@ -82,7 +88,21 @@ var vertices = [
     vec4(  golf_size.width,  0.0,  0.0, 1.0 ),
     vec4(  golf_size.width,  0.0,  0.0, 1.0 ),
     vec4( -golf_size.width,  0.0,  0.0, 1.0 ),
-    vec4( -golf_size.width,  0.0, golf_size.length, 1.0 )
+    vec4( -golf_size.width,  0.0, golf_size.length, 1.0 ),
+    // roof top
+    vec4( -roof_size_top.width,  0.0, roof_size_top.length, 1.0 ),
+    vec4(  roof_size_top.width,  0.0, roof_size_top.length, 1.0 ),
+    vec4(  roof_size_top.width,  0.0,  0.0, 1.0 ),
+    vec4(  roof_size_top.width,  0.0,  0.0, 1.0 ),
+    vec4( -roof_size_top.width,  0.0,  0.0, 1.0 ),
+    vec4( -roof_size_top.width,  0.0, roof_size_top.length, 1.0 ),
+    // roof side
+    vec4( -roof_size_side.width,  0.0, 0.0, 1.0 ),
+    vec4(  roof_size_side.width,  0.0, 0.0, 1.0 ),
+    vec4(  roof_size_side.width,  roof_size_side.height, 0.0, 1.0 ),
+    vec4(  roof_size_side.width,  roof_size_side.height, 0.0, 1.0 ),
+    vec4( -roof_size_side.width,  roof_size_side.height, 0.0, 1.0 ),
+    vec4( -roof_size_side.width,  0.0, 0.0, 1.0 ),
 ];
 
 
@@ -116,10 +136,10 @@ var texCoords = [
     vec2(  0.0,  0.0 ),
     // Mynsturhnit fyrir roof_side
     vec2(  0.0, 0.0 ),
-    vec2( roof_size_side.width*2, 0.0 ),
-    vec2( roof_size_side.width*2, roof_size_side.height ),
-    vec2( roof_size_side.width*2, roof_size_side.height ),
-    vec2(  0.0, roof_size_side.height ),
+    vec2( roof_size_side_tex.width*2, 0.0 ),
+    vec2( roof_size_side_tex.width*2, roof_size_side_tex.height ),
+    vec2( roof_size_side_tex.width*2, roof_size_side_tex.height ),
+    vec2(  0.0, roof_size_side_tex.height ),
     vec2(  0.0, 0.0 )
 
 ];
@@ -280,7 +300,7 @@ function roof_top(mv){
 function roof_draw_top(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.bindTexture( gl.TEXTURE_2D, texRoof_top );
-    gl.drawArrays( gl.TRIANGLES, numVertices, numVertices );
+    gl.drawArrays( gl.TRIANGLES, numVertices*2, numVertices );
 }
 
 
@@ -296,7 +316,7 @@ function roof_side(mv, angle){
 function roof_draw_side(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.bindTexture( gl.TEXTURE_2D, texRoof_side );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    gl.drawArrays( gl.TRIANGLES, numVertices*3, numVertices );
 }
 
 
