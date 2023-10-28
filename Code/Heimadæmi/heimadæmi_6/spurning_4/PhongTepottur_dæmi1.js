@@ -59,7 +59,8 @@ var tick = 0;
 var speeder = 0;
 
 function srink(){
-    myTeapot.scale(0.5, 0.5, 0.5);
+    var x = Math.sin(tick*deltaTime)
+    myTeapot.scale(x, 0.5, 0.5);
 }
 
 
@@ -106,7 +107,7 @@ function run() {
     
 
     myTeapot = teapot(num_iteration);
-    srink(tick);
+    srink();
 
     console.log(myTeapot.TriangleVertices.length);
     
@@ -233,10 +234,14 @@ function new_speed(now){
     return deltaTime;
 }
 var deltaTime;
+var speed = 0.5;
 function render(now) {
 
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     deltaTime = new_speed(now);
+    // run()
+
+    tick += speed;
     modelViewMatrix = lookAt( vec3(0.0, 0.0, zDist), at, up );
     modelViewMatrix = mult( modelViewMatrix, rotateY( -spinY ) );
     modelViewMatrix = mult( modelViewMatrix, rotateX( spinX ) );
