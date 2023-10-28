@@ -228,6 +228,13 @@ function quad(a, b, c, d, n)
     }
 }
 
+function draw(mv){
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv) );
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
+    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+}
+
 
 function render()
 {
@@ -249,45 +256,30 @@ function render()
     mv1 = mult( mv, translate( -(stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), (stool_width/2-foot_width/2) ) );
     mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv1) );
-    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    draw(mv1)
 
     // Then the right leg far cornor
     mv1 = mult( mv, translate( (stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), (stool_width/2-foot_width/2) ) );
     mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv1) );
-    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    draw(mv1)
 
     // First the left leg near cornor
     mv1 = mult( mv, translate( -(stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), -(stool_width/2-foot_width/2) ) );
     mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv1) );
-    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    draw(mv1)
 
     // Then the right leg near cornor
     mv1 = mult( mv, translate( (stool_length/2-foot_length/2), -(foot_height/2-stool_height/2), -(stool_width/2-foot_width/2) ) );
     mv1 = mult( mv1, scalem( foot_length, foot_height, foot_width ) );
     
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv1) );
-    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    draw(mv1)
 
     // Finally the middle bar (no translation necessary)
     mv1 = mult( mv, scalem( stool_length, stool_height, stool_width ) );
-    
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mv1) );
-    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix) );
-    gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+    draw(mv1)
 
     requestAnimFrame( render );
 }
