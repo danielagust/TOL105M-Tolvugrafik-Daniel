@@ -284,6 +284,12 @@ function get_light_phong(){
         gl.uniform1f( gl.getUniformLocation(program, "shininess_vertex"), materialShininess );
     }
     
+    // gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
+    // gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
+    // gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );	
+    
+    // gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
+
     
     gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
 
