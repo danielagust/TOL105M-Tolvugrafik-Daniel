@@ -84,9 +84,33 @@ var texCoords = [
     vec2( golf_size.width*2, golf_size.length ),
     vec2( golf_size.width*2, golf_size.length ),
     vec2(  0.0, golf_size.length ),
-    vec2(  0.0,  0.0 )
+    vec2(  0.0,  0.0 ),
+    // Mynsturhnit fyrir roof_top
+    vec2(  0.0,  0.0 ),
+    vec2( golf_size.width*2,  0.0 ),
+    vec2( golf_size.width*2, golf_size.length ),
+    vec2( golf_size.width*2, golf_size.length ),
+    vec2(  0.0, golf_size.length ),
+    vec2(  0.0,  0.0 ),
+    // Mynsturhnit fyrir roof_side
+    vec2(  0.0, 0.0 ),
+    vec2( veggur_size.width*2, 0.0 ),
+    vec2( veggur_size.width*2, veggur_size.height ),
+    vec2( veggur_size.width*2, veggur_size.height ),
+    vec2(  0.0, veggur_size.height ),
+    vec2(  0.0, 0.0 )
+
 ];
 
+
+function make_texture(texture_id, texture){
+    gl.bindTexture( gl.TEXTURE_2D, texture_id );
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture );
+    gl.generateMipmap( gl.TEXTURE_2D );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+}
 
 window.onload = function init() {
 
@@ -125,14 +149,13 @@ window.onload = function init() {
     // Lesa inn og skilgreina mynstur fyrir vegg
     var veggImage = document.getElementById("VeggImage");
     texVegg = gl.createTexture();
-    gl.bindTexture( gl.TEXTURE_2D, texVegg );
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, veggImage );
-    gl.generateMipmap( gl.TEXTURE_2D );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT );
-    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT );
+    // gl.bindTexture( gl.TEXTURE_2D, texVegg );
+    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    // gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, veggImage );
+    // gl.generateMipmap( gl.TEXTURE_2D );
+    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    make_texture(texVegg, veggImage)
 
     
     gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
@@ -226,17 +249,17 @@ function top_veggur(mv){
 }
 
 function roof_top(mv){
-    mv = mult(mv, scalem(golf_size.width,1.0,golf_size.length))
+    // mv = mult(mv, scalem(golf_size.width,1.0,golf_size.length))
     mv = mult(mv, translate(0.0,veggur_size.height+veggur_size.height,0.0))
-    mv = mult(mv, rotateX(90))
-    // mv = mult(mv, scalem(1.0,2.0,1.0))
+    // mv = mult(mv, rotateX(90))
+    mv = mult(mv, scalem(1.0,1.0,1.0))
     roof_draw_top(mv)
 }
 
 function roof_draw_top(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-    gl.bindTexture( gl.TEXTURE_2D, texVegg );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    gl.bindTexture( gl.TEXTURE_2D, texGolf );
+    gl.drawArrays( gl.TRIANGLES, numVertices, numVertices );
 }
 
 
@@ -270,14 +293,14 @@ var render = function(){
 
     // mv = mult(mv, translate(0.0,0.0,0.0))
 
-    
+    roof_top(mv)
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.bindTexture( gl.TEXTURE_2D, texGolf );
     gl.drawArrays( gl.TRIANGLES, numVertices, numVertices );
 
     // Teikna vegg með mynstri
     // mv = mult(mv, rotateY(90))
-    roof_top(mv)
+    
     veggur_draw(mv)
     roof_side(mv, 60)
 
@@ -305,6 +328,7 @@ var render = function(){
     veggur_draw(mv)
     
     top_veggur(mv)
+    
 
     requestAnimFrame(render);
 }
