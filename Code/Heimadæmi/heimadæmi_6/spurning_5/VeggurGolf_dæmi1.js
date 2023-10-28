@@ -56,6 +56,18 @@ var veggur_size = {
     length: 0.0
 }
 
+var roof_size_top = {
+    width: 5.0,
+    height: 1.5,
+    length: 0.0
+}
+
+var roof_size_side = {
+    width: 5.0,
+    height: 3.0,
+    length: 0.0
+}
+
 // Hnútar veggsins
 var vertices = [
     vec4( -veggur_size.width,  0.0, 0.0, 1.0 ),
@@ -73,6 +85,13 @@ var vertices = [
     vec4( -golf_size.width,  0.0, golf_size.length, 1.0 )
 ];
 
+
+// vec2(  0.0,  0.0 ),
+//     vec2( golf_size.width*2,  0.0 ),
+//     vec2( golf_size.width*2, golf_size.length ),
+//     vec2( golf_size.width*2, golf_size.length ),
+//     vec2(  0.0, golf_size.length ),
+//     vec2(  0.0,  0.0 ),
 // Mynsturhnit fyrir vegg
 var texCoords = [
     vec2(  0.0, 0.0 ),
@@ -90,17 +109,17 @@ var texCoords = [
     vec2(  0.0,  0.0 ),
     // Mynsturhnit fyrir roof_top
     vec2(  0.0,  0.0 ),
-    vec2( golf_size.width*2,  0.0 ),
-    vec2( golf_size.width*2, golf_size.length ),
-    vec2( golf_size.width*2, golf_size.length ),
-    vec2(  0.0, golf_size.length ),
+    vec2( roof_size_top.width*2,  0.0 ),
+    vec2( roof_size_top.width*2, roof_size_top.length ),
+    vec2( roof_size_top.width*2, roof_size_top.length ),
+    vec2(  0.0, roof_size_top.length ),
     vec2(  0.0,  0.0 ),
     // Mynsturhnit fyrir roof_side
     vec2(  0.0, 0.0 ),
-    vec2( veggur_size.width*2, 0.0 ),
-    vec2( veggur_size.width*2, veggur_size.height ),
-    vec2( veggur_size.width*2, veggur_size.height ),
-    vec2(  0.0, veggur_size.height ),
+    vec2( roof_size_side.width*2, 0.0 ),
+    vec2( roof_size_side.width*2, roof_size_side.height ),
+    vec2( roof_size_side.width*2, roof_size_side.height ),
+    vec2(  0.0, roof_size_side.height ),
     vec2(  0.0, 0.0 )
 
 ];
@@ -170,6 +189,9 @@ window.onload = function init() {
     var roofImage = document.getElementById("RoofImage");
     texRoof_top = gl.createTexture();
     make_texture(texRoof_top, roofImage, program)
+
+    texRoof_side = gl.createTexture();
+    make_texture(texRoof_side, roofImage, program)
 
 
     proLoc = gl.getUniformLocation( program, "projection" );
@@ -257,7 +279,7 @@ function roof_top(mv){
 
 function roof_draw_top(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-    gl.bindTexture( gl.TEXTURE_2D, texGolf );
+    gl.bindTexture( gl.TEXTURE_2D, texRoof_top );
     gl.drawArrays( gl.TRIANGLES, numVertices, numVertices );
 }
 
@@ -273,7 +295,7 @@ function roof_side(mv, angle){
 
 function roof_draw_side(mv){
     gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-    gl.bindTexture( gl.TEXTURE_2D, texVegg );
+    gl.bindTexture( gl.TEXTURE_2D, texRoof_side );
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
 }
 
