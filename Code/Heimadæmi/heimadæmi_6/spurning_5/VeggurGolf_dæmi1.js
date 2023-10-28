@@ -41,37 +41,49 @@ var zDist = -5.0;
 var proLoc;
 var mvLoc;
 
+var golf_size = {
+    width: 5.0,
+    height: 0.0,
+    length: 10.0
+}
+
+var veggur_size = {
+    width: 5.0,
+    height: 1.5,
+    length: 0.0
+}
+
 // Hnútar veggsins
 var vertices = [
-    vec4( -5.0,  0.0, 0.0, 1.0 ),
-    vec4(  5.0,  0.0, 0.0, 1.0 ),
-    vec4(  5.0,  1.0, 0.0, 1.0 ),
-    vec4(  5.0,  1.0, 0.0, 1.0 ),
-    vec4( -5.0,  1.0, 0.0, 1.0 ),
-    vec4( -5.0,  0.0, 0.0, 1.0 ),
+    vec4( -veggur_size.width,  0.0, 0.0, 1.0 ),
+    vec4(  veggur_size.width,  0.0, 0.0, 1.0 ),
+    vec4(  veggur_size.width,  veggur_size.height, 0.0, 1.0 ),
+    vec4(  veggur_size.width,  veggur_size.height, 0.0, 1.0 ),
+    vec4( -veggur_size.width,  veggur_size.height, 0.0, 1.0 ),
+    vec4( -veggur_size.width,  0.0, 0.0, 1.0 ),
 // Hnútar gólfsins (strax á eftir)
-    vec4( -5.0,  0.0, 10.0, 1.0 ),
-    vec4(  5.0,  0.0, 10.0, 1.0 ),
-    vec4(  5.0,  0.0,  0.0, 1.0 ),
-    vec4(  5.0,  0.0,  0.0, 1.0 ),
-    vec4( -5.0,  0.0,  0.0, 1.0 ),
-    vec4( -5.0,  0.0, 10.0, 1.0 )
+    vec4( -golf_size.width,  0.0, golf_size.length, 1.0 ),
+    vec4(  golf_size.width,  0.0, golf_size.length, 1.0 ),
+    vec4(  golf_size.width,  0.0,  0.0, 1.0 ),
+    vec4(  golf_size.width,  0.0,  0.0, 1.0 ),
+    vec4( -golf_size.width,  0.0,  0.0, 1.0 ),
+    vec4( -golf_size.width,  0.0, golf_size.length, 1.0 )
 ];
 
 // Mynsturhnit fyrir vegg
 var texCoords = [
     vec2(  0.0, 0.0 ),
-    vec2( 10.0, 0.0 ),
-    vec2( 10.0, 1.0 ),
-    vec2( 10.0, 1.0 ),
-    vec2(  0.0, 1.0 ),
+    vec2( veggur_size.width*2, 0.0 ),
+    vec2( veggur_size.width*2, veggur_size.height ),
+    vec2( veggur_size.width*2, veggur_size.height ),
+    vec2(  0.0, veggur_size.height ),
     vec2(  0.0, 0.0 ),
 // Mynsturhnit fyrir gólf
     vec2(  0.0,  0.0 ),
-    vec2( 10.0,  0.0 ),
-    vec2( 10.0, 10.0 ),
-    vec2( 10.0, 10.0 ),
-    vec2(  0.0, 10.0 ),
+    vec2( golf_size.width*2,  0.0 ),
+    vec2( golf_size.width*2, golf_size.length ),
+    vec2( golf_size.width*2, golf_size.length ),
+    vec2(  0.0, golf_size.length ),
     vec2(  0.0,  0.0 )
 ];
 
@@ -119,6 +131,9 @@ window.onload = function init() {
     gl.generateMipmap( gl.TEXTURE_2D );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT );
+    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT );
+
     
     gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 
@@ -198,21 +213,98 @@ window.onload = function init() {
  
 }
 
+
+function veggur_draw(mv){
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    gl.bindTexture( gl.TEXTURE_2D, texVegg );
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+}
+
+function top_veggur(mv){
+    mv = mult(mv, translate(0.0,veggur_size.height,0.0))
+    veggur_draw(mv);
+}
+
+function roof_top(mv){
+    mv = mult(mv, scalem(golf_size.width,1.0,golf_size.length))
+    mv = mult(mv, translate(0.0,veggur_size.height+veggur_size.height,0.0))
+    mv = mult(mv, rotateX(90))
+    // mv = mult(mv, scalem(1.0,2.0,1.0))
+    roof_draw_top(mv)
+}
+
+function roof_draw_top(mv){
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    gl.bindTexture( gl.TEXTURE_2D, texVegg );
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+}
+
+
+function roof_side(mv, angle){
+    mv = mult(mv, translate(0.0,0.0,0.0))
+    mv = mult(mv, translate(0.0,veggur_size.height,0.0))
+    
+    mv = mult(mv, rotateX(angle))
+    mv = mult(mv, scalem(1.0,2.0,1.0))
+    roof_draw_side(mv)
+}
+
+function roof_draw_side(mv){
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
+    gl.bindTexture( gl.TEXTURE_2D, texVegg );
+    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+}
+
+
+
+
 var render = function(){
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // staðsetja áhorfanda og meðhöndla músarhreyfingu
     var mv = lookAt( vec3(userXPos, 0.5, userZPos), vec3(userXPos+userXDir, 0.5, userZPos+userZDir), vec3(0.0, 1.0, 0.0 ) );
     
-    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
-
-    // Teikna vegg með mynstri
-    gl.bindTexture( gl.TEXTURE_2D, texVegg );
-    gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+    
 
     // Teikna gólf með mynstri
+
+    // mv = mult(mv, translate(0.0,0.0,0.0))
+
+    
+    gl.uniformMatrix4fv(mvLoc, false, flatten(mv));
     gl.bindTexture( gl.TEXTURE_2D, texGolf );
     gl.drawArrays( gl.TRIANGLES, numVertices, numVertices );
+
+    // Teikna vegg með mynstri
+    // mv = mult(mv, rotateY(90))
+    roof_top(mv)
+    veggur_draw(mv)
+    roof_side(mv, 60)
+
+     // Teikna vegg með mynstri
+    mv = mult(mv, translate(golf_size.width,0.0,golf_size.length/2))
+    mv = mult(mv, rotateY(90))
+    veggur_draw(mv)
+
+    
+
+     // Teikna top vegg með mynstri
+    top_veggur(mv)
+
+     // Teikna vegg með mynstri
+    mv = mult(mv, rotateY(90))
+    mv = mult(mv, translate(golf_size.width,0.0,-golf_size.length/2))
+    veggur_draw(mv)
+    
+    
+    roof_side(mv, 60)
+    
+     // Teikna vegg með mynstri
+    mv = mult(mv, rotateY(90))
+    mv = mult(mv, translate(-golf_size.width,0.0,golf_size.length/2))
+    veggur_draw(mv)
+    
+    top_veggur(mv)
 
     requestAnimFrame(render);
 }
