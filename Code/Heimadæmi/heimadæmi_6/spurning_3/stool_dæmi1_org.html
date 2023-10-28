@@ -1,0 +1,42 @@
+<html>
+    <title>Heimadæmi 4 sp4 stool</title>
+    <link rel="icon" type="image/ico" href="https://danielagust.github.io/TOL105M-Tolvugrafik-Daniel/img/Letter_D.png">
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 rotation;
+
+void main() 
+{
+    fColor = vColor;
+    gl_Position = rotation * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+   
+varying vec4 fColor;
+
+void main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="stool_dæmi1_org.js"></script>
+
+<body style="margin: 0px; height: 512px;">
+<canvas id="gl-canvas" width="512" height="512" >
+   
+<br/>
+
+</body>
+</html>
