@@ -60,6 +60,7 @@ var Right_key = 39; // d key
 var Up_key = 32; // space key
 var Down_key = 16; // shift key
 
+var if_phong = 1.0
 
 var speed= 0.1;
 var numkeys = [
@@ -216,8 +217,17 @@ function event_keyboard(){
          } else {
              zDist -= 0.2;
          }
-     }  );  
+     }  ); 
+     
+     document.getElementById("if_phong").addEventListener ("click", set_phong);
  
+}
+function set_phong(){
+    if(if_phong==1.0){
+        if_phong = 0.0
+    }else{
+        if_phong = 1.0
+    }
 }
 
 
@@ -247,18 +257,34 @@ onload = function init(){
 
 
 
-function get_light(){
+function get_light_phong(){
     lightPosition = vec4(x_pos, y_pos, z_pos, 0.0 );
 
     ambientProduct = mult(lightAmbient, materialAmbient);
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
     specularProduct = mult(lightSpecular, materialSpecular);
+    
 
-    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct_frag"), flatten(ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct_frag"), flatten(diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct_frag"), flatten(specularProduct) );	
+    gl.uniform1f( gl.getUniformLocation(program, "if_phong_vertex"),if_phong );
+    gl.uniform1f( gl.getUniformLocation(program, "if_phong_frag"), if_phong );
+
+    if(if_phong == 1.0){
+        gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct_frag"), flatten(ambientProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct_frag"), flatten(diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "specularProduct_frag"), flatten(specularProduct) );	
+        
+        gl.uniform1f( gl.getUniformLocation(program, "shininess_frag"), materialShininess );
+    }
+    else{
+        gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct_vertex"), flatten(ambientProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct_vertex"), flatten(diffuseProduct) );
+        gl.uniform4fv( gl.getUniformLocation(program, "specularProduct_vertex"), flatten(specularProduct) );	
+        
+        gl.uniform1f( gl.getUniformLocation(program, "shininess_vertex"), materialShininess );
+    }
+    
+    
     gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(program, "shininess_frag"), materialShininess );
 
 
 }
@@ -301,13 +327,13 @@ function run() {
     gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
-    gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
+    // gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
     normalMatrixLoc = gl.getUniformLocation( program, "normalMatrix" );
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
 
     
-    get_light();
+    // get_light_phong();
 
     
     
@@ -320,6 +346,7 @@ var render = function(){
 
     // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer);
     // gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
+    get_light_phong();
 
     mv = lookAt( vec3(0.0, 0.0, zDist), at, up );
     mv = mult( mv, rotateX( spinX ) );
@@ -333,6 +360,7 @@ var render = function(){
     ];
 
     gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
+    gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
 
     gl.drawArrays( gl.TRIANGLES, 0, points.length);
     requestAnimFrame(render);

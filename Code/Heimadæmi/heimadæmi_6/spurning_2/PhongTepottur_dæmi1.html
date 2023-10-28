@@ -16,10 +16,11 @@ uniform mat3 normalMatrix;
 
 uniform vec4 ambientProduct_vertex, diffuseProduct_vertex, specularProduct_vertex;
 uniform float shininess_vertex;
+uniform float if_phong_vertex;
 
 void main()
 {
-    if (true){
+    if (if_phong_vertex == 1.0){
         vec3 pos = (modelViewMatrix * vPosition).xyz;
 
         // check for directional light
@@ -84,26 +85,36 @@ uniform vec4 diffuseProduct_frag;
 uniform vec4 specularProduct_frag;
 uniform float shininess_frag;
 varying vec3 N, L, E;
+varying vec4 fColor;
+uniform float if_phong_frag;
 
 void main()
 {
-    vec4 fColor;
+    
+    if(if_phong_frag ==1.0){
+        vec4 fColor;
 
-    vec3 H = normalize( L + E );
-    vec4 ambient = ambientProduct_frag;
+        vec3 H = normalize( L + E );
+        vec4 ambient = ambientProduct_frag;
 
-    float Kd = max( dot(L, N), 0.0 );
-    vec4  diffuse = Kd*diffuseProduct_frag;
+        float Kd = max( dot(L, N), 0.0 );
+        vec4  diffuse = Kd*diffuseProduct_frag;
 
-    float Ks = pow( max(dot(N, H), 0.0), shininess_frag );
-    vec4  specular = Ks * specularProduct_frag;
+        float Ks = pow( max(dot(N, H), 0.0), shininess_frag );
+        vec4  specular = Ks * specularProduct_frag;
 
-    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+        if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
 
-    fColor = ambient + diffuse +specular;
-    fColor.a = 1.0;
+        fColor = ambient + diffuse +specular;
+        fColor.a = 1.0;
+        gl_FragColor = fColor;
 
-    gl_FragColor = fColor;
+    }
+    else{
+        gl_FragColor = fColor;
+    }
+    
+    
 }
 </script>
 
@@ -114,6 +125,12 @@ void main()
 <script type="text/javascript" src="./PhongTeapot_dæmi1.js"></script>
 
 <body>
- <canvas id="gl-canvas" width="600" height="600">
+    <div style="width: 600px;">
+        <button type = "button" id = "if_phong">
+            if phong
+        </button>
+        <canvas id="gl-canvas" width="600" height="600"></canvas>
+    </div>
+ <!-- <canvas id="gl-canvas" width="600" height="600"> -->
 </body>
 </html>
