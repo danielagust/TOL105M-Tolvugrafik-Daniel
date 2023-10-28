@@ -54,6 +54,15 @@ var num_iteration =5;
 var vBuffer;
 var nBuffer
 var myTeapot = teapot(num_iteration);
+
+var tick = 0;
+var speeder = 0;
+
+function srink(){
+    myTeapot.scale(0.5, 0.5, 0.5);
+}
+
+
 onload = function init(){
     canvas = document.getElementById( "gl-canvas" );
 
@@ -97,7 +106,7 @@ function run() {
     
 
     myTeapot = teapot(num_iteration);
-    myTeapot.scale(0.5, 0.5, 0.5);
+    srink(tick);
 
     console.log(myTeapot.TriangleVertices.length);
     
@@ -171,41 +180,63 @@ function event_keyboard(){
          }
      }  );
 
+
+     var max = 4;
+     var min = 0;
+     speed = 0.5
      window.addEventListener("keydown", function(e){
         
         switch( e.keyCode ) {
-           case 38:	// upp ör
-               zDist += 1.0;
-               break;
-           case 40:	// niður ör
-               zDist -= 1.0;
-               break;
-           // case 90:	// z - snýr stöpli áfram
-           //     theta[0] = Math.min(180, theta[0]+5);
-           //     break;
-           // case 88:	// x - snýr stöpli afturábak
-           //     theta[0] = Math.max(-180, theta[0]-5);
-           //     break;
-           case 65:	// a - snýr neðri armi
-               neðri_theta = Math.min(max_neðri_theta, neðri_theta+5);
-               break;
-           case 83:	// s - snýr neðri armi
-               neðri_theta = Math.max(-min_neðri_theta, neðri_theta-5);
-               break;
-           case 81:	// q - snýr efri armi
-               efri_theta = Math.min(max_efri_theta, efri_theta+5);
-               break;
-           case 87:	// w - snýr efri armi
-               efri_theta = Math.max(-min_efri_theta, efri_theta-5);
-               break;
+            // case 38:	// upp ör
+            //     zDist += 1.0;
+            //     break;
+            // case 40:	// niður ör
+            //     zDist -= 1.0;
+            //     break;
+            // case 90:	// z - snýr stöpli áfram
+            //     theta[0] = Math.min(180, theta[0]+5);
+            //     break;
+            // case 88:	// x - snýr stöpli afturábak
+            //     theta[0] = Math.max(-180, theta[0]-5);
+            //     break;
+            case 37:	// a - snýr neðri armi
+                // bightnes_max = Math.min(max, bightnes_max+0.5);
+                bightnes_max += speed*deltaTime;
+                break;
+            case 39:	// s - snýr neðri armi
+                // bightnes_max = Math.max(-min, bightnes_max-0.5);
+                bightnes_max -= speed*deltaTime;
+                break;
+            // case 81:	// q - snýr efri armi
+            //     efri_theta = Math.min(max_efri_theta, efri_theta+5);
+            //     break;
+            // case 87:	// w - snýr efri armi
+            //     efri_theta = Math.max(-min_efri_theta, efri_theta-5);
+            //     break;
         }
     }  );
 }
 
-function render() {
+then = 0;
+function new_speed(now){
+    // Convert to seconds
+    now *= 0.001;
+    // Subtract the previous time from the current time
+    var deltaTime = now - then;
+    if (deltaTime != deltaTime){ // check if NAN
+        return 0.0;
+    }
+    // Remember the current time for the next frame.
+    then = now;
+   //  console.log("deltaTime new ", deltaTime);
+
+    return deltaTime;
+}
+var deltaTime;
+function render(now) {
 
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    deltaTime = new_speed(now);
     modelViewMatrix = lookAt( vec3(0.0, 0.0, zDist), at, up );
     modelViewMatrix = mult( modelViewMatrix, rotateY( -spinY ) );
     modelViewMatrix = mult( modelViewMatrix, rotateX( spinX ) );
