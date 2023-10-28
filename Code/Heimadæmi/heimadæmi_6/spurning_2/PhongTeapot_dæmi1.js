@@ -250,6 +250,7 @@ onload = function init(){
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     gl.enable(gl.DEPTH_TEST);
+    gl.cullFace(gl.BACK);
     //event listeners for mouse
     event_keyboard()
     run();
@@ -327,13 +328,13 @@ function run() {
     gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
-    // gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
+    gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
     normalMatrixLoc = gl.getUniformLocation( program, "normalMatrix" );
 
     projectionMatrix = perspective( fovy, 1.0, near, far );
 
     
-    // get_light_phong();
+    get_light_phong();
 
     
     
@@ -360,7 +361,7 @@ var render = function(){
     ];
 
     gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
-    gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
+    // gl.uniformMatrix4fv( gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
 
     gl.drawArrays( gl.TRIANGLES, 0, points.length);
     requestAnimFrame(render);

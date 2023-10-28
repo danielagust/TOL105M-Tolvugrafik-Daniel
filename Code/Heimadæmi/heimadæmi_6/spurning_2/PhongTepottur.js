@@ -62,7 +62,7 @@ window.onload = function init() {
     gl.cullFace(gl.BACK);
 
 
-    var myTeapot = teapot(15);
+    var myTeapot = teapot(5);
     myTeapot.scale(0.5, 0.5, 0.5);
 
     console.log(myTeapot.TriangleVertices.length);
