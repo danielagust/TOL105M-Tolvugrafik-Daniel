@@ -103,13 +103,15 @@ var texCoords = [
 ];
 
 
-function make_texture(texture_id, texture){
+function make_texture(texture_id, texture, program){
     gl.bindTexture( gl.TEXTURE_2D, texture_id );
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture );
     gl.generateMipmap( gl.TEXTURE_2D );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+
+    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 }
 
 window.onload = function init() {
@@ -149,28 +151,20 @@ window.onload = function init() {
     // Lesa inn og skilgreina mynstur fyrir vegg
     var veggImage = document.getElementById("VeggImage");
     texVegg = gl.createTexture();
-    // gl.bindTexture( gl.TEXTURE_2D, texVegg );
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    // gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, veggImage );
-    // gl.generateMipmap( gl.TEXTURE_2D );
-    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-    // gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-    make_texture(texVegg, veggImage)
+    make_texture(texVegg, veggImage, program)
 
     
-    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
+    // gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 
     // Lesa inn og skilgreina mynstur fyrir gólf
     var golfImage = document.getElementById("GolfImage");
     texGolf = gl.createTexture();
-    gl.bindTexture( gl.TEXTURE_2D, texGolf );
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, golfImage );
-    gl.generateMipmap( gl.TEXTURE_2D );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    make_texture(texGolf, golfImage, program)
     
-    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
+    // gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
+
+
+    
 
 
     proLoc = gl.getUniformLocation( program, "projection" );
