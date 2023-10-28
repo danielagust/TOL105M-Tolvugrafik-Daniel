@@ -52,7 +52,7 @@ var golf_size = {
 
 var veggur_size = {
     width: 5.0,
-    height: 1.5,
+    height: 1.0,
     length: 0.0
 }
 
