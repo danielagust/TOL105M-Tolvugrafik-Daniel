@@ -20,6 +20,9 @@ var texCoordsArray = [];
 var texture;
 var texVegg;
 var texGolf;
+var texRoof_top;
+var texRoof_side;
+
 
 // Breytur fyrir hreyfingu áhorfanda
 var userXPos = 0.0;
@@ -164,7 +167,9 @@ window.onload = function init() {
     // gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 
 
-    
+    var roofImage = document.getElementById("RoofImage");
+    texRoof_top = gl.createTexture();
+    make_texture(texRoof_top, roofImage, program)
 
 
     proLoc = gl.getUniformLocation( program, "projection" );
