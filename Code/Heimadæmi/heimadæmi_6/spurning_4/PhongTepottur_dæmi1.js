@@ -53,14 +53,24 @@ var num_iteration =5;
 
 var vBuffer;
 var nBuffer
+var vNormal
 var myTeapot = teapot(num_iteration);
 
-var tick = 0;
-var speeder = 0;
+var tick = 0.5;
+var speed_tick = 0.1;
 
-function srink(){
-    var x = Math.sin(tick*deltaTime)
-    myTeapot.scale(x, 0.5, 0.5);
+function srink(modelViewMatrix){
+    // var x = 0.5
+    var x = (Math.sin(tick)+1)/2
+    var y = (Math.sin(tick)+1)/2
+    var z = (Math.sin(tick)+1)/2
+    // myTeapot.scale(0.5, 0.5, 0.5);
+    // console.log(myTeapot)
+    // myTeapot.scale(1.0, 1.0, 1.0);
+    // console.log(modelViewMatrix)
+
+    modelViewMatrix = mult(modelViewMatrix, scalem(x,y,z))
+    return modelViewMatrix
 }
 
 
@@ -102,38 +112,53 @@ function get_light(){
 
 
 }
+
+function make_stuff(modelViewMatrix){
+
+    points = myTeapot.TriangleVertices;
+    normals = myTeapot.Normals;
+    modelViewMatrix = srink(modelViewMatrix);
+
+    
+    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer);
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
+
+    
+    gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vNormal);
+
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
+
+    return modelViewMatrix
+
+}
 function run() {
 
     
+    
 
     myTeapot = teapot(num_iteration);
-    srink();
-
+    myTeapot.scale(0.5, 0.5, 0.5);
+    
     console.log(myTeapot.TriangleVertices.length);
     
     // myTeapot = teapot(num_iteration);
-    points = myTeapot.TriangleVertices;
-    normals = myTeapot.Normals;
+    
 
-
+    nBuffer = gl.createBuffer();
+    vNormal = gl.getAttribLocation( program, "vNormal" );
+    vBuffer = gl.createBuffer();
     
     // ambientProduct = mult(lightAmbient, materialAmbient);
     // diffuseProduct = mult(lightDiffuse, materialDiffuse);
     // specularProduct = mult(lightSpecular, materialSpecular);
     get_light()
+    make_stuff(mat4())
+    // srink();
 
-    var nBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer);
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(normals), gl.STATIC_DRAW );
-
-    var vNormal = gl.getAttribLocation( program, "vNormal" );
-    gl.vertexAttribPointer( vNormal, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vNormal);
-
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
-
+    
     var vPosition = gl.getAttribLocation( program, "vPosition");
     gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
@@ -184,16 +209,16 @@ function event_keyboard(){
 
      var max = 4;
      var min = 0;
-     speed = 0.5
+     var speed = 0.5
      window.addEventListener("keydown", function(e){
         
         switch( e.keyCode ) {
-            // case 38:	// upp ör
-            //     zDist += 1.0;
-            //     break;
-            // case 40:	// niður ör
-            //     zDist -= 1.0;
-            //     break;
+            case 38:	// upp ör
+                speed_tick += speed*deltaTime;
+                break;
+            case 40:	// niður ör
+                speed_tick -= speed*deltaTime;
+                break;
             // case 90:	// z - snýr stöpli áfram
             //     theta[0] = Math.min(180, theta[0]+5);
             //     break;
@@ -234,14 +259,13 @@ function new_speed(now){
     return deltaTime;
 }
 var deltaTime;
-var speed = 0.5;
-function render(now) {
 
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+function render(now) {
+    
     deltaTime = new_speed(now);
     // run()
 
-    tick += speed;
+    tick += speed_tick*deltaTime;
     modelViewMatrix = lookAt( vec3(0.0, 0.0, zDist), at, up );
     modelViewMatrix = mult( modelViewMatrix, rotateY( -spinY ) );
     modelViewMatrix = mult( modelViewMatrix, rotateX( spinX ) );
@@ -252,10 +276,13 @@ function render(now) {
         vec3(modelViewMatrix[1][0], modelViewMatrix[1][1], modelViewMatrix[1][2]),
         vec3(modelViewMatrix[2][0], modelViewMatrix[2][1], modelViewMatrix[2][2])
     ];
+    modelViewMatrix = make_stuff(modelViewMatrix)
     gl.uniform1f( bightnes_maxLoc, bightnes_max );
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix) );
     gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
 
+    // make_stuff()
+    
     gl.drawArrays( gl.TRIANGLES, 0, points.length );
     window.requestAnimFrame(render);
 }
