@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////
 //    Sýnidæmi í Tölvugrafík
-//     Kúla sem lituð er með Phong litun.  Hægt að snúa henni
-//     með músinni og auka/minnka nákvæmni kúlunnar með hnöppum.
+//     Kúla sem lituð er með flatri litun.  Hægt að snúa henni
+//     með músinni og auka/minnka nákvæmni kúlunnar með hnöppum
 //
 //    Hjálmtýr Hafsteinsson, október 2023
 /////////////////////////////////////////////////////////////////
@@ -27,10 +27,10 @@ var fovy = 50.0;
 var near = 0.2;
 var far = 100.0;
 
-var va = vec4(0.0, 0.0, -1.0,1);
+var va = vec4(0.0, 0.0, -1.0, 1);
 var vb = vec4(0.0, 0.942809, 0.333333, 1);
 var vc = vec4(-0.816497, -0.471405, 0.333333, 1);
-var vd = vec4(0.816497, -0.471405, 0.333333,1);
+var vd = vec4(0.816497, -0.471405, 0.333333, 1);
     
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
@@ -42,7 +42,6 @@ var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
 var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 var materialShininess = 20.0;
 
-var ctm;
 var ambientColor, diffuseColor, specularColor;
 
 var modelViewMatrix, projectionMatrix;
@@ -53,21 +52,24 @@ var normalMatrix, normalMatrixLoc;
 var eye;
 var at = vec3(0.0, 0.0, 0.0);
 var up = vec3(0.0, 1.0, 0.0);
-    
+
+
 function triangle(a, b, c) {
+
+     var t1 = subtract(b, a);
+     var t2 = subtract(c, a);
+     var normal = normalize(cross(t2, t1));
+     normal = vec4(normal);
+
+     normalsArray.push(normal);
+     normalsArray.push(normal);
+     normalsArray.push(normal);
      
      pointsArray.push(a);
      pointsArray.push(b);      
      pointsArray.push(c);
-    
-     // normals are vectors
-     
-     normalsArray.push(a[0],a[1], a[2], 0.0);
-     normalsArray.push(b[0],b[1], b[2], 0.0);
-     normalsArray.push(c[0],c[1], c[2], 0.0);
 
      index += 3;
-     
 }
 
 
@@ -111,13 +113,6 @@ window.onload = function init() {
     gl.clearColor( 0.9, 1.0, 1.0, 1.0 );
     
     gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-
-    var dypi = gl.getParameter(gl.DEPTH_BITS);
-    var gildi = gl.getParameter(gl.DEPTH_CLEAR_VALUE);
-    var bil = gl.getParameter(gl.DEPTH_RANGE);
-    //gl.enable(gl.CULL_FACE);
-    //gl.cullFace(gl.BACK);
 
     //
     //  Load shaders and initialize attribute buffers
@@ -187,7 +182,6 @@ window.onload = function init() {
     
     document.getElementById("btnIncrease").onclick = function(){
         if( numTimesToSubdivide < 7 ) numTimesToSubdivide++;
-        document.getElementById("Subdivisions").innerHTML = numTimesToSubdivide;
         index = 0;
         pointsArray = []; 
         normalsArray = [];
@@ -195,7 +189,6 @@ window.onload = function init() {
     };
     document.getElementById("btnDecrease").onclick = function(){
         if( numTimesToSubdivide > 0 ) numTimesToSubdivide--;
-        document.getElementById("Subdivisions").innerHTML = numTimesToSubdivide;
         index = 0;
         pointsArray = []; 
         normalsArray = [];
