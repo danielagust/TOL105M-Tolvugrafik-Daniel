@@ -58,12 +58,14 @@ var myTeapot = teapot(num_iteration);
 
 var tick = 0.5;
 var speed_tick = 0.1;
+var scaler = 0.5;
 
 function srink(modelViewMatrix){
     // var x = 0.5
-    var x = (Math.sin(tick)+1)/2
-    var y = (Math.sin(tick)+1)/2
-    var z = (Math.sin(tick)+1)/2
+    
+    var x = ((Math.sin(tick)+1)/2)*scaler
+    var y = ((Math.sin(tick)+1)/2)*scaler
+    var z = ((Math.sin(tick)+1)/2)*scaler
     // myTeapot.scale(0.5, 0.5, 0.5);
     // console.log(myTeapot)
     // myTeapot.scale(1.0, 1.0, 1.0);
