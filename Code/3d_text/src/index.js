@@ -1,12 +1,12 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import * as dat from "dat.gui";
+import * as THREE from "../../ThreeJS/js/three.js";
+import { OrbitControls } from "../../ThreeJS/js/examples/jsm/controls/OrbitControls.js";
+// import * as dat from "dat.gui";
 
 /**
  * Base
  */
 // Debug
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
