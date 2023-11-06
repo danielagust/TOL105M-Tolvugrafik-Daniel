@@ -1,10 +1,10 @@
 {
     "machine":{
-        "sturcure":{
+        "structure":{
             "floor":{
-                "length":16,
-                "height":0,
-                "width":15,
+                "length":6,
+                "height":6,
+                "width":7,
                 "s_text_ofset":0.5,
                 "t_text_ofset":0.5,
                 "tile":{
@@ -35,7 +35,9 @@
                 }
             },
             "gnome":{
-
+                "length":2,
+                "height":2,
+                "width":2
             },
             "mushroom":{
                 "decay_steps":4,
