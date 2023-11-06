@@ -3,6 +3,9 @@
 // Ná í striga
 const canvas = document.querySelector('#c');
 
+const objLoader = new THREE.OBJLoader();
+const loader = new THREE.TextureLoader();
+
 // Skilgreina sviðsnet
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('skyblue');
@@ -10,6 +13,46 @@ scene.background = new THREE.Color('skyblue');
 // Skilgreina myndavél og staðsetja hana
 const camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
 camera.position.set(0, 1, 3);
+
+// const loader = new THREE.GLTFLoader();
+
+// loader.load( './models/gnome.obj', function ( gltf ) {
+
+// 	scene.add( gltf.scene );
+
+// }, undefined, function ( error ) {
+
+// 	console.error( error );
+
+// } );
+
+
+function load_model(model_filename, model_texure, model_normal_texture){
+    
+
+    const texture = loader.load(model_texure);
+    const normal = loader.load(model_normal_texture);
+    const material = new THREE.MeshPhongMaterial({ map: texture, normalMap:normal});
+    const model_exit = new THREE.Object3D();
+    
+    objLoader.load(model_filename, (model) => {
+        model.traverse( child => {
+            if (child.isMesh){
+                child.material = material;
+                
+            }
+        })
+        model_exit.add(model);
+    });
+    return model_exit
+}
+// const gnome = new THREE.Object3D();
+const gnome = load_model("./models/gnome.obj", './models/MAT_Character_Gnome_Female_PigTails_0_basecolor.jpg', "./models/MAT_Character_Gnome_Female_PigTails_0_normal.jpg")
+gnome.scale.set(1.0,1.0,1.0)
+scene.add(gnome);
+
+
+
 
 // Bæta við músarstýringu
 const controls = new THREE.OrbitControls( camera, canvas );
