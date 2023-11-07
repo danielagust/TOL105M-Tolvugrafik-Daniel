@@ -29,12 +29,17 @@ const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 const machine = new THREE.Object3D();
 var GNOME
 var FLOOR
+var WALLS = new THREE.Object3D();
+const floor_config = config.machine.structure.floor
+const wall_config = config.machine.structure.wall
+
 
 function make_gnome(){
     const gnome = load_model("./models/gnome.obj", './models/MAT_Character_Gnome_Female_PigTails_0_basecolor.jpg', "./models/MAT_Character_Gnome_Female_PigTails_0_normal.jpg")
     const gnome_config = config.machine.entities.gnome
     gnome.scale.set(gnome_config.length,gnome_config.height,gnome_config.width)
     GNOME = gnome
+    // gnome.position.set(1.0,0.0,1.0)
     machine.add(gnome)
 }
 
@@ -50,12 +55,12 @@ function if_even(length, width){
     }
     return [length_offset, width_offset]
 }
-const floor_config = config.machine.structure.floor
+
 function load_tile_texture(){
     
     const offset = if_even(floor_config.length, floor_config.width)
     
-    var texture = load_texture("./texture/black_tile.png", [floor_config.s_text_ofset*floor_config.length, floor_config.t_text_ofset*floor_config.width], [Math.floor(floor_config.length/2)+offset[0],Math.floor(floor_config.width/2)+offset[1]])
+    var texture = load_texturev2("./texture/floor_texture/black_tile.png", [floor_config.s_text_ofset*floor_config.length, floor_config.t_text_ofset*floor_config.width], [Math.floor(floor_config.length/2)+offset[0],Math.floor(floor_config.width/2)+offset[1]])
     return texture
 }
 
@@ -69,10 +74,53 @@ function make_floor(){
     const floor = new THREE.PlaneGeometry( floor_config.length, floor_config.width );
     const planeMaterial = new THREE.MeshPhongMaterial( { map: texture } );
     const plane = new THREE.Mesh( floor, planeMaterial );
-    plane.rotation.x = -0.5 * Math.PI;
+    plane.rotation.x = radians(-90)
     plane.position.set(0, 0.0, 0);
     FLOOR = plane
     machine.add(plane)
+}
+
+function make_wall_texture(length, height, ticknes){
+    const basecolor = load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
+    const ambientOcclusion = load_texturev2("./texture/wall_texture/Plastic_Rough_001_ambientOcclusion.jpg", [0.0,0.0], [length,height])
+    // const height_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_height.png", [0.0,0.0], [length,height])
+    const normal = load_texturev2("./texture/wall_texture/Plastic_Rough_001_normal.jpg", [0.0,0.0], [length,height])
+    const roughness = load_texturev2("./texture/wall_texture/Plastic_Rough_001_roughness.jpg", [0.0,0.0], [length,height])
+    return get_phong(basecolor, ambientOcclusion, normal, roughness)
+}
+
+function make_wall(length){
+    
+    const geometry = new THREE.BoxGeometry(length, wall_config.height, wall_config.thicknes);
+    const material = make_wall_texture(length, wall_config.height,1.0)
+    const wall = new THREE.Mesh( geometry, material );
+    wall.position.y = wall_config.height/2+FLOOR.position.y
+    return wall
+}
+
+function make_walls(){
+    const offset = -0.5
+    const offseter = -0.1
+    const wall1 = make_wall(floor_config.length+offseter)
+    wall1.position.z = (floor_config.length/2+offset )
+    WALLS.add(wall1);
+    
+    const wall2 = make_wall(floor_config.width+offseter)
+    wall2.rotation.y = radians(90);
+    wall2.position.x = (floor_config.width/2-offset )
+    WALLS.add(wall2);
+
+    const wall3 = make_wall(floor_config.width+offseter)
+    wall3.rotation.y = radians(90);
+    wall3.position.x = -(floor_config.width/2-offset )
+    WALLS.add(wall3);
+
+    const wall4 = make_wall(floor_config.length+offseter)
+    wall4.position.z = -(floor_config.length/2+offset )
+    WALLS.add(wall4);
+
+    machine.add(WALLS)
+
 }
 
 function make_machine(){
@@ -81,8 +129,10 @@ function make_machine(){
 
 // scene.add(gnome);
 
-// make_gnome();
+make_gnome();
+
 make_floor();
+make_walls()
 make_machine();
 // console.log(gnome.position)
 

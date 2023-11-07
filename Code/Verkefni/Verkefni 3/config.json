@@ -2,9 +2,9 @@
     "machine":{
         "structure":{
             "floor":{
-                "length":6,
+                "length":16,
                 "height":6,
-                "width":7,
+                "width":15,
                 "s_text_ofset":0.5,
                 "t_text_ofset":0.5,
                 "tile":{
@@ -18,7 +18,7 @@
                 "length":16,
                 "height":2,
                 "width":15,
-                "thicknes":1
+                "thicknes":0.1
             }
         },
         "entities":{
