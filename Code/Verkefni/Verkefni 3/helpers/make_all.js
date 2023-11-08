@@ -6,6 +6,13 @@ var gnome_config;
 
 var FLOOR;
 
+const wall_text_filename = {
+    basecolor:"./texture/wall_texture/Plastic_Rough_001_basecolor.jpg",
+    ambientOcclusion:"./texture/wall_texture/Plastic_Rough_001_ambientOcclusion.jpg",
+    normal:"./texture/wall_texture/Plastic_Rough_001_normal.jpg",
+    roughness:"./texture/wall_texture/Plastic_Rough_001_roughness.jpg"
+}
+
 function set_data(json){
     // console.log(json)
     config = json 
@@ -102,45 +109,26 @@ function make_floor(){
     // console.log(plane.position, "hello")
     return plane;
 }
-function make_wall_texture_side(length, height, has_alpha){
-    var result = {};
-    result.basecolor = load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
-  
-    result.ambientOcclusion = load_texturev2("./texture/wall_texture/Plastic_Rough_001_ambientOcclusion.jpg", [0.0,0.0], [length,height])
-    // const height_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_height.png", [0.0,0.0], [length,height])
-    result.normal = load_texturev2("./texture/wall_texture/Plastic_Rough_001_normal.jpg", [0.0,0.0], [length,height])
-    
-    result.roughness = load_texturev2("./texture/wall_texture/Plastic_Rough_001_roughness.jpg", [0.0,0.0], [length,height])
-    
-    // result.alpha_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_alpha.png", [0.0,0.0], [length,height])
-    // if (!has_alpha){
-    //     result.alpha_map = null
-    // }
-    result.alpha_map = null
-    // console.log( has_alpha)
-    // console.log( result.alpha_map)
-    // console.log("")
-    return result;
-}
+
 
 
 function get_wall_side(length, height, has_alpha){
     var result = [];
-    var awnser = make_wall_texture_side(wall_config.thicknes, height, has_alpha);
+    var awnser = make_texture_side(wall_config.thicknes, height, has_alpha, wall_text_filename);
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     
-    var awnser = make_wall_texture_side(length,wall_config.thicknes, has_alpha);
+    var awnser = make_texture_side(length,wall_config.thicknes, has_alpha, wall_text_filename);
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     
-    var awnser = make_wall_texture_side(length, height, has_alpha);
+    var awnser = make_texture_side(length, height, has_alpha, wall_text_filename);
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     if(has_alpha){
         for ( var i = 0; i < result.length; ++i ){
             result[i].transparent = true;
-            result[i].opacity = 0.8
+            result[i].opacity = wall_config.alpha
         }
     }
     
@@ -203,34 +191,40 @@ function make_walls(floor){
 
     const walls = new THREE.Object3D();
     const offset = -0.5
-    const offseter = -0.1
-    const wall1 = make_wall(floor_config.length+offseter, true)
+    const offseter = -wall_config.thicknes
+    const wall1 = make_wall(floor_config.length, true)
     console.log(wall1.position)
-    wall1.position.z = (Math.ceil(floor_config.length/2) -offset_2[0])
+    wall1.position.z = (Math.ceil(floor_config.length/2) -offset_2[0]-offseter/2)
     console.log((floor_config.length/2) )
     console.log(wall1.position, "wall1")
     
     // wall1.
     walls.add(wall1);
     
-    const wall2 = make_wall(floor_config.width+offseter, false)
+    const wall2 = make_wall(floor_config.width, false)
     wall2.rotation.y = radians(90);
-    wall2.position.x = (Math.ceil(floor_config.width/2) + offset )
+    wall2.position.x = (Math.ceil(floor_config.width/2) + offset -offseter/2)
     console.log(wall2.position, "wall2")
     walls.add(wall2);
 
-    const wall3 = make_wall(floor_config.width+offseter, false)
+    const wall3 = make_wall(floor_config.width, false)
     wall3.rotation.y = radians(90);
-    wall3.position.x = -(Math.ceil(floor_config.width/2) + offset)
+    wall3.position.x = -(Math.ceil(floor_config.width/2) + offset-offseter/2)
     console.log(wall3.position, "wall3")
     walls.add(wall3);
 
-    const wall4 = make_wall(floor_config.length+offseter, false)
-    wall4.position.z = -(Math.ceil(floor_config.length/2) -offset_2[0] )
+    const wall4 = make_wall(floor_config.length, false)
+    wall4.position.z = -(Math.ceil(floor_config.length/2) -offset_2[0] -offseter/2)
     console.log(wall4.position, "wall4")
     walls.add(wall4);
     return walls; 
 
     
 
+}
+
+function make_feet(floor){
+    const feets = new THREE.Object3D();
+
+    // feet =
 }

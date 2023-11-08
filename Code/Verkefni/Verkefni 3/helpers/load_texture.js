@@ -31,6 +31,22 @@ function load_texturev1(file_name){
     return texture
 }
 
+function make_texture_side(length, height, has_alpha, filenames){
+    var result = {};
+    result.basecolor = load_texturev2(filenames.basecolor, [0.0,0.0], [length,height])
+  
+    result.ambientOcclusion = load_texturev2(filenames.ambientOcclusion, [0.0,0.0], [length,height])
+    
+    result.normal = load_texturev2(filenames.normal, [0.0,0.0], [length,height])
+    
+    result.roughness = load_texturev2(filenames.roughness, [0.0,0.0], [length,height])
+    
+    
+    result.alpha_map = null
+    
+    return result;
+}
+
 /**
  * 
  * @param {Texture} basecolor .map

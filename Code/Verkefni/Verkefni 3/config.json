@@ -18,7 +18,13 @@
                 "length":16,
                 "height":2,
                 "width":15,
-                "thicknes":0.1
+                "thicknes":0.1,
+                "alpha":0.3
+            },
+            "feet":{
+                "length":0.1,
+                "height":5,
+                "width":0.1
             }
         },
         "entities":{
@@ -53,7 +59,8 @@
             }
         }
         
-    }
+    },
+    "tick_speed":2
    
 
 }
