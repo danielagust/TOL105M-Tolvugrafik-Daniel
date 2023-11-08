@@ -25,6 +25,8 @@ function make_gnome(){
     const gnome = load_model("./models/gnome.obj", './models/MAT_Character_Gnome_Female_PigTails_0_basecolor.jpg', "./models/MAT_Character_Gnome_Female_PigTails_0_normal.jpg")
     
     gnome.scale.set(gnome_config.length,gnome_config.height,gnome_config.width)
+    gnome.position.z = (floor_config.length/2)
+    gnome.rotation.y = radians(180)
     // GNOME = gnome
     // gnome.position.set(1.0,0.0,1.0)
     // machine.add(gnome)
@@ -68,9 +70,28 @@ function make_floor(){
     // machine.add(plane)
     return plane;
 }
+function make_wall_texture_side(length, width, has_alpha){
+    var result = {};
+    result.basecolor = load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
+  
+    result.ambientOcclusion = load_texturev2("./texture/wall_texture/Plastic_Rough_001_ambientOcclusion.jpg", [0.0,0.0], [length,height])
+    // const height_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_height.png", [0.0,0.0], [length,height])
+    result.normal = load_texturev2("./texture/wall_texture/Plastic_Rough_001_normal.jpg", [0.0,0.0], [length,height])
+    
+    result.roughness = load_texturev2("./texture/wall_texture/Plastic_Rough_001_roughness.jpg", [0.0,0.0], [length,height])
+    
+    result.alpha_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_alpha.jpg", [0.0,0.0], [length,height])
+    return result;
+}
 
-function make_wall_texture(length, height, ticknes){
+function make_wall_texture(length, height, has_alpha){
     const basecolor = load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
+    // const basecolor = [
+    //     load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height]),
+    //     load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height]),
+    //     load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
+        
+    // ]
     const ambientOcclusion = load_texturev2("./texture/wall_texture/Plastic_Rough_001_ambientOcclusion.jpg", [0.0,0.0], [length,height])
     // const height_map = load_texturev2("./texture/wall_texture/Plastic_Rough_001_height.png", [0.0,0.0], [length,height])
     const normal = load_texturev2("./texture/wall_texture/Plastic_Rough_001_normal.jpg", [0.0,0.0], [length,height])
@@ -83,13 +104,19 @@ function make_wall_texture(length, height, ticknes){
     //     load_texturev2("./texture/wall_texture/Plastic_Rough_001_roughness.jpg", [0.0,0.0], [length,height]),
     //     load_texturev2("./texture/wall_texture/Plastic_Rough_001_roughness.jpg", [0.0,0.0], [length,height])
     // ]
-    return get_phong(basecolor, ambientOcclusion, normal, roughness)
+    const alpha_map = load_texturev2("", [0.0,0.0], [length,height])
+    if (has_alpha){
+        return get_phong(basecolor, ambientOcclusion, normal, roughness, alpha_map)
+    }else{
+        return get_phong(basecolor, ambientOcclusion, normal, roughness, null)
+    }
+    
 }
 
-function make_wall(length){
+function make_wall(length, has_alpha){
     
     const geometry = new THREE.BoxGeometry(length, wall_config.height, wall_config.thicknes);
-    const material = make_wall_texture(length, wall_config.height,1.0)
+    const material = make_wall_texture(length, wall_config.height, has_alpha)
     const wall = new THREE.Mesh( geometry, material );
     wall.position.y = wall_config.height/2+FLOOR.position.y
     return wall
@@ -101,21 +128,22 @@ function make_walls(floor){
     const walls = new THREE.Object3D();
     const offset = 0.5
     const offseter = -0.1
-    const wall1 = make_wall(floor_config.length+offseter)
+    const wall1 = make_wall(floor_config.length+offseter, false)
     wall1.position.z = (floor_config.length/2+offset )
+    // wall1.
     walls.add(wall1);
     
-    const wall2 = make_wall(floor_config.width+offseter)
+    const wall2 = make_wall(floor_config.width+offseter, false)
     wall2.rotation.y = radians(90);
     wall2.position.x = (floor_config.width/2-offset )
     walls.add(wall2);
 
-    const wall3 = make_wall(floor_config.width+offseter)
+    const wall3 = make_wall(floor_config.width+offseter, false)
     wall3.rotation.y = radians(90);
     wall3.position.x = -(floor_config.width/2-offset )
     walls.add(wall3);
 
-    const wall4 = make_wall(floor_config.length+offseter)
+    const wall4 = make_wall(floor_config.length+offseter, false)
     wall4.position.z = -(floor_config.length/2+offset )
     walls.add(wall4);
     return walls; 

@@ -11,12 +11,10 @@ const loader = new THREE.TextureLoader();
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('skyblue');
 
-// Skilgreina myndavél og staðsetja hana
-const camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
-camera.position.set(0, 1, 3);
+
 
 // Bæta við músarstýringu
-const controls = new THREE.OrbitControls( camera, canvas );
+// const controls = new THREE.OrbitControls( camera, canvas );
 
 // controls.lookSpeed = 0.1;
 // controls.movementSpeed = 10;
@@ -29,10 +27,12 @@ const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 set_data(config);
 
 var MACHINE;
-var GNOME
-var FLOOR
+var GNOME;
+var FLOOR;
 var WALLS;
 var ENTITIES;
+var camera;
+var controls
 
 
 function make_machine(){
@@ -61,12 +61,19 @@ function make_entities(){
 
 }
 
-// scene.add(gnome);
-
-// make_gnome();
+function make_camera(){
+    // Skilgreina myndavél og staðsetja hana
+    camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
+    camera.position.set(0, 10, 20);
+    controls = new THREE.OrbitControls( camera, canvas );
+    controls.target = GNOME.position
+}
 
 
 make_machine();
+make_camera();
+
+
 // console.log(gnome.position)
 
 

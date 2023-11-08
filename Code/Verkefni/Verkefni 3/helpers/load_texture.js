@@ -39,17 +39,33 @@ function load_texturev1(file_name){
  * @param {Texture} normal .normalMap
  * @param {Texture} roughnes .bumpMap
  */
-function get_phong(basecolor, ambientOcclusion, normal ,roughness){
-
-    const planeMaterial = new THREE.MeshPhongMaterial(
-        {
-            map:basecolor,
-            aoMap: ambientOcclusion,
-            
-            normalMap: normal,
-            bumpMap:roughness
-        }
-    )
-    return planeMaterial
+function get_phong(basecolor, ambientOcclusion, normal ,roughness, alpha_map){
+    if (alpha_map == null){
+        const planeMaterial = new THREE.MeshPhongMaterial(
+            {
+                map:basecolor,
+                aoMap: ambientOcclusion,
+                
+                normalMap: normal,
+                bumpMap:roughness
+            }
+        )
+        return planeMaterial
+    }
+    else{
+        const planeMaterial = new THREE.MeshPhongMaterial(
+            {
+                map:basecolor,
+                aoMap: ambientOcclusion,
+                alphaMap: alpha_map,
+                normalMap: normal,
+                bumpMap:roughness
+            }
+        )
+        return planeMaterial
+    }
+    
+    
+    
     
 }
