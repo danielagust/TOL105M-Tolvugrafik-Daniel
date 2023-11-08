@@ -110,15 +110,13 @@ function make_floor(){
     return plane;
 }
 
-
-
-function get_wall_side(length, height, has_alpha){
+function get_phong_side(length, height,thicknes, has_alpha, alpha){
     var result = [];
-    var awnser = make_texture_side(wall_config.thicknes, height, has_alpha, wall_text_filename);
+    var awnser = make_texture_side(thicknes, height, has_alpha, wall_text_filename);
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     
-    var awnser = make_texture_side(length,wall_config.thicknes, has_alpha, wall_text_filename);
+    var awnser = make_texture_side(length,thicknes, has_alpha, wall_text_filename);
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
     
@@ -128,12 +126,35 @@ function get_wall_side(length, height, has_alpha){
     if(has_alpha){
         for ( var i = 0; i < result.length; ++i ){
             result[i].transparent = true;
-            result[i].opacity = wall_config.alpha
+            result[i].opacity = alpha
         }
     }
     
     return result;
 }
+
+// function get_wall_side(length, height, has_alpha){
+//     var result = [];
+//     var awnser = make_texture_side(wall_config.thicknes, height, has_alpha, wall_text_filename);
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+    
+//     var awnser = make_texture_side(length,wall_config.thicknes, has_alpha, wall_text_filename);
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+    
+//     var awnser = make_texture_side(length, height, has_alpha, wall_text_filename);
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+//     result.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map))
+//     if(has_alpha){
+//         for ( var i = 0; i < result.length; ++i ){
+//             result[i].transparent = true;
+//             result[i].opacity = wall_config.alpha
+//         }
+//     }
+    
+//     return result;
+// }
 
 function make_wall_texture(length, height, has_alpha){
     // const basecolor = load_texturev2("./texture/wall_texture/Plastic_Rough_001_basecolor.jpg", [0.0,0.0], [length,height])
@@ -158,7 +179,7 @@ function make_wall_texture(length, height, has_alpha){
     // const alpha_map = load_texturev2("", [0.0,0.0], [length,height])
 
     // var result = [];
-    result = get_wall_side(length, height, has_alpha)
+    result = get_phong_side(length, height,wall_config.thicknes, has_alpha, wall_config.alpha)
     //     // console.log(result)
     return result
     
