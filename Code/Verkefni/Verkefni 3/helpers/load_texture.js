@@ -62,6 +62,7 @@ function get_phong(basecolor, ambientOcclusion, normal ,roughness, alpha_map){
                 bumpMap:roughness
             }
         )
+        // console.log("helllo")
         return planeMaterial
     }
     

@@ -44,9 +44,14 @@ function make_machine(){
     WALLS = make_walls(FLOOR);
     machine.add(WALLS)
 
+    
+    
+    var offset_2 = if_even_invers(floor_config.length, floor_config.width) 
+    machine.position.set(offset_2[0], 0.0, offset_2[1]);
+    console.log(machine.position, "hrllo")
     make_entities()
-    machine.add(ENTITIES)
-
+    scene.add(ENTITIES)
+    
     MACHINE = machine
     scene.add(MACHINE)
     
