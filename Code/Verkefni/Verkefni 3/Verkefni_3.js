@@ -30,12 +30,35 @@ var MACHINE;
 var GNOME;
 var FLOOR;
 var WALLS;
+var FEETS;
 var ENTITIES;
 var camera;
 var controls;
 
 var Left_key = 65; // a key
 var Right_key = 68; // d key
+
+var Left_flip = false;
+var Right_flip = false;
+
+var if_gnome_move_on_tick = false;
+var max_gnome_pos = floor_config.width/2-1;
+var min_gnome_pos = floor_config.width/2-1;
+const speed =config.machine.entities.gnome.speed
+
+var tick_speed = config.tick_speed;
+var last_count =0;
+var lastTime = 0;
+var tcik = 0;
+
+
+function run(){
+    make_machine();
+    make_camera();
+    event_keyboard();
+    make_light();
+    requestAnimationFrame(animate);
+}
 
 
 function make_machine(){
@@ -47,11 +70,14 @@ function make_machine(){
     WALLS = make_walls(FLOOR);
     machine.add(WALLS)
 
+    FEETS = make_feets(FLOOR);
+    machine.add(FEETS)
+
     
     
     var offset_2 = if_even_invers(floor_config.length, floor_config.width) 
     machine.position.set(offset_2[0], 0.0, offset_2[1]);
-    console.log(machine.position, "hrllo")
+    // console.log(machine.position, "hrllo")
     make_entities()
     scene.add(ENTITIES)
     
@@ -72,22 +98,28 @@ function make_entities(){
 function make_camera(){
     // Skilgreina myndavél og staðsetja hana
     camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
-    // camera.position.set(0, 10, 20);
-    camera.position.set(0, 4, 0);
+    camera.position.set(0, 10, 20);
+    // camera.position.set(0, 4, 0);
     controls = new THREE.OrbitControls( camera, canvas );
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
+    new_pos(controls.target, GNOME.position)
+}
+
+function make_light(){
+    // Skilgreina ljósgjafa og bæta honum í sviðsnetið
+    const light = new THREE.DirectionalLight(0xFFFFFF, 1);
+    light.position.set(0, 10, 10);
+    scene.add(light);
 }
 
 
-make_machine();
-make_camera();
-event_keyboard();
+
+
+
 
 
 function event_keyboard(){
-    var max_gnome_pos = floor_config.width/2;
-    var min_gnome_pos = floor_config.width/2;
-    const step =1.0
+    
     window.addEventListener("keydown", function(e){
         switch( e.keyCode ) {
             // case Forward_key:	// upp �r
@@ -106,12 +138,24 @@ function event_keyboard(){
             //     break;
 
             case Right_key:	// a - snýr neðri armi
-                GNOME.position.x = Math.min(max_gnome_pos, GNOME.position.x+step);
+                if(if_gnome_move_on_tick){
+                    Right_flip = true
+                }else{
+                    GNOME.position.x = Math.min(max_gnome_pos, GNOME.position.x+speed);
+                }
+                
+                
                 // camera.position.x = Math.min(max_gnome_pos, camera.position.x+step);
                 // GNOME.position.x +=1.0
                 break;
             case Left_key:	// s - snýr neðri armi
-                GNOME.position.x = Math.max(-min_gnome_pos, GNOME.position.x-step);
+                if(if_gnome_move_on_tick){
+                    Left_flip = true
+                }else{
+                    GNOME.position.x = Math.max(-min_gnome_pos, GNOME.position.x-speed);
+                }
+                
+                
                 // camera.position.x = Math.max(-min_gnome_pos, camera.position.x-step);
                 break;
             // case Up_key:
@@ -131,16 +175,22 @@ function event_keyboard(){
 
 
 
-// Skilgreina ljósgjafa og bæta honum í sviðsnetið
-const light = new THREE.DirectionalLight(0xFFFFFF, 1);
-light.position.set(2, 4, 1);
-scene.add(light);
 
 
-var tick_speed = config.tick_speed;
-var last_count =0;
-var lastTime = 0;
-var tcik = 0;
+
+
+
+function gnome_move(delta){
+    
+    if(Right_flip){
+        GNOME.position.x = Math.min(max_gnome_pos, GNOME.position.x+speed); 
+        Right_flip = false;
+    }
+    if(Left_flip){
+        GNOME.position.x = Math.max(-min_gnome_pos, GNOME.position.x-speed);
+        Left_flip = false
+    }
+}
 
 function move_tick(delta){
     var deltaTime;
@@ -152,6 +202,7 @@ function move_tick(delta){
         if (last_count != tcik.toFixed(0)){
             console.log("hello")
             last_count = tcik.toFixed(0)
+            gnome_move();
         }
         
 
@@ -176,15 +227,15 @@ function updateGameLogic_main(delta){
 const animate = function (timestamp) {
     
 
-    var delta = clock.getDelta();
+    // var delta = clock.getDelta();
     move_tick(timestamp)
 
     
-    controls.update(delta);
+    controls.update();
     renderer.render( scene, camera );
     requestAnimationFrame( animate );
 
    
 };
-clock.start()
-requestAnimationFrame(animate);
+// clock.start()
+run();
