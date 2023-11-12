@@ -28,6 +28,7 @@ class Body{
         this.head = null;
         this.tail = null;
         this.id = id;
+        this.prev_pos = new THREE.Vector3(0.3,1,0);
         
 
     }
@@ -71,8 +72,24 @@ class Body{
 
     }
     split(Objects){
-        Objects.remove(this.body)
+
+        Objects.traverse( child => {
+            // if (child.isMesh){
+            //     if(child.position.equals(head_pos)){
+            //         next_mushroom = true;
+            //     }
+            //     // console.log("hello")
+            //     // child.material = material;  
+            // }
+            if(child == this.body){
+                child = null
+            }
+            
+        })
+        // Objects.remove(this.body)
+        
         if(this.next == null){
+            console.log("hello0");
             if(this.before == null){
                 return {
                     head:null,
@@ -80,6 +97,8 @@ class Body{
                 }
             }
             else{
+                console.log("hello0");
+                console.log(this, "hello")
                 this.before.is_head = true;
                 return {
                     head:this.before,
@@ -89,7 +108,7 @@ class Body{
         }
         if(this.before == null){
             return {
-                head:null,
+                head:this,
                 gone: true
             }
         }
@@ -98,6 +117,7 @@ class Body{
             this.next.before = null;
             var temp =  this.before;
             this.before.next = null;
+            console.log(temp, "hello0");
             return {
                 head:temp,
                 gone: false
@@ -116,7 +136,7 @@ class Body{
             body.next = this;
             this.before = body;
         }
-        console.log(this.before)
+        // console.log(this.before)
         return body
 
          // Create a temporary variable
@@ -160,7 +180,7 @@ class Body{
         
         this.before = this.tail;
         
-        console.log(this.before)
+        // console.log(this.before)
     }
 }
 

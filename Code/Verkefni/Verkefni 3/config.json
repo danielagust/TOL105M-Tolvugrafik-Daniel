@@ -36,12 +36,12 @@
                     "radius":0.6
                 },
                 "length":{
-                    "max_length":3,
+                    "max_length":10,
                     "min_length":3
                     
                 },
                 "random":{
-                    "change_length":0.4
+                    "change_length":0.2
                 }
             },
             "gnome":{
@@ -59,14 +59,20 @@
                 "top":{
                     "halfnes":1,
                     "radius":0.5
-                }
+                },
+                "size":{
+                    "length":0.4,
+                    "height":0.4,
+                    "width":0.4
+                },
+                "amount_row": 1
                 
             }
         }
         
     },
     "game_logic":{
-        "tick_speed":1
+        "tick_speed":4
     },
     "room":{
         "wall":{

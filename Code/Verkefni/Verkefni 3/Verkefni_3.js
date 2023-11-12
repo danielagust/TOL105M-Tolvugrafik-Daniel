@@ -35,8 +35,10 @@ var FEETS;
 var ENTITIES;
 var camera;
 var controls;
-var HEADS;
-var HEAD_list
+var HEADS ;
+var HEAD_list = [];
+var MUSHROOM;
+var MUSHROOM_list = [];
 
 var Left_key = 65; // a key
 var Right_key = 68; // d key
@@ -48,12 +50,14 @@ var if_gnome_move_on_tick = false;
 var max_gnome_pos = floor_config.width/2-1;
 var min_gnome_pos = floor_config.width/2-1;
 const speed =config.machine.entities.gnome.speed
+var centipede_config = config.machine.entities.centipede
 
 var tick_speed = config.game_logic.tick_speed;
 var last_count =0;
 var lastTime = 0;
-var tcik = 0;
+var tick = 0;
 var head_end ;
+var inside_tick = 0;
 
 
 function run(){
@@ -90,29 +94,49 @@ function make_machine(){
     
 }
 
+
+
 function make_entities(){
     var entities = new THREE.Object3D();
     GNOME = make_gnome();
     entities.add(GNOME);
     
     var body = make_centipede(WALLS);
-    HEADS = body.mesh;
-    HEAD_list = body.head
-    head_end = HEAD_list
+    HEADS=(body.mesh);
+    HEAD_list.push(body.head)
+    // console.log(body)
+
+    // var body = make_centipede(WALLS);
+    // HEADS.add(body.mesh);
+    // HEAD_list.push(body.head)
+    // console.log(body)
+    
+    // head_end = HEAD_list
     // console.log(HEAD_list)
     entities.add(HEADS)
+
+    MUSHROOM = make_mushrooms(6, -6);
+    // make_mushrooms();
+    entities.add(MUSHROOM)
+
+    for ( var i = 0; i < centipede_config.length.max_length; ++i ){
+        
+    }
     
-    make_part();
-    make_part();
-    make_part();
     // make_part();
-    console.log(HEAD_list , "headlists")
-    // for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
-    //     move_head({
-    //         mushrooms:WALLS,
-    //         walls: 7
-    //     }, HEAD_list)
-    // }
+    // make_part();
+    
+    // console.log(HEAD_list , "headlists")
+    for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
+        make_part();
+        move_head({
+            mushrooms:WALLS,
+            walls: 7
+        }, HEAD_list[0])
+    }
+    console.log(HEAD_list[0].before)
+    HEAD_list.push(HEAD_list[0].before.split(HEADS).head)
+    console.log(HEAD_list)
     
     
     
@@ -124,17 +148,17 @@ function make_entities(){
 function make_camera(){
     // Skilgreina myndavél og staðsetja hana
     camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
-    // camera.position.set(0, 10, 20);
-    camera.position.set(0, 4, 0);
+    camera.position.set(0, 10, 20);
+    // camera.position.set(0, 10, 0);
     controls = new THREE.OrbitControls( camera, canvas );
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
-    // new_pos(controls.target, GNOME.position)
+    new_pos(controls.target, GNOME.position)
 }
 
 function make_light(){
     // Skilgreina ljósgjafa og bæta honum í sviðsnetið
     const light = new THREE.DirectionalLight(0xFFFFFF, 1);
-    light.position.set(0, 10, 10);
+    light.position.set(0, 10, 0);
     scene.add(light);
 }
 
@@ -224,10 +248,10 @@ function move_tick(delta){
         deltaTime = delta - lastTime;
         // console.log(lastTime)
         // console.log(deltaTime)
-        tcik += tick_speed * deltaTime / 1000;
-        if (last_count != tcik.toFixed(0)){
-            console.log("tick")
-            last_count = tcik.toFixed(0)
+        tick += tick_speed * deltaTime / 1000;
+        if (last_count != tick.toFixed(0)){
+            // console.log("tick")
+            last_count = tick.toFixed(0)
             updateGameLogic_main(delta)
         }
         
@@ -239,26 +263,51 @@ function move_tick(delta){
     
     lastTime = delta
 }
-
+var tick
+var if_end_cent_var = false;
 function updateGameLogic_main(delta){
-    gnome_move();
-    move_head({
-        mushrooms:WALLS,
-        walls: 7
-    }, HEAD_list)
+    inside_tick += 1
+    
+    
+    console.log(if_end_cent_var)
+    if(!if_end_cent_var){
+        gnome_move();
+        // if_end_cent_var = move_centa(true)
+    }
+    else{
+        GNOME.position.y = -2
+        // lost code
+    }
+    
+   
+    // if(count <= centipede_config.length.max_length){
+    //     make_part();
+        
+    // }
+    // else if(count >= centipede_config.length.max_length+1){
+    //     // if_end_cent_var = move_head({
+            
+    //     //     mushrooms:MUSHROOM,
+    //     //     walls: 7
+    //     // }, HEAD_list[1]) 
+        
+    // }
 
     
 }
 var count = 1;
-
+var fliper = true
 function make_part(index){
     
-    move_head({
-        mushrooms:WALLS,
-        walls: 7
-    }, HEAD_list)
+    // move_head({
+    //     mushrooms:WALLS,
+    //     walls: 7
+    // }, HEAD_list)
     
-    if_new(HEAD_list, count, HEADS)
+    if(fliper){
+        fliper = if_new(HEAD_list[0], count, HEADS).stop
+    }
+    
     count+=1;
     // console.log(head_end);
     // console.log(HEAD_list)
@@ -266,6 +315,28 @@ function make_part(index){
     
 
 }
+
+function move_centa(index_flip){
+    for ( var i = 0; i < HEAD_list.length; ++i ){
+        if(i==0 ||index_flip){
+            var if_end_cent_var = move_head({
+            
+                mushrooms:MUSHROOM,
+                walls: 7
+            }, HEAD_list[i])    
+        }
+       
+        if(if_end_cent_var){
+            return true;
+        }
+    }
+    return false
+    // console.log(HEAD_list)
+   
+    
+}
+
+
 
 
 

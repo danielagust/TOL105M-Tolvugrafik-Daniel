@@ -31,6 +31,7 @@ function set_data(json){
     feet_config = config.machine.structure.feet
     gnome_config = config.machine.entities.gnome
     centipede_config = config.machine.entities.centipede
+    mushroom_config  = config.machine.entities.mushroom
     // console.log(feet_config)
     
     
@@ -39,7 +40,56 @@ function set_data(json){
 // console.log(config)
 
 
+function make_mushroom(x, z){
+    const mushroom = load_model("./models/mushroom/19382_Short_strange_mushroom_v1.obj", './models/mushroom/mushroom_text.png', "")
+    // mu
+    mushroom.scale.set(mushroom_config.size.length,mushroom_config.size.height,mushroom_config.size.width)
+    // var offset_2 = if_evenv2(floor_config.length, floor_config.width) 
+    // mushroom.position.z = (Math.round(floor_config.length/2) +offset_2[0]-0.0)
+    // gnome.position.z = 2.0
+    mushroom.position.y -= 0.5
+    // console.log(mushroom.position)
+    mushroom.rotateX(radians(90))
+    mushroom.rotation.y = radians(180)
+    mushroom.position.z = z;
+    mushroom.position.x = x;
+    // GNOME = gnome
+    // gnome.position.set(1.0,0.0,1.0)
+    // machine.add(gnome)
+    return mushroom
+}
+function if_in_list(elmen, list){
+    return list.includes(elmen, 0)
+}
 
+function make_mushrooms(){
+    var min = -floor_config.length/2+0.5
+    var max = floor_config.length/2-0.5
+    var pos_list = [];
+    var end = 3
+    mushrooms = new THREE.Object3D();
+    
+    for ( var i = start.z; i < floor_config.length+start.z-end; ++i ){
+        var temp = [];
+        for ( var j = 0; j < mushroom_config.amount_row; ++j ){
+            const random = Math.random() * (max- min) + min
+            
+            const pos = Math.floor(random)
+            if(!if_in_list(pos, temp)){
+                temp.push(pos)
+                const mushroom = make_mushroom(pos, i)
+                mushrooms.add(mushroom);
+            }
+            
+
+        }
+        // pos_list.push(temp)
+    }
+    // console.log(pos_list)
+    // console.log(mushrooms)
+    return mushrooms
+    
+}
 
 
 function make_gnome(){
@@ -349,8 +399,8 @@ function make_body(body_node_head_end,index, bodyes, pos){
     var new_moves =  copy(now_moves);
     new_moves.push("R");
     // new_moves.push("R");
-    console.log(new_moves)
-    const before_part = new Obj_Body(body, centipede_config.body.radius, false, null, new_moves, index, index);
+    // console.log(new_moves)
+    const before_part = new Obj_Body(body, centipede_config.body.radius, false, null, new_moves, 0, index);
     
     body_node_head_end.insertEnd(before_part);
     // console.log(body_node_head_end)
@@ -446,20 +496,27 @@ function if_new(body_node_head_start, index, bodyes){
     
     const random = Math.random();
     const tempo = centipede_config.random.change_length >= random
+    // console.log(tempo)
     // var body_node_head_step = body_node_head_start;
     if(tempo && centipede_config.length.min_length <= index){
         // console.log("hello_in", index)
-        
+        return {
+            mesh: bodyes,
+            stop: false
+        }
         
     }
     else{ // code here
 
         // console.log("hello_out", index)
         // body_node_head_step = make_body(body_node_head_step, index, bodyes, start)
+        make_body(body_node_head_start, index, bodyes, start)
+        return {
+            mesh: bodyes,
+            stop: true
+        }
     }
-    make_body(body_node_head_start, 0, bodyes, start)
-    return {
-        mesh: bodyes
-    }
+    
+    
     
 }
