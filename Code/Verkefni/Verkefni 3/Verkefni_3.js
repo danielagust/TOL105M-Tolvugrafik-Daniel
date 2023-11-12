@@ -46,7 +46,7 @@ var max_gnome_pos = floor_config.width/2-1;
 var min_gnome_pos = floor_config.width/2-1;
 const speed =config.machine.entities.gnome.speed
 
-var tick_speed = config.tick_speed;
+var tick_speed = config.game_logic.tick_speed;
 var last_count =0;
 var lastTime = 0;
 var tcik = 0;
@@ -89,8 +89,11 @@ function make_machine(){
 function make_entities(){
     var entities = new THREE.Object3D();
     GNOME = make_gnome();
-
     entities.add(GNOME);
+    
+    var body = make_centipede();
+    entities.add(body)
+
     ENTITIES = entities;
 
 }
@@ -98,11 +101,11 @@ function make_entities(){
 function make_camera(){
     // Skilgreina myndavél og staðsetja hana
     camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
-    camera.position.set(0, 10, 20);
-    // camera.position.set(0, 4, 0);
+    // camera.position.set(0, 10, 20);
+    camera.position.set(0, 4, 0);
     controls = new THREE.OrbitControls( camera, canvas );
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
-    new_pos(controls.target, GNOME.position)
+    // new_pos(controls.target, GNOME.position)
 }
 
 function make_light(){
@@ -202,7 +205,7 @@ function move_tick(delta){
         if (last_count != tcik.toFixed(0)){
             console.log("hello")
             last_count = tcik.toFixed(0)
-            gnome_move();
+            updateGameLogic_main(delta)
         }
         
 
@@ -215,6 +218,8 @@ function move_tick(delta){
 }
 
 function updateGameLogic_main(delta){
+    gnome_move();
+
     
 }
 

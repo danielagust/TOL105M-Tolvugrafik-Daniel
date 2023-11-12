@@ -94,12 +94,29 @@ function if_evenv2(length, width){
     return [length_offset, width_offset]
 }
 
-function load_tile_texture(){
+function load_tile_texture(file_name){
     
     const offset = if_even(floor_config.length, floor_config.width)
     
     var texture = load_texturev2("./texture/floor_texture/black_tile.png", [floor_config.s_text_ofset*floor_config.length, floor_config.t_text_ofset*floor_config.width], [Math.floor(floor_config.length/2)+offset[0],Math.floor(floor_config.width/2)+offset[1]])
     return texture
+}
+
+function make_floor_texture(){
+    
+
+    var Material = [];
+    var texture = load_tile_texture();
+    // Material.push(new THREE.MeshPhongMaterial( { map: texture } ));
+    var awnser = make_texture_side(floor_config.length, floor_config.height, false, wall_text_filename)
+    console.log(texture)
+    Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
+    Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
+    Material.push(get_phong(texture, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map)); // top
+    Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
+    Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
+    Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
+    return Material
 }
 
 function make_floor(){
@@ -108,11 +125,13 @@ function make_floor(){
     // console.log(if_even(floor_config.length, floor_config.width))
     
     
-    const texture = load_tile_texture();
-    const floor = new THREE.PlaneGeometry( floor_config.length, floor_config.width );
-    const planeMaterial = new THREE.MeshPhongMaterial( { map: texture } );
-    const plane = new THREE.Mesh( floor, planeMaterial );
-    plane.rotation.x = radians(-90)
+    
+    const floor = new THREE.BoxGeometry( floor_config.length, floor_config.height,floor_config.width );
+    const Material = make_floor_texture();
+    
+    const plane = new THREE.Mesh( floor, Material );
+    // plane.rotation.x = radians(-90)
+    plane.position.y = -floor_config.height/2
     
     // console.log(plane.position, "hello")
     
@@ -273,10 +292,41 @@ function make_feet(pos){
 
 function make_feets(floor){
     const feets = new THREE.Object3D();
-    const floor_width = wall_config.width/2+wall_config.thicknes/2
-    // const wall_
+    const floor_length = floor_config.length/2+wall_config.thicknes/2
+    // const floor_height = -(feet_config.height/2-wall_config.height/2)+wall_config.height/2
+    const floor_height = -(feet_config.height/2-wall_config.height)-floor_config.height/2
+    const floor_width = floor_config.width/2+wall_config.thicknes/2
+    
+    
 
-    var feet = make_feet(new THREE.Vector3(floor_config.width/2+wall_config.thicknes/2,0.0,floor_config.length/2+wall_config.thicknes/2));
+    var feet = make_feet(new THREE.Vector3(floor_length,floor_height,floor_width));
+    feets.add(feet);
+
+    var feet = make_feet(new THREE.Vector3(-floor_length,floor_height,floor_width));
+    feets.add(feet);
+
+    var feet = make_feet(new THREE.Vector3(-floor_length,floor_height,-floor_width));
+    feets.add(feet);
+
+    var feet = make_feet(new THREE.Vector3(floor_length,floor_height,-floor_width));
     feets.add(feet);
     return feets;
+}
+
+
+function make_head(){
+    const geometry = new THREE.SphereGeometry( 1/2, 32, 16 );
+    const texture = load_texturev1("./texture/centipede_texture/centipede_text.png")
+    const material = new THREE.MeshPhongMaterial( { map: texture } )
+    const head = new THREE.Mesh( geometry, material );
+    head.position.y += 1/2
+    return head;
+
+}
+
+function make_centipede(){
+    const bodyes = new THREE.Object3D();
+    
+    bodyes.add(make_head());
+    return bodyes;
 }
