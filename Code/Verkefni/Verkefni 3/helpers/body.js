@@ -12,7 +12,7 @@ class Body{
      * @param {*} before 
      * @param {*} moves 
      */
-    constructor(mesh, radius, is_head, before, moves, index){
+    constructor(mesh, radius, is_head, before, moves, index, id){
 
         this.body = mesh;
         this.radius = radius;
@@ -25,33 +25,43 @@ class Body{
         this.if_end = false
         this.last_move = "R"
         this.angle = 0;
+        this.head = null;
+        this.tail = null;
+        this.id = id;
         
 
     }
     
     move(amount, next_move){
+        // console.log(this.index)
+        
         if(this.moves[this.index]=="R"){
+            // console.log(this.id)
             this.move_right(amount)
-            this.index += 1;
+            
+            
         }
         if(this.moves[this.index]=="L"){
             this.move_left(amount)
-            this.index += 1;
+            // this.index += 1;
         }
 
         if(this.moves[this.index]=="D"){
             this.move_down(amount)
-            this.index += 1;
+            // this.index += 1;
         }
+        
 
         if(this.before!=null){
-            this.before.moves.push(next_move)
+            // this.before.moves.push(next_move)
             this.before.move(amount);
         }
+        // this.moves.push(next_move)
+        this.index += 1;
     }
 
     move_down(amount){
-        this.body.position.z -= amount
+        this.body.position.z += amount
     }
     move_left(amount){
         this.body.position.x -= amount
@@ -101,11 +111,56 @@ class Body{
         }
     }
     add(body){
+        
         if(this.before == null){
             body.next = this;
             this.before = body;
         }
+        console.log(this.before)
         return body
+
+         // Create a temporary variable
+        // let temp = body
+    
+        // // If the list is empty link assign
+        // // new node to both head and tail
+        // if (this.head == null) {
+        //     this.head = temp;
+        //     this.tail = temp;
+        // }
+    
+        // // else add item to the head and shift head backward
+        // else {
+        //     temp.next = this.head;
+        //     this.head.prev = temp;
+        //     this.head = temp;
+        // }
+    }
+
+    insertEnd(body) {
+        // Create a temporary variable
+        let temp = body
+     
+        // If the list is empty link assign
+        // new node to both head and tail
+        if (this.head == null) {
+            this.head = body;
+            this.tail = body;
+            this.tail.next = body;
+        }
+     
+        // else add item to the tail and shift tail
+        else {
+            body.before = this.tail;
+            this.tail.next = body;
+            this.tail = this.tail.next;
+            
+            // this.before = this.tail;
+        }
+        
+        this.before = this.tail;
+        
+        console.log(this.before)
     }
 }
 

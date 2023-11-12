@@ -31,6 +31,7 @@ function move_head(Objects_collision, head){
     const mushrooms = Objects_collision.mushrooms
     const walls_end = Objects_collision.walls;
     const head_pos = head.body.position.clone()
+    // console.log(head, "head")
     // const pos_temp = new THREE.Vector3(-6, 0.5,-7)
     if(head.curr_move == "R"){
         head_pos.x += 1;
@@ -85,7 +86,9 @@ function rotate_part(theta, head){
     head.body.rotateY(radians(theta))
     head.angle = angle_corrector
 }
+var flip = true
 function move_cent(amount,move, head){
+    // console.log(head, "head")
     if(move=="R"){
         if(head.last_move == "D"){
             rotate_part(90, head)
@@ -117,18 +120,26 @@ function move_cent(amount,move, head){
         // console.log("hello d")
         if(head.curr_move == "R"){
             head.curr_move = "L"
-            console.log("hello R")
+            // console.log("hello R")
         }
         else if(head.curr_move == "L"){
             head.curr_move = "R"
-            console.log("hello L")
+            // console.log("hello L")
         }
         head.last_move = "D"
+        // head.before.moves.push(move)
     }
     if(head.before!=null){
-        // head.before.moves.push(next_move)
-        console.log("hello")
-        head.before.move(amount);
+        if(flip){
+            // head.before.moves.push(move)
+            flip = false
+        }
+        // head.before.moves.push(move)
+        // console.log("hello")
+        // console.log(head, "head")
+        
+        head.before.move(amount, move);
+        head.add_next_move(move);
     }
     // console.log(head.before)
 
@@ -145,3 +156,4 @@ function move_cent(amount,move, head){
 //     this.body.position.x += amount
 
 // }
+

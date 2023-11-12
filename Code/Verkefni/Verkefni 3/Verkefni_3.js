@@ -53,6 +53,7 @@ var tick_speed = config.game_logic.tick_speed;
 var last_count =0;
 var lastTime = 0;
 var tcik = 0;
+var head_end ;
 
 
 function run(){
@@ -97,14 +98,21 @@ function make_entities(){
     var body = make_centipede(WALLS);
     HEADS = body.mesh;
     HEAD_list = body.head
+    head_end = HEAD_list
     // console.log(HEAD_list)
     entities.add(HEADS)
-    for ( var i = 0; i < (config.machine.structure.floor.length)*2+1; ++i ){
-        move_head({
-            mushrooms:WALLS,
-            walls: 7
-        }, HEAD_list)
-    }
+    
+    make_part();
+    make_part();
+    // make_part();
+    console.log(HEAD_list , "headlists")
+    // for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
+    //     move_head({
+    //         mushrooms:WALLS,
+    //         walls: 7
+    //     }, HEAD_list)
+    // }
+    
     
     
 
@@ -233,9 +241,31 @@ function move_tick(delta){
 
 function updateGameLogic_main(delta){
     gnome_move();
+    move_head({
+        mushrooms:WALLS,
+        walls: 7
+    }, HEAD_list)
 
     
 }
+var count = 1;
+
+function make_part(index){
+    
+    move_head({
+        mushrooms:WALLS,
+        walls: 7
+    }, HEAD_list)
+    
+    if_new(HEAD_list, count, HEADS)
+    count+=1;
+    // console.log(head_end);
+    // console.log(HEAD_list)
+    // console.log(HEAD_list)
+    
+
+}
+
 
 
 // move_head({WALLS}, HEAD_list)
