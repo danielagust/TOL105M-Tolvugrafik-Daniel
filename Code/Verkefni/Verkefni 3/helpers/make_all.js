@@ -153,7 +153,7 @@ function load_tile_texture(file_name){
     
     const offset = if_even(floor_config.length, floor_config.width)
     
-    var texture = load_texturev2("./texture/floor_texture/black_tile.png", [floor_config.s_text_ofset*floor_config.length, floor_config.t_text_ofset*floor_config.width], [Math.floor(floor_config.length/2)+offset[0],Math.floor(floor_config.width/2)+offset[1]])
+    var texture = load_texturev2("./texture/Floor_texture/black_tile.png", [floor_config.s_text_ofset*floor_config.length, floor_config.t_text_ofset*floor_config.width], [Math.floor(floor_config.length/2)+offset[0],Math.floor(floor_config.width/2)+offset[1]])
     return texture
 }
 

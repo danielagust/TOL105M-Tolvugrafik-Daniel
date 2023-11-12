@@ -33,6 +33,8 @@ var FLOOR;
 var WALLS;
 var FEETS;
 var ENTITIES;
+var camera_top;
+var camera_gnome;
 var camera;
 var controls;
 var HEADS ;
@@ -70,6 +72,9 @@ function run(){
     make_camera();
     event_keyboard();
     make_light();
+    
+    document.getElementById("camrea_button").addEventListener ("click", if_gnome_camrea);
+    // if_gnome_camrea(true);
     requestAnimationFrame(animate);
 }
 
@@ -158,10 +163,13 @@ function make_entities(){
 
 function make_camera(){
     // Skilgreina myndavél og staðsetja hana
-    camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
+    camera_top = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
     // camera.position.set(0, 10, 20);
-    camera.position.set(0, 10, 10);
-    controls = new THREE.OrbitControls( camera, canvas );
+    camera_top.position.set(0, 10, 10);
+    // controls = new THREE.OrbitControls( camera_top, canvas );
+    controls = new THREE.PointerLockControls( camera_top, canvas );
+    // controls.lock()
+    
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
     // new_pos(controls.target, GNOME.position)
 }
@@ -186,9 +194,30 @@ function sumon_built(){
     
 }
 
+var flip_camrea_out = false
+var flip_camrea = true;
+function if_gnome_camrea(){
+    console.log("hello")
+    if(flip_camrea){
+        flip_camrea_out = false
+        flip_camrea = false
+        camera = camera_top;
+        controls = new THREE.OrbitControls( camera_top, canvas );
+        // controls = new THREE.PointerLockControls( camera_top, canvas );
 
-
-
+    }
+    else{
+        flip_camrea_out = true
+        flip_camrea = false
+        camera = camera_top;
+        new_pos(camera.position, GNOME.position)
+        camera.position.y += 0.5
+        console.log("hello inn")
+        new_pos(controls.target, new THREE.Vector3(0.0,10,0.0))
+        // controls = new THREE.PointerLockControls( camera_top, canvas );
+        
+    }
+}
 
 
 
@@ -218,7 +247,10 @@ function event_keyboard(){
                     GNOME.position.x = Math.min(max_gnome_pos, GNOME.position.x+speed);
                 }
                 
-                
+                if(flip_camrea_out){
+                    camera.position.x = Math.min(max_gnome_pos, camera.position.x+speed);
+                    camera.target.x = Math.min(max_gnome_pos, camera.target.x+speed);
+                }
                 // camera.position.x = Math.min(max_gnome_pos, camera.position.x+step);
                 // GNOME.position.x +=1.0
                 break;
@@ -229,7 +261,10 @@ function event_keyboard(){
                     GNOME.position.x = Math.max(-min_gnome_pos, GNOME.position.x-speed);
                 }
                 
-                
+                if(flip_camrea_out){
+                    camera.position.x = Math.max(-min_gnome_pos, camera.position.x-speed);
+                    camera.target.x = Math.max(-min_gnome_pos, camera.target.x-speed);
+                }
                 // camera.position.x = Math.max(-min_gnome_pos, camera.position.x-step);
                 break;
             case Space_key:
@@ -375,7 +410,7 @@ function updateGameLogic_main(delta){
     // console.log(if_end_cent_var)
     if(!if_end_cent_var){
         gnome_move();
-         move_centa(true)
+        if_end_cent_var = move_centa(true)
         move_built()
         // console.log(sumon_flip)
         if(sumon_flip && inside_tick % interval == 0){
@@ -467,8 +502,8 @@ const animate = function (timestamp) {
     move_tick(timestamp)
 
     
-    controls.update();
-    renderer.render( scene, camera );
+    // controls.update();
+    renderer.render( scene, camera_top );
     requestAnimationFrame( animate );
 
    
