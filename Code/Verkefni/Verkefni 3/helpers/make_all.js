@@ -1,9 +1,9 @@
 
-var config;
-var floor_config;
-var wall_config;
-var gnome_config;
-var feet_config;
+// var config;
+// var floor_config;
+// var wall_config;
+// var gnome_config;
+// var feet_config;
 
 var FLOOR;
 
@@ -29,6 +29,7 @@ function set_data(json){
     wall_config = config.machine.structure.wall
     feet_config = config.machine.structure.feet
     gnome_config = config.machine.entities.gnome
+    centipede_config = config.machine.entities.centipede
     // console.log(feet_config)
     
     
@@ -109,7 +110,7 @@ function make_floor_texture(){
     var texture = load_tile_texture();
     // Material.push(new THREE.MeshPhongMaterial( { map: texture } ));
     var awnser = make_texture_side(floor_config.length, floor_config.height, false, wall_text_filename)
-    console.log(texture)
+    // console.log(texture)
     Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
     Material.push(get_phong(awnser.basecolor, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map));
     Material.push(get_phong(texture, awnser.ambientOcclusion, awnser.normal, awnser.roughness, awnser.alpha_map)); // top
@@ -285,7 +286,8 @@ function make_feet(pos){
     const geometry = new THREE.BoxGeometry(feet_config.length, feet_config.height, feet_config.width);
     const material = make_feet_texture();
     const feet = new THREE.Mesh( geometry, material );
-    console.log(pos)
+    
+    // console.log(pos)
     new_pos(feet.position, pos)
     return feet
 }
@@ -315,8 +317,8 @@ function make_feets(floor){
 
 
 function make_head(){
-    const geometry = new THREE.SphereGeometry( 1/2, 32, 16 );
-    const texture = load_texturev1("./texture/centipede_texture/centipede_text.png")
+    const geometry = new THREE.SphereGeometry( centipede_config.head.radius, 32, 16 );
+    const texture = load_texturev1("./texture/centipede_texture/centipede_head.png")
     const material = new THREE.MeshPhongMaterial( { map: texture } )
     const head = new THREE.Mesh( geometry, material );
     head.position.y += 1/2
@@ -324,9 +326,105 @@ function make_head(){
 
 }
 
-function make_centipede(){
-    const bodyes = new THREE.Object3D();
+function make_body(body_node_head,index, bodyes, pos){
+    const geometry = new THREE.SphereGeometry( centipede_config.head.radius, 32, 16 );
+    const texture = load_texturev1("./texture/centipede_texture/centipede_body.png")
+    const material = new THREE.MeshPhongMaterial( { map: texture } )
+    const body = new THREE.Mesh( geometry, material );
+    body.position.set(pos.x, 0.0, pos.z)
+    // console.log(pos)
+    body.position.y += 1/2
+    bodyes.add(body);
+    var now_moves = body_node_head.body_node_head_end.moves;
+    now_moves.push("R");
+    const before_part = new Obj_Body(body, centipede_config.body.radius, false, null, now_moves, index);
+    body_node_head.body_node_head_end = body_node_head.body_node_head_end.add(before_part)
     
-    bodyes.add(make_head());
+    // body_node_head.body_node_head_end.next = body_node_head.body_node_head_next;
+
+
+    return {
+        body:body,
+        body_node_head_end: body_node_head.body_node_head_end
+
+    };
+
+}
+
+
+
+function make_centipede(mushrooms){
+    const bodyes = new THREE.Object3D();
+    const head = make_head();
+    
+
+    head.position.x = -floor_config.length/2+0.5 // fast
+    head.position.z = -floor_config.width/2+1 // fast
+    const start = head.position.clone()
+    // const start = new THREE.Vector3(-floor_config.length/2+0.5, 0.5,-floor_config.width/2+1)
+    console.log(start, "start")   
+
+    bodyes.add(head);
+    var body_node_head_start = new Obj_Body(head, centipede_config.head.radius, true, null, ["R"], 0);
+    var body_node_head_step = {
+        body_node_head_end:body_node_head_start
+    }
+    var body_node_head_end = body_node_head_start;
+    var body_node_head_next = body_node_head_start;
+    
+    move_head({
+                mushrooms:mushrooms,
+                walls: 7
+            }, body_node_head_start)
+
+    var flip = true;
+    for ( var i = 1; i < centipede_config.length.max_length; ++i ){
+        const random = Math.random();
+        const tempo = centipede_config.random.change_length >= random
+        if(tempo && centipede_config.length.min_length <= i){
+            // console.log("hello_inn", i)
+            // console.log("random", random);
+            // console.log("length",centipede_config.length.min_length <= i)
+            flip = false
+            break;
+        }
+        else{ // code here
+
+            // console.log("hello_out", i)
+        }
+        if(flip){
+            
+            // console.log("flip")
+            
+        }
+        // console.log("hello cent")
+        body_node_head_step = make_body(body_node_head_step, i, bodyes, start)
+        move_head({
+            mushrooms:mushrooms,
+            walls: 7
+        }, body_node_head_start)
+        
+
+        
+    }
+    console.log(body_node_head_start)
+    // while(centipede_config.length.max_length >= count){
+        
+    //     // if(centipede_config.length.max_length > count){
+    //     //     break;
+    //     // }
+    //     count
+    // }
+    
+    
+    // var temp = body_node_head.split(bodyes)
+
+    // console.log(temp)
+    
+    // bodyes.remove(body)
+    return {
+        head:body_node_head_start,
+        mesh: bodyes
+    }
     return bodyes;
 }

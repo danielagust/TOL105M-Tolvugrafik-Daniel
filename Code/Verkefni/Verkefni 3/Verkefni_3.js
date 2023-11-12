@@ -25,6 +25,7 @@ var clock = new THREE.Clock(true);
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 
 set_data(config);
+set_data_helper(config);
 
 var MACHINE;
 var GNOME;
@@ -34,6 +35,8 @@ var FEETS;
 var ENTITIES;
 var camera;
 var controls;
+var HEADS;
+var HEAD_list
 
 var Left_key = 65; // a key
 var Right_key = 68; // d key
@@ -91,8 +94,19 @@ function make_entities(){
     GNOME = make_gnome();
     entities.add(GNOME);
     
-    var body = make_centipede();
-    entities.add(body)
+    var body = make_centipede(WALLS);
+    HEADS = body.mesh;
+    HEAD_list = body.head
+    // console.log(HEAD_list)
+    entities.add(HEADS)
+    for ( var i = 0; i < (config.machine.structure.floor.length)*2+1; ++i ){
+        move_head({
+            mushrooms:WALLS,
+            walls: 7
+        }, HEAD_list)
+    }
+    
+    
 
     ENTITIES = entities;
 
@@ -203,7 +217,7 @@ function move_tick(delta){
         // console.log(deltaTime)
         tcik += tick_speed * deltaTime / 1000;
         if (last_count != tcik.toFixed(0)){
-            console.log("hello")
+            console.log("tick")
             last_count = tcik.toFixed(0)
             updateGameLogic_main(delta)
         }
@@ -224,7 +238,7 @@ function updateGameLogic_main(delta){
 }
 
 
-
+// move_head({WALLS}, HEAD_list)
 
 
 

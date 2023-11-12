@@ -30,14 +30,18 @@
         "entities":{
             "centipede":{
                 "body":{
-                    "radius":1
+                    "radius":0.5
                 },
                 "head":{
-                    "radius":1
+                    "radius":0.6
                 },
                 "length":{
-                    "max_length":10,
+                    "max_length":2,
                     "min_length":2
+                    
+                },
+                "random":{
+                    "change_length":0.4
                 }
             },
             "gnome":{
