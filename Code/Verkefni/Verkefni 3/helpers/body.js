@@ -25,7 +25,7 @@ class Body{
         this.if_end = false
         this.last_move = "R"
         this.angle = 0;
-        this.head = null;
+        this.head = this;
         this.tail = null;
         this.id = id;
         this.prev_pos = new THREE.Vector3(0.3,1,0);
@@ -80,9 +80,34 @@ class Body{
         
         // this.body = undefined
     }
+
+    deleteNode(del, head2) {
+		// base case
+		if (head2 == null || del == null)
+			return null;
+
+		// If node to be deleted is head node
+		if (head2 == del)
+			head2 = del.next;
+
+		// Change next only if node to be
+		// deleted is NOT the last node
+		if (del.next != null)
+			del.next.before = del.before;
+
+		// Change prev only if node to be
+		// deleted is NOT the first node
+		if (del.before != null)
+			del.before.next = del.next;
+
+		del = null;
+
+		return head2;
+	}
+
     split(Objects){
         var counter = 0;
-        console.log(Objects.children)
+        // console.log(Objects.children)
         // console.log(this.body)
         // Objects.traverse( child => {
         //     // if (child.isMesh){
@@ -101,15 +126,16 @@ class Body{
         // })
         
         this.remove(this.body, Objects)
-        console.log(Objects.children)
-        // var selectedObject = Objects.getObjectByName(this.body.name);
-        // console.log(selectedObject, "name")
-        // console.log(Objects, "OBJ")
+        this.deleteNode(this, this.head)
+        // // console.log(Objects.children)
+        // // var selectedObject = Objects.getObjectByName(this.body.name);
+        // // console.log(selectedObject, "name")
+        // // console.log(Objects, "OBJ")
         
-        // Objects.remove(this.body)
+        // // Objects.remove(this.body)
         
         // if(this.next == null){
-        //     console.log("hello0");
+        //     // console.log("hello0");
         //     if(this.before == null){
         //         return {
         //             head:null,
@@ -117,8 +143,8 @@ class Body{
         //         }
         //     }
         //     else{
-        //         console.log("hello0");
-        //         console.log(this, "hello")
+        //         // console.log("hello2");
+        //         // console.log(this, "hello")
         //         this.before.is_head = true;
         //         return {
         //             head:this.before,
@@ -183,7 +209,7 @@ class Body{
      
         // If the list is empty link assign
         // new node to both head and tail
-        if (this.head == null) {
+        if (this.head == this) {
             this.head = body;
             this.tail = body;
             this.tail.next = body;
@@ -194,6 +220,7 @@ class Body{
             body.before = this.tail;
             this.tail.next = body;
             this.tail = this.tail.next;
+            body.next = this.tail.next
             
             // this.before = this.tail;
         }

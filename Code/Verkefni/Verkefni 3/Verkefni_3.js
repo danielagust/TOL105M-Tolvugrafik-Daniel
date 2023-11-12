@@ -103,7 +103,8 @@ function make_entities(){
     
     var body = make_centipede(WALLS);
     HEADS=(body.mesh);
-    HEAD_list.push(body.head)
+    
+    HEAD_list.push(body.head.head)
     // console.log(body)
 
     // var body = make_centipede(WALLS);
@@ -116,6 +117,7 @@ function make_entities(){
     entities.add(HEADS)
 
     MUSHROOM = make_mushrooms(6, -6);
+    
     // make_mushrooms();
     entities.add(MUSHROOM)
 
@@ -127,17 +129,17 @@ function make_entities(){
     // make_part();
     
     // console.log(HEAD_list , "headlists")
-    for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
-        move_head({
-            mushrooms:WALLS,
-            walls: 7
-        }, HEAD_list[0])
-        if_new(HEAD_list[0], count, HEADS).stop
+    // for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
+    //     // move_head({
+    //     //     mushrooms:WALLS,
+    //     //     walls: 7
+    //     // }, HEAD_list[0])
+    //     if_new(HEAD_list[0], count, HEADS).stop
         
-    }
+    // }
     // console.log(HEAD_list[0].before)
     // HEAD_list.push(HEAD_list[0].before.split(HEADS).head)
-    HEAD_list[0].before.before.split(HEADS)
+    // HEAD_list[0].before.before.split(HEADS)
     console.log(HEAD_list)
     
     
@@ -271,7 +273,7 @@ function updateGameLogic_main(delta){
     inside_tick += 1
     
     
-    console.log(if_end_cent_var)
+    // console.log(if_end_cent_var)
     if(!if_end_cent_var){
         gnome_move();
         if_end_cent_var = move_centa(true)
@@ -282,18 +284,25 @@ function updateGameLogic_main(delta){
     }
     
    
-    // if(count <= centipede_config.length.max_length){
-    //     make_part();
+    if(count <= centipede_config.length.max_length){
+        make_part();
         
-    // }
-    // else if(count >= centipede_config.length.max_length+1){
-    //     // if_end_cent_var = move_head({
+    }
+    // console.log(inside_tick > centipede_config.length.max_length+1 )
+    // console.log(inside_tick < centipede_config.length.max_length+1)
+
+    if(inside_tick >= centipede_config.length.max_length+4 && inside_tick <= centipede_config.length.max_length+4){
+        // if_end_cent_var = move_head({
             
-    //     //     mushrooms:MUSHROOM,
-    //     //     walls: 7
-    //     // }, HEAD_list[1]) 
+        //     mushrooms:MUSHROOM,
+        //     walls: 7
+        // }, HEAD_list[1]) 
+        HEAD_list.push(HEAD_list[0].before.split(HEADS))
+        console.log("hello")
+        console.log(HEAD_list)
+        // HEAD_list[0].before.split(HEADS)
         
-    // }
+    }
 
     
 }
@@ -320,13 +329,11 @@ function make_part(index){
 
 function move_centa(index_flip){
     for ( var i = 0; i < HEAD_list.length; ++i ){
-        if(i==0 ||index_flip){
-            var if_end_cent_var = move_head({
+        var if_end_cent_var = move_head({
             
-                mushrooms:MUSHROOM,
-                walls: 7
-            }, HEAD_list[i])    
-        }
+            mushrooms:MUSHROOM,
+            walls: 7
+        }, HEAD_list[i])  
        
         if(if_end_cent_var){
             return true;

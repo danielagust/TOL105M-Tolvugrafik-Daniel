@@ -30,9 +30,37 @@ function new_pos(pos1, pos2){
 }
 
 var last_move;
+
+function deleteNode(del, head2) {
+    // base case
+    if (head2 == null || del == null)
+        return null;
+
+    // If node to be deleted is head node
+    if (head2 == del)
+        head2 = del.next;
+
+    // Change next only if node to be
+    // deleted is NOT the last node
+    if (del.next != null)
+        del.next.before = del.before;
+
+    // Change prev only if node to be
+    // deleted is NOT the first node
+    if (del.before != null)
+        del.before.next = del.next;
+
+    del = null;
+
+    return head2;
+}
 function move_head(Objects_collision, head){
+
     const mushrooms = Objects_collision.mushrooms
     const walls_end = Objects_collision.walls;
+    if(head == null){
+        return false
+    }
     const head_pos = head.body.position.clone()
     
     
@@ -118,7 +146,7 @@ function move_head(Objects_collision, head){
     
     head.prev_pos = head.body.position.clone();
     move_cent(1, head.curr_move, head);
-    return if_end_cent(head);;
+    return if_end_cent(head);
     
     // console.log(head.body.rotation.y, "helo" )
     // var theta = 90;
