@@ -84,7 +84,7 @@ class Body{
     deleteNode(del, head2) {
 		// base case
 		if (head2 == null || del == null)
-			return null;
+			return del;
 
 		// If node to be deleted is head node
 		if (head2 == del)
@@ -93,16 +93,17 @@ class Body{
 		// Change next only if node to be
 		// deleted is NOT the last node
 		if (del.next != null)
-			del.next.before = del.before;
+			del.next.before = null;
 
 		// Change prev only if node to be
 		// deleted is NOT the first node
 		if (del.before != null)
 			del.before.next = del.next;
 
-		del = null;
+		// del = null;
+        del.next = null
 
-		return head2;
+		return del;
 	}
 
     split(Objects){
@@ -126,7 +127,7 @@ class Body{
         // })
         
         this.remove(this.body, Objects)
-        this.deleteNode(this, this.head)
+        return this.deleteNode(this, this.head)
         // // console.log(Objects.children)
         // // var selectedObject = Objects.getObjectByName(this.body.name);
         // // console.log(selectedObject, "name")
@@ -203,6 +204,17 @@ class Body{
         // }
     }
 
+    swap_moves(moves){
+        var move = this.moves[this.index]
+        this.moves = copy(moves)
+        moves.push(move)
+        console.log(this, "hello")
+        if(this.before != null){
+            this.before.swap_moves(moves)
+        }
+        
+        
+    }
     insertEnd(body) {
         // Create a temporary variable
         let temp = body

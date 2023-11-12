@@ -297,7 +297,8 @@ function updateGameLogic_main(delta){
         //     mushrooms:MUSHROOM,
         //     walls: 7
         // }, HEAD_list[1]) 
-        HEAD_list.push(HEAD_list[0].before.split(HEADS))
+        // HEAD_list.push(HEAD_list[0].before.split(HEADS))
+        HEAD_list.push(split(HEAD_list[0], HEAD_list, HEADS))
         console.log("hello")
         console.log(HEAD_list)
         // HEAD_list[0].before.split(HEADS)

@@ -54,6 +54,20 @@ function deleteNode(del, head2) {
 
     return head2;
 }
+
+function copy(list){
+    var temp = [];
+    for ( var i = 0; i < list.length; ++i ){
+        temp.push(list[i])
+    }
+    return temp;
+}
+function split(node, list, obj){
+    var val=  node.split(obj)
+    val.swap_moves([val.moves[val.index]])
+    return val
+
+}
 function move_head(Objects_collision, head){
 
     const mushrooms = Objects_collision.mushrooms

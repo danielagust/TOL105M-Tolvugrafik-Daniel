@@ -379,13 +379,7 @@ function make_head(){
 
 }
 
-function copy(list){
-    var temp = [];
-    for ( var i = 0; i < list.length; ++i ){
-        temp.push(list[i])
-    }
-    return temp;
-}
+
 
 function make_body(body_node_head_end,index, bodyes, pos){
     const geometry = new THREE.SphereGeometry( centipede_config.head.radius, 32, 16 );
