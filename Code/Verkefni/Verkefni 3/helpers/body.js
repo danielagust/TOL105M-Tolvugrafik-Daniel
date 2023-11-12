@@ -72,14 +72,14 @@ class Body{
 
     }
 
-    remove(object, Objects){
-        // console.log(object, Objects)
-        object.geometry.dispose();
-        object.material.dispose();
-        Objects.remove( object );
+    // remove(object, Objects){
+    //     // console.log(object, Objects)
+    //     object.geometry.dispose();
+    //     object.material.dispose();
+    //     Objects.remove( object );
         
-        // this.body = undefined
-    }
+    //     // this.body = undefined
+    // }
 
     deleteNode(del, head2) {
 		// base case
@@ -126,7 +126,7 @@ class Body{
             
         // })
         
-        this.remove(this.body, Objects)
+        remove(this.body, Objects)
         return this.deleteNode(this, this.head)
         // // console.log(Objects.children)
         // // var selectedObject = Objects.getObjectByName(this.body.name);
@@ -206,8 +206,12 @@ class Body{
 
     swap_moves(moves){
         var move = this.moves[this.index]
+        console.log( this.moves)
+        console.log( this.index)
+        
         this.moves = copy(moves)
         moves.push(move)
+        
         console.log(this, "hello")
         if(this.before != null){
             this.before.swap_moves(moves)
@@ -249,3 +253,12 @@ this.Obj_Body = Body
 // var hello = new Obj_Body();
 
 // console.log(hello)
+
+
+// const myArray = [1, 2, 3, 4, 5];
+// const index = 1
+// const x = myArray.splice(index, 1);
+
+// console.log(`myArray values: ${myArray}`);
+// console.log(`variable x value: ${x}`);
+

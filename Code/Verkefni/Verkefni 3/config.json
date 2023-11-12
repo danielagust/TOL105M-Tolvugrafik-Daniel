@@ -67,12 +67,16 @@
                 },
                 "amount_row": 1
                 
+            },
+            "bulit":{
+                "radius":0.25
             }
         }
         
     },
     "game_logic":{
-        "tick_speed":4
+        "tick_speed":4,
+        "interval":2
     },
     "room":{
         "wall":{

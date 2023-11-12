@@ -39,14 +39,19 @@ var HEADS ;
 var HEAD_list = [];
 var MUSHROOM;
 var MUSHROOM_list = [];
+var Built_list = [];
+var BUILT = new THREE.Object3D();
 
 var Left_key = 65; // a key
 var Right_key = 68; // d key
+var Space_key = 32;
 
 var Left_flip = false;
 var Right_flip = false;
+var Space_flip = false;
+var sumon_flip = false;
 
-var if_gnome_move_on_tick = false;
+var if_gnome_move_on_tick = true;
 var max_gnome_pos = floor_config.width/2-1;
 var min_gnome_pos = floor_config.width/2-1;
 const speed =config.machine.entities.gnome.speed
@@ -121,6 +126,8 @@ function make_entities(){
     // make_mushrooms();
     entities.add(MUSHROOM)
 
+    
+
     for ( var i = 0; i < centipede_config.length.max_length; ++i ){
         
     }
@@ -140,7 +147,7 @@ function make_entities(){
     // console.log(HEAD_list[0].before)
     // HEAD_list.push(HEAD_list[0].before.split(HEADS).head)
     // HEAD_list[0].before.before.split(HEADS)
-    console.log(HEAD_list)
+    // console.log(HEAD_list)
     
     
     
@@ -152,11 +159,11 @@ function make_entities(){
 function make_camera(){
     // Skilgreina myndavél og staðsetja hana
     camera = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
-    camera.position.set(0, 10, 20);
-    // camera.position.set(0, 10, 0);
+    // camera.position.set(0, 10, 20);
+    camera.position.set(0, 10, 10);
     controls = new THREE.OrbitControls( camera, canvas );
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
-    new_pos(controls.target, GNOME.position)
+    // new_pos(controls.target, GNOME.position)
 }
 
 function make_light(){
@@ -164,6 +171,19 @@ function make_light(){
     const light = new THREE.DirectionalLight(0xFFFFFF, 1);
     light.position.set(0, 10, 0);
     scene.add(light);
+}
+
+
+function sumon_built(){
+    if(Space_flip){
+        var bulit = make_bulit(GNOME);
+        bulit.position.y += 0.5
+        Built_list.push(bulit)
+        BUILT.add(bulit)
+        ENTITIES.add(BUILT)
+        Space_flip = false
+    }
+    
 }
 
 
@@ -212,6 +232,15 @@ function event_keyboard(){
                 
                 // camera.position.x = Math.max(-min_gnome_pos, camera.position.x-step);
                 break;
+            case Space_key:
+                if(if_gnome_move_on_tick){
+                    Space_flip = true
+                    sumon_flip = true;
+                }else{
+                    // sumon_built();
+                    sumon_flip = true;
+                }
+
             // case Up_key:
             //     dir.ud += speed;
             //     break;
@@ -231,7 +260,44 @@ function event_keyboard(){
 
 
 
+function move_built(){
+    for ( var i = 0; i < Built_list.length; ++i ){
+        Built_list[i].position.z -=1;
+        if(-Built_list[i].position.z >= 8){
+            // console.log("hello")
+            // const myArray = [1, 2, 3, 4, 5];
+            // const index = 1
+            var del = Built_list.splice(i, 1);
+            // console.log(del)
+            remove(del[0], BUILT);
 
+        }
+        
+
+        // console.log(Built_list[i].position)
+    }
+
+    // BUILT.traverse( child => {
+    //     // if (child.isMesh){
+    //     //     if(child.position.equals(head_pos)){
+    //     //         next_mushroom = true;
+    //     //     }
+    //     //     // console.log("hello")
+    //     //     // child.material = material;  
+    //     // }
+    //     // if(child.position.equals(head_pos)){
+    //     //     next_mushroom = true;
+    //     // }
+    //     // Built_list[i].position.z -=1;
+    //     // if(-Built_list[i].position.z >= 8){
+    //     //     console.log("hello")
+    //     // }
+    //     child.position.z-=0.5
+    //     if(-child.position.z >= 8){
+    //                 console.log("hello")
+    //     }
+    // })
+}
 
 
 function gnome_move(delta){
@@ -269,6 +335,7 @@ function move_tick(delta){
 }
 var tick
 var if_end_cent_var = false;
+const interval =  config.game_logic.interval;
 function updateGameLogic_main(delta){
     inside_tick += 1
     
@@ -277,6 +344,12 @@ function updateGameLogic_main(delta){
     if(!if_end_cent_var){
         gnome_move();
         if_end_cent_var = move_centa(true)
+        move_built()
+        // console.log(sumon_flip)
+        if(sumon_flip && inside_tick % interval == 0){
+            sumon_built();
+            sumon_flip = false
+        }
     }
     else{
         GNOME.position.y = -2
@@ -298,9 +371,9 @@ function updateGameLogic_main(delta){
         //     walls: 7
         // }, HEAD_list[1]) 
         // HEAD_list.push(HEAD_list[0].before.split(HEADS))
-        HEAD_list.push(split(HEAD_list[0], HEAD_list, HEADS))
-        console.log("hello")
-        console.log(HEAD_list)
+        // HEAD_list.push(split(HEAD_list[0], HEAD_list, HEADS))
+        // console.log("hello")
+        // console.log(HEAD_list)
         // HEAD_list[0].before.split(HEADS)
         
     }

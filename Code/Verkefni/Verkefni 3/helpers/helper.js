@@ -64,9 +64,19 @@ function copy(list){
 }
 function split(node, list, obj){
     var val=  node.split(obj)
-    val.swap_moves([val.moves[val.index]])
+    // val.swap_moves([val.moves[val.index]])
+    val.add_next_move("D")
     return val
 
+}
+
+function remove(object, Objects){
+    // console.log(object, Objects)
+    object.geometry.dispose();
+    object.material.dispose();
+    Objects.remove( object );
+    
+    // this.body = undefined
 }
 function move_head(Objects_collision, head){
 

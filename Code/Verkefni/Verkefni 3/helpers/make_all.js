@@ -32,6 +32,7 @@ function set_data(json){
     gnome_config = config.machine.entities.gnome
     centipede_config = config.machine.entities.centipede
     mushroom_config  = config.machine.entities.mushroom
+    bulit_config = config.machine.entities.bulit
     // console.log(feet_config)
     
     
@@ -407,6 +408,17 @@ function make_body(body_node_head_end,index, bodyes, pos){
 
     return body_node_head_end
 
+}
+
+function make_bulit(gnome){
+    const geometry = new THREE.SphereGeometry( bulit_config.radius, 32, 16 );
+    const texture = load_texturev1("./texture/bulit/bulit.png")
+    const material = new THREE.MeshPhongMaterial( { map: texture } )
+    const bulit = new THREE.Mesh( geometry, material );
+    bulit.position.y  = 1
+    new_pos(bulit.position, gnome.position.clone())
+     
+    return bulit
 }
 
 
