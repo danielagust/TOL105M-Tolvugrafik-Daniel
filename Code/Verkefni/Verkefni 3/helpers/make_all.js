@@ -371,7 +371,9 @@ function make_head(){
     const geometry = new THREE.SphereGeometry( centipede_config.head.radius, 32, 16 );
     const texture = load_texturev1("./texture/centipede_texture/centipede_head.png")
     const material = new THREE.MeshPhongMaterial( { map: texture } )
+    
     const head = new THREE.Mesh( geometry, material );
+    head.name = Math.random();
     head.position.y += 1/2
     return head;
 
@@ -390,6 +392,7 @@ function make_body(body_node_head_end,index, bodyes, pos){
     const texture = load_texturev1("./texture/centipede_texture/centipede_body.png")
     const material = new THREE.MeshPhongMaterial( { map: texture } )
     const body = new THREE.Mesh( geometry, material );
+    body.name = Math.random();
     body.position.set(pos.x, 0.0, pos.z)
     // console.log(pos)
     body.position.y += 1/2

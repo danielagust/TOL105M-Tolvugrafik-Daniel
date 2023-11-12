@@ -128,14 +128,16 @@ function make_entities(){
     
     // console.log(HEAD_list , "headlists")
     for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){
-        make_part();
         move_head({
             mushrooms:WALLS,
             walls: 7
         }, HEAD_list[0])
+        if_new(HEAD_list[0], count, HEADS).stop
+        
     }
-    console.log(HEAD_list[0].before)
-    HEAD_list.push(HEAD_list[0].before.split(HEADS).head)
+    // console.log(HEAD_list[0].before)
+    // HEAD_list.push(HEAD_list[0].before.split(HEADS).head)
+    HEAD_list[0].before.before.split(HEADS)
     console.log(HEAD_list)
     
     
@@ -272,7 +274,7 @@ function updateGameLogic_main(delta){
     console.log(if_end_cent_var)
     if(!if_end_cent_var){
         gnome_move();
-        // if_end_cent_var = move_centa(true)
+        if_end_cent_var = move_centa(true)
     }
     else{
         GNOME.position.y = -2

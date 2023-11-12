@@ -71,58 +71,78 @@ class Body{
         this.body.position.x += amount
 
     }
-    split(Objects){
 
-        Objects.traverse( child => {
-            // if (child.isMesh){
-            //     if(child.position.equals(head_pos)){
-            //         next_mushroom = true;
-            //     }
-            //     // console.log("hello")
-            //     // child.material = material;  
-            // }
-            if(child == this.body){
-                child = null
-            }
+    remove(object, Objects){
+        // console.log(object, Objects)
+        object.geometry.dispose();
+        object.material.dispose();
+        Objects.remove( object );
+        
+        // this.body = undefined
+    }
+    split(Objects){
+        var counter = 0;
+        console.log(Objects.children)
+        // console.log(this.body)
+        // Objects.traverse( child => {
+        //     // if (child.isMesh){
+        //     //     if(child.position.equals(head_pos)){
+        //     //         next_mushroom = true;
+        //     //     }
+        //     //     // console.log("hello")
+        //     //     // child.material = material;  
+        //     // }
+        //     if(counter == 1){
+        //         console.log(child)
+        //         this.remove(child, Objects)
+        //     }
+        //     counter +=1
             
-        })
+        // })
+        
+        this.remove(this.body, Objects)
+        console.log(Objects.children)
+        // var selectedObject = Objects.getObjectByName(this.body.name);
+        // console.log(selectedObject, "name")
+        // console.log(Objects, "OBJ")
+        
         // Objects.remove(this.body)
         
-        if(this.next == null){
-            console.log("hello0");
-            if(this.before == null){
-                return {
-                    head:null,
-                    gone: true
-                }
-            }
-            else{
-                console.log("hello0");
-                console.log(this, "hello")
-                this.before.is_head = true;
-                return {
-                    head:this.before,
-                    gone: false
-                }
-            }
-        }
-        if(this.before == null){
-            return {
-                head:this,
-                gone: true
-            }
-        }
-        else{
-            this.before.is_head = true;
-            this.next.before = null;
-            var temp =  this.before;
-            this.before.next = null;
-            console.log(temp, "hello0");
-            return {
-                head:temp,
-                gone: false
-            }
-        }
+        // if(this.next == null){
+        //     console.log("hello0");
+        //     if(this.before == null){
+        //         return {
+        //             head:null,
+        //             gone: true
+        //         }
+        //     }
+        //     else{
+        //         console.log("hello0");
+        //         console.log(this, "hello")
+        //         this.before.is_head = true;
+        //         return {
+        //             head:this.before,
+        //             gone: false
+        //         }
+        //     }
+        // }
+        // if(this.before == null){
+        //     return {
+        //         head:this,
+        //         gone: true
+        //     }
+        // }
+        // else{
+        //     this.before.is_head = true;
+        //     this.next.before = null;
+        //     var temp =  this.before;
+        //     this.before.next = null;
+        //     console.log(temp, "hello0");
+        //     return {
+        //         head:temp,
+        //         gone: false
+        //     }
+        // }
     }
     add_next_move(move){
         this.moves.push(move)
