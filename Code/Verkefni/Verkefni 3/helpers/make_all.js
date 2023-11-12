@@ -57,6 +57,7 @@ function make_mushroom(x, z){
     // GNOME = gnome
     // gnome.position.set(1.0,0.0,1.0)
     // machine.add(gnome)
+    mushroom.step = mushroom_config.decay_steps;
     return mushroom
 }
 function if_in_list(elmen, list){
@@ -80,6 +81,7 @@ function make_mushrooms(){
                 temp.push(pos)
                 const mushroom = make_mushroom(pos, i)
                 mushrooms.add(mushroom);
+                // console.log(mushroom)
             }
             
 

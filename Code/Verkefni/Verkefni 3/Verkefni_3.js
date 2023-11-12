@@ -260,16 +260,48 @@ function event_keyboard(){
 
 
 
+
 function move_built(){
     for ( var i = 0; i < Built_list.length; ++i ){
         Built_list[i].position.z -=1;
-        if(-Built_list[i].position.z >= 8){
+        var next_mushroom = false;
+        // console.log(MUSHROOM)
+
+        var outside_child
+        // MUSHROOM.traverse( child => {
+        //     // if (child.isMesh){
+        //     //     if(child.position.equals(head_pos)){
+        //     //         next_mushroom = true;
+        //     //     }
+        //     //     // console.log("hello")
+        //     //     // child.material = material;  
+        //     // }
+        //     Built_list[i].position.y = child.position.y
+        //     if(child.position.equals(Built_list[i].position)){
+        //         next_mushroom = true;
+        //         // console.log("hit")
+        //         console.log(child.step)
+        //         child.step-=1;
+        //         if(child.step ==0){
+        //             console.log(child)
+        //             // remove(child.children[0].children[0], child.children[0])
+        //             console.log(child)
+        //             // MUSHROOM.remove(child)
+        //         }
+            
+        //     }
+        //     Built_list[i].position.y = 0.5
+
+        // })
+        MUSHROOM.remove(outside_child)
+        if(-Built_list[i].position.z >= 8 ||next_mushroom){
             // console.log("hello")
             // const myArray = [1, 2, 3, 4, 5];
             // const index = 1
             var del = Built_list.splice(i, 1);
             // console.log(del)
             remove(del[0], BUILT);
+            next_mushroom = false
 
         }
         
@@ -343,7 +375,7 @@ function updateGameLogic_main(delta){
     // console.log(if_end_cent_var)
     if(!if_end_cent_var){
         gnome_move();
-        if_end_cent_var = move_centa(true)
+         move_centa(true)
         move_built()
         // console.log(sumon_flip)
         if(sumon_flip && inside_tick % interval == 0){
