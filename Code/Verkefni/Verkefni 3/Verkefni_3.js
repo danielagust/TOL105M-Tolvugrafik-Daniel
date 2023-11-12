@@ -268,31 +268,31 @@ function move_built(){
         // console.log(MUSHROOM)
 
         var outside_child
-        // MUSHROOM.traverse( child => {
-        //     // if (child.isMesh){
-        //     //     if(child.position.equals(head_pos)){
-        //     //         next_mushroom = true;
-        //     //     }
-        //     //     // console.log("hello")
-        //     //     // child.material = material;  
-        //     // }
-        //     Built_list[i].position.y = child.position.y
-        //     if(child.position.equals(Built_list[i].position)){
-        //         next_mushroom = true;
-        //         // console.log("hit")
-        //         console.log(child.step)
-        //         child.step-=1;
-        //         if(child.step ==0){
-        //             console.log(child)
-        //             // remove(child.children[0].children[0], child.children[0])
-        //             console.log(child)
-        //             // MUSHROOM.remove(child)
-        //         }
+        MUSHROOM.traverse( child => {
+            // if (child.isMesh){
+            //     if(child.position.equals(head_pos)){
+            //         next_mushroom = true;
+            //     }
+            //     // console.log("hello")
+            //     // child.material = material;  
+            // }
+            Built_list[i].position.y = child.position.y
+            if(child.position.equals(Built_list[i].position)){
+                next_mushroom = true;
+                // console.log("hit")
+                // console.log(child.step)
+                // child.step-=1;
+                // if(child.step ==0){
+                //     console.log(child)
+                //     // remove(child.children[0].children[0], child.children[0])
+                //     console.log(child)
+                //     // MUSHROOM.remove(child)
+                // }
             
-        //     }
-        //     Built_list[i].position.y = 0.5
+            }
+            Built_list[i].position.y = 0.5
 
-        // })
+        })
         MUSHROOM.remove(outside_child)
         if(-Built_list[i].position.z >= 8 ||next_mushroom){
             // console.log("hello")
