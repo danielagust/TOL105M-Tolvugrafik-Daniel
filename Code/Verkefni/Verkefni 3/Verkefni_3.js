@@ -104,6 +104,7 @@ function make_entities(){
     
     make_part();
     make_part();
+    make_part();
     // make_part();
     console.log(HEAD_list , "headlists")
     // for ( var i = 0; i < (config.machine.structure.floor.length-1); ++i ){

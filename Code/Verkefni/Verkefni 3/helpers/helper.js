@@ -82,7 +82,7 @@ function move_head(Objects_collision, head){
 
 function rotate_part(theta, head){
     var angle_corrector = -(head.angle - theta)%360;
-    console.log(angle_corrector)
+    // console.log(angle_corrector)
     head.body.rotateY(radians(theta))
     head.angle = angle_corrector
 }
