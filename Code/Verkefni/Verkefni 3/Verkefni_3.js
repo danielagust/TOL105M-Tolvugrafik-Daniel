@@ -166,8 +166,9 @@ function make_camera(){
     camera_top = new THREE.PerspectiveCamera( 75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000 );
     // camera.position.set(0, 10, 20);
     camera_top.position.set(0, 10, 10);
-    // controls = new THREE.OrbitControls( camera_top, canvas );
-    controls = new THREE.PointerLockControls( camera_top, canvas );
+    controls = new THREE.OrbitControls( camera_top, canvas );
+    // controls = new THREE.DragControls( camera_top, canvas );
+    controls
     // controls.lock()
     
     // controls.target.set(GNOME.position.x, GNOME.position.y, GNOME.position.z)
@@ -197,23 +198,29 @@ function sumon_built(){
 var flip_camrea_out = false
 var flip_camrea = true;
 function if_gnome_camrea(){
-    console.log("hello")
+    // console.log(flip_camrea)
     if(flip_camrea){
         flip_camrea_out = false
         flip_camrea = false
         camera = camera_top;
-        controls = new THREE.OrbitControls( camera_top, canvas );
+        new_pos(camera.position, new THREE.Vector3(0, 10, 10))
+        controls.dispose ()
+        console.log("hello")
+        // controls = new THREE.OrbitControls( camera_top, canvas );
         // controls = new THREE.PointerLockControls( camera_top, canvas );
 
     }
     else{
         flip_camrea_out = true
-        flip_camrea = false
+        flip_camrea = true
         camera = camera_top;
         new_pos(camera.position, GNOME.position)
+        // controls.target
         camera.position.y += 0.5
         console.log("hello inn")
-        new_pos(controls.target, new THREE.Vector3(0.0,10,0.0))
+        controls.listenToKeyEvents(canvas)
+        controls.target.x = 0.0
+        // new_pos(controls.target, new THREE.Vector3(0.0,10,0.0))
         // controls = new THREE.PointerLockControls( camera_top, canvas );
         
     }
@@ -249,7 +256,7 @@ function event_keyboard(){
                 
                 if(flip_camrea_out){
                     camera.position.x = Math.min(max_gnome_pos, camera.position.x+speed);
-                    camera.target.x = Math.min(max_gnome_pos, camera.target.x+speed);
+                    controls.target.x = Math.min(max_gnome_pos, controls.target.x+speed);
                 }
                 // camera.position.x = Math.min(max_gnome_pos, camera.position.x+step);
                 // GNOME.position.x +=1.0
@@ -263,7 +270,7 @@ function event_keyboard(){
                 
                 if(flip_camrea_out){
                     camera.position.x = Math.max(-min_gnome_pos, camera.position.x-speed);
-                    camera.target.x = Math.max(-min_gnome_pos, camera.target.x-speed);
+                    controls.target.x = Math.max(-min_gnome_pos, controls.target.x-speed);
                 }
                 // camera.position.x = Math.max(-min_gnome_pos, camera.position.x-step);
                 break;
@@ -502,7 +509,7 @@ const animate = function (timestamp) {
     move_tick(timestamp)
 
     
-    // controls.update();
+    controls.update();
     renderer.render( scene, camera_top );
     requestAnimationFrame( animate );
 
